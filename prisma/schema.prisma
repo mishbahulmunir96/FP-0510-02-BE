@@ -6,11 +6,13 @@
 
 generator client {
   provider = "prisma-client-js"
+  output   = "./generated/client"
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  // directUrl = env("DIRECT_URL")
 }
 
 model Sample {
@@ -20,4 +22,248 @@ model Sample {
   updatedAt DateTime @updatedAt
 
   @@map("samples")
+}
+
+model User {
+  id          Int           @id @default(autoincrement())
+  name        String
+  email       String        @unique
+  password    String
+  imageUrl    String
+  token       String
+  role        Role          @default(USER)
+  provider    Provider      @default(CREDENTIAL)
+  isVerified  Boolean       @default(false)
+  isDeleted   Boolean       @default(false)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  Transaction Transaction[]
+  Review      Review[]
+
+  @@map("users")
+}
+
+enum Role {
+  USER
+  TENANT
+}
+
+enum Provider {
+  CREDENTIAL
+  GOOGLE
+}
+
+model Tenant {
+  id          Int      @id @default(autoincrement())
+  name        String
+  imageUrl    String?
+  phoneNumber String?
+  userId      Int
+  bankName    String
+  bankNumber  Int
+  balance     Int      @default(0)
+  role        Role     @default(TENANT)
+  isDeleted   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  property Property[]
+
+  @@map("tenants")
+}
+
+model Property {
+  id          Int              @id @default(autoincrement())
+  slug        String           @unique
+  title       String
+  description String           @db.Text()
+  latitude    String
+  longitude   String
+  status      StatusProperty
+  isDeleted   Boolean          @default(false)
+  category    PropertyCategory
+  tenantId    Int
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  propertyImage    PropertyImage[]
+  propertyFacility PropertyFacility[]
+  room             Room[]
+
+  tenant Tenant   @relation(fields: [tenantId], references: [id])
+  Review Review[]
+
+  @@map("properties")
+}
+
+enum StatusProperty {
+  PUBLISHED
+  DRAFT
+}
+
+enum PropertyCategory {
+  Hotel
+  Villa
+  Apartment
+}
+
+model PropertyImage {
+  id         Int      @id @default(autoincrement())
+  imageUrl   String?
+  propertyId Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  property Property @relation(fields: [propertyId], references: [id])
+
+  @@map("propertyImages")
+}
+
+model PropertyFacility {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String   @db.Text()
+  isDeleted   Boolean  @default(false)
+  propertyId  Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  property Property @relation(fields: [propertyId], references: [id])
+
+  @@map("propertyFacilities")
+}
+
+model Room {
+  id         Int      @id @default(autoincrement())
+  type       Type
+  stock      Int
+  price      Int
+  guest      Int
+  isDeleted  Boolean  @default(false)
+  propertyId Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  peakSeasonRate      PeakSeasonRate[]
+  roomFacility        RoomFacility[]
+  roomImage           RoomImage[]
+  roomNonAvailability RoomNonAvailability[]
+  transaction         Transaction[]
+
+  property Property @relation(fields: [propertyId], references: [id])
+
+  @@map("rooms")
+}
+
+enum Type {
+  Deluxe
+  Standard
+  Suite
+}
+
+model PeakSeasonRate {
+  id        Int      @id @default(autoincrement())
+  price     Int
+  date      DateTime
+  isDeleted Boolean  @default(false)
+  roomId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  room Room @relation(fields: [roomId], references: [id])
+
+  @@map("peakSeasonRates")
+}
+
+model RoomFacility {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String   @db.Text()
+  isDeleted   Boolean  @default(false)
+  roomId      Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  room Room @relation(fields: [roomId], references: [id])
+
+  @@map("roomFacilities")
+}
+
+model RoomImage {
+  id        Int      @id @default(autoincrement())
+  imageUrl  String?
+  roomId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  room Room @relation(fields: [roomId], references: [id])
+
+  @@map("roomImages")
+}
+
+model RoomNonAvailability {
+  id        Int      @id @default(autoincrement())
+  date      DateTime
+  isDeleted Boolean  @default(false)
+  reason    String
+  roomId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  room Room @relation(fields: [roomId], references: [id])
+
+  @@map("roomNonAvailability")
+}
+
+model Transaction {
+  id              Int               @id @default(autoincrement())
+  uuid            String            @default(uuid())
+  userId          Int
+  roomId          Int
+  status          StatusTransaction
+  total           Int
+  startDate       DateTime
+  endDate         DateTime
+  paymentMethode  PaymentMethode    @default(MANUAL)
+  paymentProof    String?
+  snapToken       String?
+  snapRedirectUrl String?
+  expiredAt       DateTime?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  user   User     @relation(fields: [userId], references: [id])
+  room   Room     @relation(fields: [roomId], references: [id])
+  review Review[]
+
+  @@map("transactions")
+}
+
+enum PaymentMethode {
+  MANUAL
+  OTOMATIS
+}
+
+enum StatusTransaction {
+  WAITING_FOR_PAYMENT
+  WAITING_FOR_PAYMENT_CONFIRMATION
+  CANCELLED
+  PROCESSED
+}
+
+model Review {
+  id            Int      @id @default(autoincrement())
+  rating        Int      @default(0)
+  review        String   @db.Text()
+  userId        Int
+  transactionId Int
+  propertyId    Int
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  user        User        @relation(fields: [userId], references: [id])
+  transaction Transaction @relation(fields: [transactionId], references: [id])
+  property    Property    @relation(fields: [propertyId], references: [id])
+
+  @@map("reviews")
 }
