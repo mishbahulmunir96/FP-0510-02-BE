@@ -166,7 +166,8 @@ exports.Prisma.PropertyScalarFieldEnum = {
   category: 'category',
   tenantId: 'tenantId',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  location: 'location'
 };
 
 exports.Prisma.PropertyImageScalarFieldEnum = {
@@ -202,7 +203,8 @@ exports.Prisma.RoomScalarFieldEnum = {
 exports.Prisma.PeakSeasonRateScalarFieldEnum = {
   id: 'id',
   price: 'price',
-  date: 'date',
+  startDate: 'startDate',
+  endDate: 'endDate',
   isDeleted: 'isDeleted',
   roomId: 'roomId',
   createdAt: 'createdAt',
@@ -293,12 +295,6 @@ exports.Provider = exports.$Enums.Provider = {
 exports.StatusProperty = exports.$Enums.StatusProperty = {
   PUBLISHED: 'PUBLISHED',
   DRAFT: 'DRAFT'
-};
-
-exports.PropertyCategory = exports.$Enums.PropertyCategory = {
-  Hotel: 'Hotel',
-  Villa: 'Villa',
-  Apartment: 'Apartment'
 };
 
 exports.Type = exports.$Enums.Type = {

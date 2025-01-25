@@ -2,6 +2,7 @@ import express, { NextFunction, Request, Response } from "express";
 import { PORT } from "./config";
 import cors from "cors";
 import sampleRouter from "./routes/sample.router";
+import propertyRouter from "./routes/property.router";
 
 const app = express();
 
@@ -10,6 +11,7 @@ app.use(express.json());
 
 //router, harus diatas middleware error
 app.use("/samples", sampleRouter);
+app.use("/properties", propertyRouter);
 
 // middleware error
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
