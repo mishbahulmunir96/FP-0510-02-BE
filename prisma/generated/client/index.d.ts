@@ -107,15 +107,6 @@ export const StatusProperty: {
 export type StatusProperty = (typeof StatusProperty)[keyof typeof StatusProperty]
 
 
-export const PropertyCategory: {
-  Hotel: 'Hotel',
-  Villa: 'Villa',
-  Apartment: 'Apartment'
-};
-
-export type PropertyCategory = (typeof PropertyCategory)[keyof typeof PropertyCategory]
-
-
 export const Type: {
   Deluxe: 'Deluxe',
   Standard: 'Standard',
@@ -155,10 +146,6 @@ export const Provider: typeof $Enums.Provider
 export type StatusProperty = $Enums.StatusProperty
 
 export const StatusProperty: typeof $Enums.StatusProperty
-
-export type PropertyCategory = $Enums.PropertyCategory
-
-export const PropertyCategory: typeof $Enums.PropertyCategory
 
 export type Type = $Enums.Type
 
@@ -3305,8 +3292,8 @@ export namespace Prisma {
     name: string
     email: string
     password: string
-    imageUrl: string
-    token: string
+    imageUrl: string | null
+    token: string | null
     role: $Enums.Role
     provider: $Enums.Provider
     isVerified: boolean
@@ -3400,8 +3387,8 @@ export namespace Prisma {
       name: string
       email: string
       password: string
-      imageUrl: string
-      token: string
+      imageUrl: string | null
+      token: string | null
       role: $Enums.Role
       provider: $Enums.Provider
       isVerified: boolean
@@ -5292,10 +5279,11 @@ export namespace Prisma {
     longitude: string | null
     status: $Enums.StatusProperty | null
     isDeleted: boolean | null
-    category: $Enums.PropertyCategory | null
+    category: string | null
     tenantId: number | null
     createdAt: Date | null
     updatedAt: Date | null
+    location: string | null
   }
 
   export type PropertyMaxAggregateOutputType = {
@@ -5307,10 +5295,11 @@ export namespace Prisma {
     longitude: string | null
     status: $Enums.StatusProperty | null
     isDeleted: boolean | null
-    category: $Enums.PropertyCategory | null
+    category: string | null
     tenantId: number | null
     createdAt: Date | null
     updatedAt: Date | null
+    location: string | null
   }
 
   export type PropertyCountAggregateOutputType = {
@@ -5326,6 +5315,7 @@ export namespace Prisma {
     tenantId: number
     createdAt: number
     updatedAt: number
+    location: number
     _all: number
   }
 
@@ -5353,6 +5343,7 @@ export namespace Prisma {
     tenantId?: true
     createdAt?: true
     updatedAt?: true
+    location?: true
   }
 
   export type PropertyMaxAggregateInputType = {
@@ -5368,6 +5359,7 @@ export namespace Prisma {
     tenantId?: true
     createdAt?: true
     updatedAt?: true
+    location?: true
   }
 
   export type PropertyCountAggregateInputType = {
@@ -5383,6 +5375,7 @@ export namespace Prisma {
     tenantId?: true
     createdAt?: true
     updatedAt?: true
+    location?: true
     _all?: true
   }
 
@@ -5481,10 +5474,11 @@ export namespace Prisma {
     longitude: string
     status: $Enums.StatusProperty
     isDeleted: boolean
-    category: $Enums.PropertyCategory
+    category: string
     tenantId: number
     createdAt: Date
     updatedAt: Date
+    location: string
     _count: PropertyCountAggregateOutputType | null
     _avg: PropertyAvgAggregateOutputType | null
     _sum: PropertySumAggregateOutputType | null
@@ -5519,6 +5513,7 @@ export namespace Prisma {
     tenantId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    location?: boolean
     propertyImage?: boolean | Property$propertyImageArgs<ExtArgs>
     propertyFacility?: boolean | Property$propertyFacilityArgs<ExtArgs>
     room?: boolean | Property$roomArgs<ExtArgs>
@@ -5540,6 +5535,7 @@ export namespace Prisma {
     tenantId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    location?: boolean
     tenant?: boolean | TenantDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["property"]>
 
@@ -5556,6 +5552,7 @@ export namespace Prisma {
     tenantId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    location?: boolean
   }
 
   export type PropertyInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5588,10 +5585,11 @@ export namespace Prisma {
       longitude: string
       status: $Enums.StatusProperty
       isDeleted: boolean
-      category: $Enums.PropertyCategory
+      category: string
       tenantId: number
       createdAt: Date
       updatedAt: Date
+      location: string
     }, ExtArgs["result"]["property"]>
     composites: {}
   }
@@ -5998,10 +5996,11 @@ export namespace Prisma {
     readonly longitude: FieldRef<"Property", 'String'>
     readonly status: FieldRef<"Property", 'StatusProperty'>
     readonly isDeleted: FieldRef<"Property", 'Boolean'>
-    readonly category: FieldRef<"Property", 'PropertyCategory'>
+    readonly category: FieldRef<"Property", 'String'>
     readonly tenantId: FieldRef<"Property", 'Int'>
     readonly createdAt: FieldRef<"Property", 'DateTime'>
     readonly updatedAt: FieldRef<"Property", 'DateTime'>
+    readonly location: FieldRef<"Property", 'String'>
   }
     
 
@@ -15727,7 +15726,8 @@ export namespace Prisma {
     category: 'category',
     tenantId: 'tenantId',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    location: 'location'
   };
 
   export type PropertyScalarFieldEnum = (typeof PropertyScalarFieldEnum)[keyof typeof PropertyScalarFieldEnum]
@@ -15978,20 +15978,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'PropertyCategory'
-   */
-  export type EnumPropertyCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PropertyCategory'>
-    
-
-
-  /**
-   * Reference to a field of type 'PropertyCategory[]'
-   */
-  export type ListEnumPropertyCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PropertyCategory[]'>
-    
-
-
-  /**
    * Reference to a field of type 'Type'
    */
   export type EnumTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Type'>
@@ -16107,8 +16093,8 @@ export namespace Prisma {
     name?: StringFilter<"User"> | string
     email?: StringFilter<"User"> | string
     password?: StringFilter<"User"> | string
-    imageUrl?: StringFilter<"User"> | string
-    token?: StringFilter<"User"> | string
+    imageUrl?: StringNullableFilter<"User"> | string | null
+    token?: StringNullableFilter<"User"> | string | null
     role?: EnumRoleFilter<"User"> | $Enums.Role
     provider?: EnumProviderFilter<"User"> | $Enums.Provider
     isVerified?: BoolFilter<"User"> | boolean
@@ -16124,8 +16110,8 @@ export namespace Prisma {
     name?: SortOrder
     email?: SortOrder
     password?: SortOrder
-    imageUrl?: SortOrder
-    token?: SortOrder
+    imageUrl?: SortOrderInput | SortOrder
+    token?: SortOrderInput | SortOrder
     role?: SortOrder
     provider?: SortOrder
     isVerified?: SortOrder
@@ -16144,8 +16130,8 @@ export namespace Prisma {
     NOT?: UserWhereInput | UserWhereInput[]
     name?: StringFilter<"User"> | string
     password?: StringFilter<"User"> | string
-    imageUrl?: StringFilter<"User"> | string
-    token?: StringFilter<"User"> | string
+    imageUrl?: StringNullableFilter<"User"> | string | null
+    token?: StringNullableFilter<"User"> | string | null
     role?: EnumRoleFilter<"User"> | $Enums.Role
     provider?: EnumProviderFilter<"User"> | $Enums.Provider
     isVerified?: BoolFilter<"User"> | boolean
@@ -16161,8 +16147,8 @@ export namespace Prisma {
     name?: SortOrder
     email?: SortOrder
     password?: SortOrder
-    imageUrl?: SortOrder
-    token?: SortOrder
+    imageUrl?: SortOrderInput | SortOrder
+    token?: SortOrderInput | SortOrder
     role?: SortOrder
     provider?: SortOrder
     isVerified?: SortOrder
@@ -16184,8 +16170,8 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"User"> | string
     email?: StringWithAggregatesFilter<"User"> | string
     password?: StringWithAggregatesFilter<"User"> | string
-    imageUrl?: StringWithAggregatesFilter<"User"> | string
-    token?: StringWithAggregatesFilter<"User"> | string
+    imageUrl?: StringNullableWithAggregatesFilter<"User"> | string | null
+    token?: StringNullableWithAggregatesFilter<"User"> | string | null
     role?: EnumRoleWithAggregatesFilter<"User"> | $Enums.Role
     provider?: EnumProviderWithAggregatesFilter<"User"> | $Enums.Provider
     isVerified?: BoolWithAggregatesFilter<"User"> | boolean
@@ -16298,10 +16284,11 @@ export namespace Prisma {
     longitude?: StringFilter<"Property"> | string
     status?: EnumStatusPropertyFilter<"Property"> | $Enums.StatusProperty
     isDeleted?: BoolFilter<"Property"> | boolean
-    category?: EnumPropertyCategoryFilter<"Property"> | $Enums.PropertyCategory
+    category?: StringFilter<"Property"> | string
     tenantId?: IntFilter<"Property"> | number
     createdAt?: DateTimeFilter<"Property"> | Date | string
     updatedAt?: DateTimeFilter<"Property"> | Date | string
+    location?: StringFilter<"Property"> | string
     propertyImage?: PropertyImageListRelationFilter
     propertyFacility?: PropertyFacilityListRelationFilter
     room?: RoomListRelationFilter
@@ -16322,6 +16309,7 @@ export namespace Prisma {
     tenantId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    location?: SortOrder
     propertyImage?: PropertyImageOrderByRelationAggregateInput
     propertyFacility?: PropertyFacilityOrderByRelationAggregateInput
     room?: RoomOrderByRelationAggregateInput
@@ -16341,10 +16329,11 @@ export namespace Prisma {
     longitude?: StringFilter<"Property"> | string
     status?: EnumStatusPropertyFilter<"Property"> | $Enums.StatusProperty
     isDeleted?: BoolFilter<"Property"> | boolean
-    category?: EnumPropertyCategoryFilter<"Property"> | $Enums.PropertyCategory
+    category?: StringFilter<"Property"> | string
     tenantId?: IntFilter<"Property"> | number
     createdAt?: DateTimeFilter<"Property"> | Date | string
     updatedAt?: DateTimeFilter<"Property"> | Date | string
+    location?: StringFilter<"Property"> | string
     propertyImage?: PropertyImageListRelationFilter
     propertyFacility?: PropertyFacilityListRelationFilter
     room?: RoomListRelationFilter
@@ -16365,6 +16354,7 @@ export namespace Prisma {
     tenantId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    location?: SortOrder
     _count?: PropertyCountOrderByAggregateInput
     _avg?: PropertyAvgOrderByAggregateInput
     _max?: PropertyMaxOrderByAggregateInput
@@ -16384,10 +16374,11 @@ export namespace Prisma {
     longitude?: StringWithAggregatesFilter<"Property"> | string
     status?: EnumStatusPropertyWithAggregatesFilter<"Property"> | $Enums.StatusProperty
     isDeleted?: BoolWithAggregatesFilter<"Property"> | boolean
-    category?: EnumPropertyCategoryWithAggregatesFilter<"Property"> | $Enums.PropertyCategory
+    category?: StringWithAggregatesFilter<"Property"> | string
     tenantId?: IntWithAggregatesFilter<"Property"> | number
     createdAt?: DateTimeWithAggregatesFilter<"Property"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Property"> | Date | string
+    location?: StringWithAggregatesFilter<"Property"> | string
   }
 
   export type PropertyImageWhereInput = {
@@ -17105,8 +17096,8 @@ export namespace Prisma {
     name: string
     email: string
     password: string
-    imageUrl: string
-    token: string
+    imageUrl?: string | null
+    token?: string | null
     role?: $Enums.Role
     provider?: $Enums.Provider
     isVerified?: boolean
@@ -17122,8 +17113,8 @@ export namespace Prisma {
     name: string
     email: string
     password: string
-    imageUrl: string
-    token: string
+    imageUrl?: string | null
+    token?: string | null
     role?: $Enums.Role
     provider?: $Enums.Provider
     isVerified?: boolean
@@ -17138,8 +17129,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
-    imageUrl?: StringFieldUpdateOperationsInput | string
-    token?: StringFieldUpdateOperationsInput | string
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    token?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     provider?: EnumProviderFieldUpdateOperationsInput | $Enums.Provider
     isVerified?: BoolFieldUpdateOperationsInput | boolean
@@ -17155,8 +17146,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
-    imageUrl?: StringFieldUpdateOperationsInput | string
-    token?: StringFieldUpdateOperationsInput | string
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    token?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     provider?: EnumProviderFieldUpdateOperationsInput | $Enums.Provider
     isVerified?: BoolFieldUpdateOperationsInput | boolean
@@ -17172,8 +17163,8 @@ export namespace Prisma {
     name: string
     email: string
     password: string
-    imageUrl: string
-    token: string
+    imageUrl?: string | null
+    token?: string | null
     role?: $Enums.Role
     provider?: $Enums.Provider
     isVerified?: boolean
@@ -17186,8 +17177,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
-    imageUrl?: StringFieldUpdateOperationsInput | string
-    token?: StringFieldUpdateOperationsInput | string
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    token?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     provider?: EnumProviderFieldUpdateOperationsInput | $Enums.Provider
     isVerified?: BoolFieldUpdateOperationsInput | boolean
@@ -17201,8 +17192,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
-    imageUrl?: StringFieldUpdateOperationsInput | string
-    token?: StringFieldUpdateOperationsInput | string
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    token?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     provider?: EnumProviderFieldUpdateOperationsInput | $Enums.Provider
     isVerified?: BoolFieldUpdateOperationsInput | boolean
@@ -17325,9 +17316,10 @@ export namespace Prisma {
     longitude: string
     status: $Enums.StatusProperty
     isDeleted?: boolean
-    category: $Enums.PropertyCategory
+    category: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    location: string
     propertyImage?: PropertyImageCreateNestedManyWithoutPropertyInput
     propertyFacility?: PropertyFacilityCreateNestedManyWithoutPropertyInput
     room?: RoomCreateNestedManyWithoutPropertyInput
@@ -17344,10 +17336,11 @@ export namespace Prisma {
     longitude: string
     status: $Enums.StatusProperty
     isDeleted?: boolean
-    category: $Enums.PropertyCategory
+    category: string
     tenantId: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    location: string
     propertyImage?: PropertyImageUncheckedCreateNestedManyWithoutPropertyInput
     propertyFacility?: PropertyFacilityUncheckedCreateNestedManyWithoutPropertyInput
     room?: RoomUncheckedCreateNestedManyWithoutPropertyInput
@@ -17362,9 +17355,10 @@ export namespace Prisma {
     longitude?: StringFieldUpdateOperationsInput | string
     status?: EnumStatusPropertyFieldUpdateOperationsInput | $Enums.StatusProperty
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    category?: EnumPropertyCategoryFieldUpdateOperationsInput | $Enums.PropertyCategory
+    category?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    location?: StringFieldUpdateOperationsInput | string
     propertyImage?: PropertyImageUpdateManyWithoutPropertyNestedInput
     propertyFacility?: PropertyFacilityUpdateManyWithoutPropertyNestedInput
     room?: RoomUpdateManyWithoutPropertyNestedInput
@@ -17381,10 +17375,11 @@ export namespace Prisma {
     longitude?: StringFieldUpdateOperationsInput | string
     status?: EnumStatusPropertyFieldUpdateOperationsInput | $Enums.StatusProperty
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    category?: EnumPropertyCategoryFieldUpdateOperationsInput | $Enums.PropertyCategory
+    category?: StringFieldUpdateOperationsInput | string
     tenantId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    location?: StringFieldUpdateOperationsInput | string
     propertyImage?: PropertyImageUncheckedUpdateManyWithoutPropertyNestedInput
     propertyFacility?: PropertyFacilityUncheckedUpdateManyWithoutPropertyNestedInput
     room?: RoomUncheckedUpdateManyWithoutPropertyNestedInput
@@ -17400,10 +17395,11 @@ export namespace Prisma {
     longitude: string
     status: $Enums.StatusProperty
     isDeleted?: boolean
-    category: $Enums.PropertyCategory
+    category: string
     tenantId: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    location: string
   }
 
   export type PropertyUpdateManyMutationInput = {
@@ -17414,9 +17410,10 @@ export namespace Prisma {
     longitude?: StringFieldUpdateOperationsInput | string
     status?: EnumStatusPropertyFieldUpdateOperationsInput | $Enums.StatusProperty
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    category?: EnumPropertyCategoryFieldUpdateOperationsInput | $Enums.PropertyCategory
+    category?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    location?: StringFieldUpdateOperationsInput | string
   }
 
   export type PropertyUncheckedUpdateManyInput = {
@@ -17428,10 +17425,11 @@ export namespace Prisma {
     longitude?: StringFieldUpdateOperationsInput | string
     status?: EnumStatusPropertyFieldUpdateOperationsInput | $Enums.StatusProperty
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    category?: EnumPropertyCategoryFieldUpdateOperationsInput | $Enums.PropertyCategory
+    category?: StringFieldUpdateOperationsInput | string
     tenantId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    location?: StringFieldUpdateOperationsInput | string
   }
 
   export type PropertyImageCreateInput = {
@@ -18212,6 +18210,21 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type StringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
   export type EnumRoleFilter<$PrismaModel = never> = {
     equals?: $Enums.Role | EnumRoleFieldRefInput<$PrismaModel>
     in?: $Enums.Role[] | ListEnumRoleFieldRefInput<$PrismaModel>
@@ -18241,6 +18254,11 @@ export namespace Prisma {
     every?: ReviewWhereInput
     some?: ReviewWhereInput
     none?: ReviewWhereInput
+  }
+
+  export type SortOrderInput = {
+    sort: SortOrder
+    nulls?: NullsOrder
   }
 
   export type TransactionOrderByRelationAggregateInput = {
@@ -18304,6 +18322,24 @@ export namespace Prisma {
     id?: SortOrder
   }
 
+  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
   export type EnumRoleWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.Role | EnumRoleFieldRefInput<$PrismaModel>
     in?: $Enums.Role[] | ListEnumRoleFieldRefInput<$PrismaModel>
@@ -18332,30 +18368,10 @@ export namespace Prisma {
     _max?: NestedBoolFilter<$PrismaModel>
   }
 
-  export type StringNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
-  }
-
   export type PropertyListRelationFilter = {
     every?: PropertyWhereInput
     some?: PropertyWhereInput
     none?: PropertyWhereInput
-  }
-
-  export type SortOrderInput = {
-    sort: SortOrder
-    nulls?: NullsOrder
   }
 
   export type PropertyOrderByRelationAggregateInput = {
@@ -18421,36 +18437,11 @@ export namespace Prisma {
     balance?: SortOrder
   }
 
-  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
-  }
-
   export type EnumStatusPropertyFilter<$PrismaModel = never> = {
     equals?: $Enums.StatusProperty | EnumStatusPropertyFieldRefInput<$PrismaModel>
     in?: $Enums.StatusProperty[] | ListEnumStatusPropertyFieldRefInput<$PrismaModel>
     notIn?: $Enums.StatusProperty[] | ListEnumStatusPropertyFieldRefInput<$PrismaModel>
     not?: NestedEnumStatusPropertyFilter<$PrismaModel> | $Enums.StatusProperty
-  }
-
-  export type EnumPropertyCategoryFilter<$PrismaModel = never> = {
-    equals?: $Enums.PropertyCategory | EnumPropertyCategoryFieldRefInput<$PrismaModel>
-    in?: $Enums.PropertyCategory[] | ListEnumPropertyCategoryFieldRefInput<$PrismaModel>
-    notIn?: $Enums.PropertyCategory[] | ListEnumPropertyCategoryFieldRefInput<$PrismaModel>
-    not?: NestedEnumPropertyCategoryFilter<$PrismaModel> | $Enums.PropertyCategory
   }
 
   export type PropertyImageListRelationFilter = {
@@ -18501,6 +18492,7 @@ export namespace Prisma {
     tenantId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    location?: SortOrder
   }
 
   export type PropertyAvgOrderByAggregateInput = {
@@ -18521,6 +18513,7 @@ export namespace Prisma {
     tenantId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    location?: SortOrder
   }
 
   export type PropertyMinOrderByAggregateInput = {
@@ -18536,6 +18529,7 @@ export namespace Prisma {
     tenantId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    location?: SortOrder
   }
 
   export type PropertySumOrderByAggregateInput = {
@@ -18551,16 +18545,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumStatusPropertyFilter<$PrismaModel>
     _max?: NestedEnumStatusPropertyFilter<$PrismaModel>
-  }
-
-  export type EnumPropertyCategoryWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.PropertyCategory | EnumPropertyCategoryFieldRefInput<$PrismaModel>
-    in?: $Enums.PropertyCategory[] | ListEnumPropertyCategoryFieldRefInput<$PrismaModel>
-    notIn?: $Enums.PropertyCategory[] | ListEnumPropertyCategoryFieldRefInput<$PrismaModel>
-    not?: NestedEnumPropertyCategoryWithAggregatesFilter<$PrismaModel> | $Enums.PropertyCategory
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumPropertyCategoryFilter<$PrismaModel>
-    _max?: NestedEnumPropertyCategoryFilter<$PrismaModel>
   }
 
   export type PropertyScalarRelationFilter = {
@@ -19142,6 +19126,10 @@ export namespace Prisma {
     connect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
   }
 
+  export type NullableStringFieldUpdateOperationsInput = {
+    set?: string | null
+  }
+
   export type EnumRoleFieldUpdateOperationsInput = {
     set?: $Enums.Role
   }
@@ -19222,10 +19210,6 @@ export namespace Prisma {
     connectOrCreate?: PropertyCreateOrConnectWithoutTenantInput | PropertyCreateOrConnectWithoutTenantInput[]
     createMany?: PropertyCreateManyTenantInputEnvelope
     connect?: PropertyWhereUniqueInput | PropertyWhereUniqueInput[]
-  }
-
-  export type NullableStringFieldUpdateOperationsInput = {
-    set?: string | null
   }
 
   export type PropertyUpdateManyWithoutTenantNestedInput = {
@@ -19320,10 +19304,6 @@ export namespace Prisma {
 
   export type EnumStatusPropertyFieldUpdateOperationsInput = {
     set?: $Enums.StatusProperty
-  }
-
-  export type EnumPropertyCategoryFieldUpdateOperationsInput = {
-    set?: $Enums.PropertyCategory
   }
 
   export type PropertyImageUpdateManyWithoutPropertyNestedInput = {
@@ -19976,6 +19956,20 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type NestedStringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
   export type NestedEnumRoleFilter<$PrismaModel = never> = {
     equals?: $Enums.Role | EnumRoleFieldRefInput<$PrismaModel>
     in?: $Enums.Role[] | ListEnumRoleFieldRefInput<$PrismaModel>
@@ -19993,48 +19987,6 @@ export namespace Prisma {
   export type NestedBoolFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
-  export type NestedEnumRoleWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.Role | EnumRoleFieldRefInput<$PrismaModel>
-    in?: $Enums.Role[] | ListEnumRoleFieldRefInput<$PrismaModel>
-    notIn?: $Enums.Role[] | ListEnumRoleFieldRefInput<$PrismaModel>
-    not?: NestedEnumRoleWithAggregatesFilter<$PrismaModel> | $Enums.Role
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumRoleFilter<$PrismaModel>
-    _max?: NestedEnumRoleFilter<$PrismaModel>
-  }
-
-  export type NestedEnumProviderWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.Provider | EnumProviderFieldRefInput<$PrismaModel>
-    in?: $Enums.Provider[] | ListEnumProviderFieldRefInput<$PrismaModel>
-    notIn?: $Enums.Provider[] | ListEnumProviderFieldRefInput<$PrismaModel>
-    not?: NestedEnumProviderWithAggregatesFilter<$PrismaModel> | $Enums.Provider
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumProviderFilter<$PrismaModel>
-    _max?: NestedEnumProviderFilter<$PrismaModel>
-  }
-
-  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
-  }
-
-  export type NestedStringNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
   export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -20065,18 +20017,39 @@ export namespace Prisma {
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
+  export type NestedEnumRoleWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.Role | EnumRoleFieldRefInput<$PrismaModel>
+    in?: $Enums.Role[] | ListEnumRoleFieldRefInput<$PrismaModel>
+    notIn?: $Enums.Role[] | ListEnumRoleFieldRefInput<$PrismaModel>
+    not?: NestedEnumRoleWithAggregatesFilter<$PrismaModel> | $Enums.Role
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumRoleFilter<$PrismaModel>
+    _max?: NestedEnumRoleFilter<$PrismaModel>
+  }
+
+  export type NestedEnumProviderWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.Provider | EnumProviderFieldRefInput<$PrismaModel>
+    in?: $Enums.Provider[] | ListEnumProviderFieldRefInput<$PrismaModel>
+    notIn?: $Enums.Provider[] | ListEnumProviderFieldRefInput<$PrismaModel>
+    not?: NestedEnumProviderWithAggregatesFilter<$PrismaModel> | $Enums.Provider
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumProviderFilter<$PrismaModel>
+    _max?: NestedEnumProviderFilter<$PrismaModel>
+  }
+
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
   export type NestedEnumStatusPropertyFilter<$PrismaModel = never> = {
     equals?: $Enums.StatusProperty | EnumStatusPropertyFieldRefInput<$PrismaModel>
     in?: $Enums.StatusProperty[] | ListEnumStatusPropertyFieldRefInput<$PrismaModel>
     notIn?: $Enums.StatusProperty[] | ListEnumStatusPropertyFieldRefInput<$PrismaModel>
     not?: NestedEnumStatusPropertyFilter<$PrismaModel> | $Enums.StatusProperty
-  }
-
-  export type NestedEnumPropertyCategoryFilter<$PrismaModel = never> = {
-    equals?: $Enums.PropertyCategory | EnumPropertyCategoryFieldRefInput<$PrismaModel>
-    in?: $Enums.PropertyCategory[] | ListEnumPropertyCategoryFieldRefInput<$PrismaModel>
-    notIn?: $Enums.PropertyCategory[] | ListEnumPropertyCategoryFieldRefInput<$PrismaModel>
-    not?: NestedEnumPropertyCategoryFilter<$PrismaModel> | $Enums.PropertyCategory
   }
 
   export type NestedEnumStatusPropertyWithAggregatesFilter<$PrismaModel = never> = {
@@ -20087,16 +20060,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumStatusPropertyFilter<$PrismaModel>
     _max?: NestedEnumStatusPropertyFilter<$PrismaModel>
-  }
-
-  export type NestedEnumPropertyCategoryWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.PropertyCategory | EnumPropertyCategoryFieldRefInput<$PrismaModel>
-    in?: $Enums.PropertyCategory[] | ListEnumPropertyCategoryFieldRefInput<$PrismaModel>
-    notIn?: $Enums.PropertyCategory[] | ListEnumPropertyCategoryFieldRefInput<$PrismaModel>
-    not?: NestedEnumPropertyCategoryWithAggregatesFilter<$PrismaModel> | $Enums.PropertyCategory
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumPropertyCategoryFilter<$PrismaModel>
-    _max?: NestedEnumPropertyCategoryFilter<$PrismaModel>
   }
 
   export type NestedEnumTypeFilter<$PrismaModel = never> = {
@@ -20324,9 +20287,10 @@ export namespace Prisma {
     longitude: string
     status: $Enums.StatusProperty
     isDeleted?: boolean
-    category: $Enums.PropertyCategory
+    category: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    location: string
     propertyImage?: PropertyImageCreateNestedManyWithoutPropertyInput
     propertyFacility?: PropertyFacilityCreateNestedManyWithoutPropertyInput
     room?: RoomCreateNestedManyWithoutPropertyInput
@@ -20342,9 +20306,10 @@ export namespace Prisma {
     longitude: string
     status: $Enums.StatusProperty
     isDeleted?: boolean
-    category: $Enums.PropertyCategory
+    category: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    location: string
     propertyImage?: PropertyImageUncheckedCreateNestedManyWithoutPropertyInput
     propertyFacility?: PropertyFacilityUncheckedCreateNestedManyWithoutPropertyInput
     room?: RoomUncheckedCreateNestedManyWithoutPropertyInput
@@ -20389,10 +20354,11 @@ export namespace Prisma {
     longitude?: StringFilter<"Property"> | string
     status?: EnumStatusPropertyFilter<"Property"> | $Enums.StatusProperty
     isDeleted?: BoolFilter<"Property"> | boolean
-    category?: EnumPropertyCategoryFilter<"Property"> | $Enums.PropertyCategory
+    category?: StringFilter<"Property"> | string
     tenantId?: IntFilter<"Property"> | number
     createdAt?: DateTimeFilter<"Property"> | Date | string
     updatedAt?: DateTimeFilter<"Property"> | Date | string
+    location?: StringFilter<"Property"> | string
   }
 
   export type PropertyImageCreateWithoutPropertyInput = {
@@ -20700,9 +20666,10 @@ export namespace Prisma {
     longitude: string
     status: $Enums.StatusProperty
     isDeleted?: boolean
-    category: $Enums.PropertyCategory
+    category: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    location: string
     propertyFacility?: PropertyFacilityCreateNestedManyWithoutPropertyInput
     room?: RoomCreateNestedManyWithoutPropertyInput
     tenant: TenantCreateNestedOneWithoutPropertyInput
@@ -20718,10 +20685,11 @@ export namespace Prisma {
     longitude: string
     status: $Enums.StatusProperty
     isDeleted?: boolean
-    category: $Enums.PropertyCategory
+    category: string
     tenantId: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    location: string
     propertyFacility?: PropertyFacilityUncheckedCreateNestedManyWithoutPropertyInput
     room?: RoomUncheckedCreateNestedManyWithoutPropertyInput
     Review?: ReviewUncheckedCreateNestedManyWithoutPropertyInput
@@ -20751,9 +20719,10 @@ export namespace Prisma {
     longitude?: StringFieldUpdateOperationsInput | string
     status?: EnumStatusPropertyFieldUpdateOperationsInput | $Enums.StatusProperty
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    category?: EnumPropertyCategoryFieldUpdateOperationsInput | $Enums.PropertyCategory
+    category?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    location?: StringFieldUpdateOperationsInput | string
     propertyFacility?: PropertyFacilityUpdateManyWithoutPropertyNestedInput
     room?: RoomUpdateManyWithoutPropertyNestedInput
     tenant?: TenantUpdateOneRequiredWithoutPropertyNestedInput
@@ -20769,10 +20738,11 @@ export namespace Prisma {
     longitude?: StringFieldUpdateOperationsInput | string
     status?: EnumStatusPropertyFieldUpdateOperationsInput | $Enums.StatusProperty
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    category?: EnumPropertyCategoryFieldUpdateOperationsInput | $Enums.PropertyCategory
+    category?: StringFieldUpdateOperationsInput | string
     tenantId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    location?: StringFieldUpdateOperationsInput | string
     propertyFacility?: PropertyFacilityUncheckedUpdateManyWithoutPropertyNestedInput
     room?: RoomUncheckedUpdateManyWithoutPropertyNestedInput
     Review?: ReviewUncheckedUpdateManyWithoutPropertyNestedInput
@@ -20786,9 +20756,10 @@ export namespace Prisma {
     longitude: string
     status: $Enums.StatusProperty
     isDeleted?: boolean
-    category: $Enums.PropertyCategory
+    category: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    location: string
     propertyImage?: PropertyImageCreateNestedManyWithoutPropertyInput
     room?: RoomCreateNestedManyWithoutPropertyInput
     tenant: TenantCreateNestedOneWithoutPropertyInput
@@ -20804,10 +20775,11 @@ export namespace Prisma {
     longitude: string
     status: $Enums.StatusProperty
     isDeleted?: boolean
-    category: $Enums.PropertyCategory
+    category: string
     tenantId: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    location: string
     propertyImage?: PropertyImageUncheckedCreateNestedManyWithoutPropertyInput
     room?: RoomUncheckedCreateNestedManyWithoutPropertyInput
     Review?: ReviewUncheckedCreateNestedManyWithoutPropertyInput
@@ -20837,9 +20809,10 @@ export namespace Prisma {
     longitude?: StringFieldUpdateOperationsInput | string
     status?: EnumStatusPropertyFieldUpdateOperationsInput | $Enums.StatusProperty
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    category?: EnumPropertyCategoryFieldUpdateOperationsInput | $Enums.PropertyCategory
+    category?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    location?: StringFieldUpdateOperationsInput | string
     propertyImage?: PropertyImageUpdateManyWithoutPropertyNestedInput
     room?: RoomUpdateManyWithoutPropertyNestedInput
     tenant?: TenantUpdateOneRequiredWithoutPropertyNestedInput
@@ -20855,10 +20828,11 @@ export namespace Prisma {
     longitude?: StringFieldUpdateOperationsInput | string
     status?: EnumStatusPropertyFieldUpdateOperationsInput | $Enums.StatusProperty
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    category?: EnumPropertyCategoryFieldUpdateOperationsInput | $Enums.PropertyCategory
+    category?: StringFieldUpdateOperationsInput | string
     tenantId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    location?: StringFieldUpdateOperationsInput | string
     propertyImage?: PropertyImageUncheckedUpdateManyWithoutPropertyNestedInput
     room?: RoomUncheckedUpdateManyWithoutPropertyNestedInput
     Review?: ReviewUncheckedUpdateManyWithoutPropertyNestedInput
@@ -21021,9 +20995,10 @@ export namespace Prisma {
     longitude: string
     status: $Enums.StatusProperty
     isDeleted?: boolean
-    category: $Enums.PropertyCategory
+    category: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    location: string
     propertyImage?: PropertyImageCreateNestedManyWithoutPropertyInput
     propertyFacility?: PropertyFacilityCreateNestedManyWithoutPropertyInput
     tenant: TenantCreateNestedOneWithoutPropertyInput
@@ -21039,10 +21014,11 @@ export namespace Prisma {
     longitude: string
     status: $Enums.StatusProperty
     isDeleted?: boolean
-    category: $Enums.PropertyCategory
+    category: string
     tenantId: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    location: string
     propertyImage?: PropertyImageUncheckedCreateNestedManyWithoutPropertyInput
     propertyFacility?: PropertyFacilityUncheckedCreateNestedManyWithoutPropertyInput
     Review?: ReviewUncheckedCreateNestedManyWithoutPropertyInput
@@ -21202,9 +21178,10 @@ export namespace Prisma {
     longitude?: StringFieldUpdateOperationsInput | string
     status?: EnumStatusPropertyFieldUpdateOperationsInput | $Enums.StatusProperty
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    category?: EnumPropertyCategoryFieldUpdateOperationsInput | $Enums.PropertyCategory
+    category?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    location?: StringFieldUpdateOperationsInput | string
     propertyImage?: PropertyImageUpdateManyWithoutPropertyNestedInput
     propertyFacility?: PropertyFacilityUpdateManyWithoutPropertyNestedInput
     tenant?: TenantUpdateOneRequiredWithoutPropertyNestedInput
@@ -21220,10 +21197,11 @@ export namespace Prisma {
     longitude?: StringFieldUpdateOperationsInput | string
     status?: EnumStatusPropertyFieldUpdateOperationsInput | $Enums.StatusProperty
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    category?: EnumPropertyCategoryFieldUpdateOperationsInput | $Enums.PropertyCategory
+    category?: StringFieldUpdateOperationsInput | string
     tenantId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    location?: StringFieldUpdateOperationsInput | string
     propertyImage?: PropertyImageUncheckedUpdateManyWithoutPropertyNestedInput
     propertyFacility?: PropertyFacilityUncheckedUpdateManyWithoutPropertyNestedInput
     Review?: ReviewUncheckedUpdateManyWithoutPropertyNestedInput
@@ -21545,8 +21523,8 @@ export namespace Prisma {
     name: string
     email: string
     password: string
-    imageUrl: string
-    token: string
+    imageUrl?: string | null
+    token?: string | null
     role?: $Enums.Role
     provider?: $Enums.Provider
     isVerified?: boolean
@@ -21561,8 +21539,8 @@ export namespace Prisma {
     name: string
     email: string
     password: string
-    imageUrl: string
-    token: string
+    imageUrl?: string | null
+    token?: string | null
     role?: $Enums.Role
     provider?: $Enums.Provider
     isVerified?: boolean
@@ -21657,8 +21635,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
-    imageUrl?: StringFieldUpdateOperationsInput | string
-    token?: StringFieldUpdateOperationsInput | string
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    token?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     provider?: EnumProviderFieldUpdateOperationsInput | $Enums.Provider
     isVerified?: BoolFieldUpdateOperationsInput | boolean
@@ -21673,8 +21651,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
-    imageUrl?: StringFieldUpdateOperationsInput | string
-    token?: StringFieldUpdateOperationsInput | string
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    token?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     provider?: EnumProviderFieldUpdateOperationsInput | $Enums.Provider
     isVerified?: BoolFieldUpdateOperationsInput | boolean
@@ -21746,8 +21724,8 @@ export namespace Prisma {
     name: string
     email: string
     password: string
-    imageUrl: string
-    token: string
+    imageUrl?: string | null
+    token?: string | null
     role?: $Enums.Role
     provider?: $Enums.Provider
     isVerified?: boolean
@@ -21762,8 +21740,8 @@ export namespace Prisma {
     name: string
     email: string
     password: string
-    imageUrl: string
-    token: string
+    imageUrl?: string | null
+    token?: string | null
     role?: $Enums.Role
     provider?: $Enums.Provider
     isVerified?: boolean
@@ -21826,9 +21804,10 @@ export namespace Prisma {
     longitude: string
     status: $Enums.StatusProperty
     isDeleted?: boolean
-    category: $Enums.PropertyCategory
+    category: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    location: string
     propertyImage?: PropertyImageCreateNestedManyWithoutPropertyInput
     propertyFacility?: PropertyFacilityCreateNestedManyWithoutPropertyInput
     room?: RoomCreateNestedManyWithoutPropertyInput
@@ -21844,10 +21823,11 @@ export namespace Prisma {
     longitude: string
     status: $Enums.StatusProperty
     isDeleted?: boolean
-    category: $Enums.PropertyCategory
+    category: string
     tenantId: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    location: string
     propertyImage?: PropertyImageUncheckedCreateNestedManyWithoutPropertyInput
     propertyFacility?: PropertyFacilityUncheckedCreateNestedManyWithoutPropertyInput
     room?: RoomUncheckedCreateNestedManyWithoutPropertyInput
@@ -21873,8 +21853,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
-    imageUrl?: StringFieldUpdateOperationsInput | string
-    token?: StringFieldUpdateOperationsInput | string
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    token?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     provider?: EnumProviderFieldUpdateOperationsInput | $Enums.Provider
     isVerified?: BoolFieldUpdateOperationsInput | boolean
@@ -21889,8 +21869,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
-    imageUrl?: StringFieldUpdateOperationsInput | string
-    token?: StringFieldUpdateOperationsInput | string
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    token?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     provider?: EnumProviderFieldUpdateOperationsInput | $Enums.Provider
     isVerified?: BoolFieldUpdateOperationsInput | boolean
@@ -21965,9 +21945,10 @@ export namespace Prisma {
     longitude?: StringFieldUpdateOperationsInput | string
     status?: EnumStatusPropertyFieldUpdateOperationsInput | $Enums.StatusProperty
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    category?: EnumPropertyCategoryFieldUpdateOperationsInput | $Enums.PropertyCategory
+    category?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    location?: StringFieldUpdateOperationsInput | string
     propertyImage?: PropertyImageUpdateManyWithoutPropertyNestedInput
     propertyFacility?: PropertyFacilityUpdateManyWithoutPropertyNestedInput
     room?: RoomUpdateManyWithoutPropertyNestedInput
@@ -21983,10 +21964,11 @@ export namespace Prisma {
     longitude?: StringFieldUpdateOperationsInput | string
     status?: EnumStatusPropertyFieldUpdateOperationsInput | $Enums.StatusProperty
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    category?: EnumPropertyCategoryFieldUpdateOperationsInput | $Enums.PropertyCategory
+    category?: StringFieldUpdateOperationsInput | string
     tenantId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    location?: StringFieldUpdateOperationsInput | string
     propertyImage?: PropertyImageUncheckedUpdateManyWithoutPropertyNestedInput
     propertyFacility?: PropertyFacilityUncheckedUpdateManyWithoutPropertyNestedInput
     room?: RoomUncheckedUpdateManyWithoutPropertyNestedInput
@@ -22109,9 +22091,10 @@ export namespace Prisma {
     longitude: string
     status: $Enums.StatusProperty
     isDeleted?: boolean
-    category: $Enums.PropertyCategory
+    category: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    location: string
   }
 
   export type PropertyUpdateWithoutTenantInput = {
@@ -22122,9 +22105,10 @@ export namespace Prisma {
     longitude?: StringFieldUpdateOperationsInput | string
     status?: EnumStatusPropertyFieldUpdateOperationsInput | $Enums.StatusProperty
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    category?: EnumPropertyCategoryFieldUpdateOperationsInput | $Enums.PropertyCategory
+    category?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    location?: StringFieldUpdateOperationsInput | string
     propertyImage?: PropertyImageUpdateManyWithoutPropertyNestedInput
     propertyFacility?: PropertyFacilityUpdateManyWithoutPropertyNestedInput
     room?: RoomUpdateManyWithoutPropertyNestedInput
@@ -22140,9 +22124,10 @@ export namespace Prisma {
     longitude?: StringFieldUpdateOperationsInput | string
     status?: EnumStatusPropertyFieldUpdateOperationsInput | $Enums.StatusProperty
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    category?: EnumPropertyCategoryFieldUpdateOperationsInput | $Enums.PropertyCategory
+    category?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    location?: StringFieldUpdateOperationsInput | string
     propertyImage?: PropertyImageUncheckedUpdateManyWithoutPropertyNestedInput
     propertyFacility?: PropertyFacilityUncheckedUpdateManyWithoutPropertyNestedInput
     room?: RoomUncheckedUpdateManyWithoutPropertyNestedInput
@@ -22158,9 +22143,10 @@ export namespace Prisma {
     longitude?: StringFieldUpdateOperationsInput | string
     status?: EnumStatusPropertyFieldUpdateOperationsInput | $Enums.StatusProperty
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    category?: EnumPropertyCategoryFieldUpdateOperationsInput | $Enums.PropertyCategory
+    category?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    location?: StringFieldUpdateOperationsInput | string
   }
 
   export type PropertyImageCreateManyPropertyInput = {
