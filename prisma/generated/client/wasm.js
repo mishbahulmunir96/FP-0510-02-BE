@@ -144,7 +144,6 @@ exports.Prisma.TenantScalarFieldEnum = {
   name: 'name',
   imageUrl: 'imageUrl',
   phoneNumber: 'phoneNumber',
-  userId: 'userId',
   bankName: 'bankName',
   bankNumber: 'bankNumber',
   balance: 'balance',
@@ -203,7 +202,8 @@ exports.Prisma.RoomScalarFieldEnum = {
 exports.Prisma.PeakSeasonRateScalarFieldEnum = {
   id: 'id',
   price: 'price',
-  date: 'date',
+  startDate: 'startDate',
+  endDate: 'endDate',
   isDeleted: 'isDeleted',
   roomId: 'roomId',
   createdAt: 'createdAt',

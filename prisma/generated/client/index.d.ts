@@ -1954,13 +1954,13 @@ export namespace Prisma {
    */
 
   export type UserCountOutputType = {
-    Transaction: number
-    Review: number
+    transaction: number
+    review: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    Transaction?: boolean | UserCountOutputTypeCountTransactionArgs
-    Review?: boolean | UserCountOutputTypeCountReviewArgs
+    transaction?: boolean | UserCountOutputTypeCountTransactionArgs
+    review?: boolean | UserCountOutputTypeCountReviewArgs
   }
 
   // Custom InputTypes
@@ -3334,8 +3334,8 @@ export namespace Prisma {
     isDeleted?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    Transaction?: boolean | User$TransactionArgs<ExtArgs>
-    Review?: boolean | User$ReviewArgs<ExtArgs>
+    transaction?: boolean | User$transactionArgs<ExtArgs>
+    review?: boolean | User$reviewArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -3370,8 +3370,8 @@ export namespace Prisma {
   }
 
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    Transaction?: boolean | User$TransactionArgs<ExtArgs>
-    Review?: boolean | User$ReviewArgs<ExtArgs>
+    transaction?: boolean | User$transactionArgs<ExtArgs>
+    review?: boolean | User$reviewArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -3379,8 +3379,8 @@ export namespace Prisma {
   export type $UserPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "User"
     objects: {
-      Transaction: Prisma.$TransactionPayload<ExtArgs>[]
-      Review: Prisma.$ReviewPayload<ExtArgs>[]
+      transaction: Prisma.$TransactionPayload<ExtArgs>[]
+      review: Prisma.$ReviewPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -3759,8 +3759,8 @@ export namespace Prisma {
    */
   export interface Prisma__UserClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    Transaction<T extends User$TransactionArgs<ExtArgs> = {}>(args?: Subset<T, User$TransactionArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "findMany"> | Null>
-    Review<T extends User$ReviewArgs<ExtArgs> = {}>(args?: Subset<T, User$ReviewArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findMany"> | Null>
+    transaction<T extends User$transactionArgs<ExtArgs> = {}>(args?: Subset<T, User$transactionArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "findMany"> | Null>
+    review<T extends User$reviewArgs<ExtArgs> = {}>(args?: Subset<T, User$reviewArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findMany"> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4116,9 +4116,9 @@ export namespace Prisma {
   }
 
   /**
-   * User.Transaction
+   * User.transaction
    */
-  export type User$TransactionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type User$transactionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Transaction
      */
@@ -4136,9 +4136,9 @@ export namespace Prisma {
   }
 
   /**
-   * User.Review
+   * User.review
    */
-  export type User$ReviewArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type User$reviewArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Review
      */
@@ -4184,14 +4184,12 @@ export namespace Prisma {
 
   export type TenantAvgAggregateOutputType = {
     id: number | null
-    userId: number | null
     bankNumber: number | null
     balance: number | null
   }
 
   export type TenantSumAggregateOutputType = {
     id: number | null
-    userId: number | null
     bankNumber: number | null
     balance: number | null
   }
@@ -4201,7 +4199,6 @@ export namespace Prisma {
     name: string | null
     imageUrl: string | null
     phoneNumber: string | null
-    userId: number | null
     bankName: string | null
     bankNumber: number | null
     balance: number | null
@@ -4216,7 +4213,6 @@ export namespace Prisma {
     name: string | null
     imageUrl: string | null
     phoneNumber: string | null
-    userId: number | null
     bankName: string | null
     bankNumber: number | null
     balance: number | null
@@ -4231,7 +4227,6 @@ export namespace Prisma {
     name: number
     imageUrl: number
     phoneNumber: number
-    userId: number
     bankName: number
     bankNumber: number
     balance: number
@@ -4245,14 +4240,12 @@ export namespace Prisma {
 
   export type TenantAvgAggregateInputType = {
     id?: true
-    userId?: true
     bankNumber?: true
     balance?: true
   }
 
   export type TenantSumAggregateInputType = {
     id?: true
-    userId?: true
     bankNumber?: true
     balance?: true
   }
@@ -4262,7 +4255,6 @@ export namespace Prisma {
     name?: true
     imageUrl?: true
     phoneNumber?: true
-    userId?: true
     bankName?: true
     bankNumber?: true
     balance?: true
@@ -4277,7 +4269,6 @@ export namespace Prisma {
     name?: true
     imageUrl?: true
     phoneNumber?: true
-    userId?: true
     bankName?: true
     bankNumber?: true
     balance?: true
@@ -4292,7 +4283,6 @@ export namespace Prisma {
     name?: true
     imageUrl?: true
     phoneNumber?: true
-    userId?: true
     bankName?: true
     bankNumber?: true
     balance?: true
@@ -4394,7 +4384,6 @@ export namespace Prisma {
     name: string
     imageUrl: string | null
     phoneNumber: string | null
-    userId: number
     bankName: string
     bankNumber: number
     balance: number
@@ -4428,7 +4417,6 @@ export namespace Prisma {
     name?: boolean
     imageUrl?: boolean
     phoneNumber?: boolean
-    userId?: boolean
     bankName?: boolean
     bankNumber?: boolean
     balance?: boolean
@@ -4445,7 +4433,6 @@ export namespace Prisma {
     name?: boolean
     imageUrl?: boolean
     phoneNumber?: boolean
-    userId?: boolean
     bankName?: boolean
     bankNumber?: boolean
     balance?: boolean
@@ -4460,7 +4447,6 @@ export namespace Prisma {
     name?: boolean
     imageUrl?: boolean
     phoneNumber?: boolean
-    userId?: boolean
     bankName?: boolean
     bankNumber?: boolean
     balance?: boolean
@@ -4486,7 +4472,6 @@ export namespace Prisma {
       name: string
       imageUrl: string | null
       phoneNumber: string | null
-      userId: number
       bankName: string
       bankNumber: number
       balance: number
@@ -4892,7 +4877,6 @@ export namespace Prisma {
     readonly name: FieldRef<"Tenant", 'String'>
     readonly imageUrl: FieldRef<"Tenant", 'String'>
     readonly phoneNumber: FieldRef<"Tenant", 'String'>
-    readonly userId: FieldRef<"Tenant", 'Int'>
     readonly bankName: FieldRef<"Tenant", 'String'>
     readonly bankNumber: FieldRef<"Tenant", 'Int'>
     readonly balance: FieldRef<"Tenant", 'Int'>
@@ -9559,7 +9543,8 @@ export namespace Prisma {
   export type PeakSeasonRateMinAggregateOutputType = {
     id: number | null
     price: number | null
-    date: Date | null
+    startDate: Date | null
+    endDate: Date | null
     isDeleted: boolean | null
     roomId: number | null
     createdAt: Date | null
@@ -9569,7 +9554,8 @@ export namespace Prisma {
   export type PeakSeasonRateMaxAggregateOutputType = {
     id: number | null
     price: number | null
-    date: Date | null
+    startDate: Date | null
+    endDate: Date | null
     isDeleted: boolean | null
     roomId: number | null
     createdAt: Date | null
@@ -9579,7 +9565,8 @@ export namespace Prisma {
   export type PeakSeasonRateCountAggregateOutputType = {
     id: number
     price: number
-    date: number
+    startDate: number
+    endDate: number
     isDeleted: number
     roomId: number
     createdAt: number
@@ -9603,7 +9590,8 @@ export namespace Prisma {
   export type PeakSeasonRateMinAggregateInputType = {
     id?: true
     price?: true
-    date?: true
+    startDate?: true
+    endDate?: true
     isDeleted?: true
     roomId?: true
     createdAt?: true
@@ -9613,7 +9601,8 @@ export namespace Prisma {
   export type PeakSeasonRateMaxAggregateInputType = {
     id?: true
     price?: true
-    date?: true
+    startDate?: true
+    endDate?: true
     isDeleted?: true
     roomId?: true
     createdAt?: true
@@ -9623,7 +9612,8 @@ export namespace Prisma {
   export type PeakSeasonRateCountAggregateInputType = {
     id?: true
     price?: true
-    date?: true
+    startDate?: true
+    endDate?: true
     isDeleted?: true
     roomId?: true
     createdAt?: true
@@ -9720,7 +9710,8 @@ export namespace Prisma {
   export type PeakSeasonRateGroupByOutputType = {
     id: number
     price: number
-    date: Date
+    startDate: Date
+    endDate: Date
     isDeleted: boolean
     roomId: number
     createdAt: Date
@@ -9749,7 +9740,8 @@ export namespace Prisma {
   export type PeakSeasonRateSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     price?: boolean
-    date?: boolean
+    startDate?: boolean
+    endDate?: boolean
     isDeleted?: boolean
     roomId?: boolean
     createdAt?: boolean
@@ -9760,7 +9752,8 @@ export namespace Prisma {
   export type PeakSeasonRateSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     price?: boolean
-    date?: boolean
+    startDate?: boolean
+    endDate?: boolean
     isDeleted?: boolean
     roomId?: boolean
     createdAt?: boolean
@@ -9771,7 +9764,8 @@ export namespace Prisma {
   export type PeakSeasonRateSelectScalar = {
     id?: boolean
     price?: boolean
-    date?: boolean
+    startDate?: boolean
+    endDate?: boolean
     isDeleted?: boolean
     roomId?: boolean
     createdAt?: boolean
@@ -9793,7 +9787,8 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: number
       price: number
-      date: Date
+      startDate: Date
+      endDate: Date
       isDeleted: boolean
       roomId: number
       createdAt: Date
@@ -10194,7 +10189,8 @@ export namespace Prisma {
   interface PeakSeasonRateFieldRefs {
     readonly id: FieldRef<"PeakSeasonRate", 'Int'>
     readonly price: FieldRef<"PeakSeasonRate", 'Int'>
-    readonly date: FieldRef<"PeakSeasonRate", 'DateTime'>
+    readonly startDate: FieldRef<"PeakSeasonRate", 'DateTime'>
+    readonly endDate: FieldRef<"PeakSeasonRate", 'DateTime'>
     readonly isDeleted: FieldRef<"PeakSeasonRate", 'Boolean'>
     readonly roomId: FieldRef<"PeakSeasonRate", 'Int'>
     readonly createdAt: FieldRef<"PeakSeasonRate", 'DateTime'>
@@ -15701,7 +15697,6 @@ export namespace Prisma {
     name: 'name',
     imageUrl: 'imageUrl',
     phoneNumber: 'phoneNumber',
-    userId: 'userId',
     bankName: 'bankName',
     bankNumber: 'bankNumber',
     balance: 'balance',
@@ -15775,7 +15770,8 @@ export namespace Prisma {
   export const PeakSeasonRateScalarFieldEnum: {
     id: 'id',
     price: 'price',
-    date: 'date',
+    startDate: 'startDate',
+    endDate: 'endDate',
     isDeleted: 'isDeleted',
     roomId: 'roomId',
     createdAt: 'createdAt',
@@ -16101,8 +16097,8 @@ export namespace Prisma {
     isDeleted?: BoolFilter<"User"> | boolean
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
-    Transaction?: TransactionListRelationFilter
-    Review?: ReviewListRelationFilter
+    transaction?: TransactionListRelationFilter
+    review?: ReviewListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -16118,8 +16114,8 @@ export namespace Prisma {
     isDeleted?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    Transaction?: TransactionOrderByRelationAggregateInput
-    Review?: ReviewOrderByRelationAggregateInput
+    transaction?: TransactionOrderByRelationAggregateInput
+    review?: ReviewOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -16138,8 +16134,8 @@ export namespace Prisma {
     isDeleted?: BoolFilter<"User"> | boolean
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
-    Transaction?: TransactionListRelationFilter
-    Review?: ReviewListRelationFilter
+    transaction?: TransactionListRelationFilter
+    review?: ReviewListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -16188,7 +16184,6 @@ export namespace Prisma {
     name?: StringFilter<"Tenant"> | string
     imageUrl?: StringNullableFilter<"Tenant"> | string | null
     phoneNumber?: StringNullableFilter<"Tenant"> | string | null
-    userId?: IntFilter<"Tenant"> | number
     bankName?: StringFilter<"Tenant"> | string
     bankNumber?: IntFilter<"Tenant"> | number
     balance?: IntFilter<"Tenant"> | number
@@ -16204,7 +16199,6 @@ export namespace Prisma {
     name?: SortOrder
     imageUrl?: SortOrderInput | SortOrder
     phoneNumber?: SortOrderInput | SortOrder
-    userId?: SortOrder
     bankName?: SortOrder
     bankNumber?: SortOrder
     balance?: SortOrder
@@ -16223,7 +16217,6 @@ export namespace Prisma {
     name?: StringFilter<"Tenant"> | string
     imageUrl?: StringNullableFilter<"Tenant"> | string | null
     phoneNumber?: StringNullableFilter<"Tenant"> | string | null
-    userId?: IntFilter<"Tenant"> | number
     bankName?: StringFilter<"Tenant"> | string
     bankNumber?: IntFilter<"Tenant"> | number
     balance?: IntFilter<"Tenant"> | number
@@ -16239,7 +16232,6 @@ export namespace Prisma {
     name?: SortOrder
     imageUrl?: SortOrderInput | SortOrder
     phoneNumber?: SortOrderInput | SortOrder
-    userId?: SortOrder
     bankName?: SortOrder
     bankNumber?: SortOrder
     balance?: SortOrder
@@ -16262,7 +16254,6 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"Tenant"> | string
     imageUrl?: StringNullableWithAggregatesFilter<"Tenant"> | string | null
     phoneNumber?: StringNullableWithAggregatesFilter<"Tenant"> | string | null
-    userId?: IntWithAggregatesFilter<"Tenant"> | number
     bankName?: StringWithAggregatesFilter<"Tenant"> | string
     bankNumber?: IntWithAggregatesFilter<"Tenant"> | number
     balance?: IntWithAggregatesFilter<"Tenant"> | number
@@ -16603,7 +16594,8 @@ export namespace Prisma {
     NOT?: PeakSeasonRateWhereInput | PeakSeasonRateWhereInput[]
     id?: IntFilter<"PeakSeasonRate"> | number
     price?: IntFilter<"PeakSeasonRate"> | number
-    date?: DateTimeFilter<"PeakSeasonRate"> | Date | string
+    startDate?: DateTimeFilter<"PeakSeasonRate"> | Date | string
+    endDate?: DateTimeFilter<"PeakSeasonRate"> | Date | string
     isDeleted?: BoolFilter<"PeakSeasonRate"> | boolean
     roomId?: IntFilter<"PeakSeasonRate"> | number
     createdAt?: DateTimeFilter<"PeakSeasonRate"> | Date | string
@@ -16614,7 +16606,8 @@ export namespace Prisma {
   export type PeakSeasonRateOrderByWithRelationInput = {
     id?: SortOrder
     price?: SortOrder
-    date?: SortOrder
+    startDate?: SortOrder
+    endDate?: SortOrder
     isDeleted?: SortOrder
     roomId?: SortOrder
     createdAt?: SortOrder
@@ -16628,7 +16621,8 @@ export namespace Prisma {
     OR?: PeakSeasonRateWhereInput[]
     NOT?: PeakSeasonRateWhereInput | PeakSeasonRateWhereInput[]
     price?: IntFilter<"PeakSeasonRate"> | number
-    date?: DateTimeFilter<"PeakSeasonRate"> | Date | string
+    startDate?: DateTimeFilter<"PeakSeasonRate"> | Date | string
+    endDate?: DateTimeFilter<"PeakSeasonRate"> | Date | string
     isDeleted?: BoolFilter<"PeakSeasonRate"> | boolean
     roomId?: IntFilter<"PeakSeasonRate"> | number
     createdAt?: DateTimeFilter<"PeakSeasonRate"> | Date | string
@@ -16639,7 +16633,8 @@ export namespace Prisma {
   export type PeakSeasonRateOrderByWithAggregationInput = {
     id?: SortOrder
     price?: SortOrder
-    date?: SortOrder
+    startDate?: SortOrder
+    endDate?: SortOrder
     isDeleted?: SortOrder
     roomId?: SortOrder
     createdAt?: SortOrder
@@ -16657,7 +16652,8 @@ export namespace Prisma {
     NOT?: PeakSeasonRateScalarWhereWithAggregatesInput | PeakSeasonRateScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"PeakSeasonRate"> | number
     price?: IntWithAggregatesFilter<"PeakSeasonRate"> | number
-    date?: DateTimeWithAggregatesFilter<"PeakSeasonRate"> | Date | string
+    startDate?: DateTimeWithAggregatesFilter<"PeakSeasonRate"> | Date | string
+    endDate?: DateTimeWithAggregatesFilter<"PeakSeasonRate"> | Date | string
     isDeleted?: BoolWithAggregatesFilter<"PeakSeasonRate"> | boolean
     roomId?: IntWithAggregatesFilter<"PeakSeasonRate"> | number
     createdAt?: DateTimeWithAggregatesFilter<"PeakSeasonRate"> | Date | string
@@ -17104,8 +17100,8 @@ export namespace Prisma {
     isDeleted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    Transaction?: TransactionCreateNestedManyWithoutUserInput
-    Review?: ReviewCreateNestedManyWithoutUserInput
+    transaction?: TransactionCreateNestedManyWithoutUserInput
+    review?: ReviewCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -17121,8 +17117,8 @@ export namespace Prisma {
     isDeleted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    Transaction?: TransactionUncheckedCreateNestedManyWithoutUserInput
-    Review?: ReviewUncheckedCreateNestedManyWithoutUserInput
+    transaction?: TransactionUncheckedCreateNestedManyWithoutUserInput
+    review?: ReviewUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -17137,8 +17133,8 @@ export namespace Prisma {
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    Transaction?: TransactionUpdateManyWithoutUserNestedInput
-    Review?: ReviewUpdateManyWithoutUserNestedInput
+    transaction?: TransactionUpdateManyWithoutUserNestedInput
+    review?: ReviewUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -17154,8 +17150,8 @@ export namespace Prisma {
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    Transaction?: TransactionUncheckedUpdateManyWithoutUserNestedInput
-    Review?: ReviewUncheckedUpdateManyWithoutUserNestedInput
+    transaction?: TransactionUncheckedUpdateManyWithoutUserNestedInput
+    review?: ReviewUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -17206,7 +17202,6 @@ export namespace Prisma {
     name: string
     imageUrl?: string | null
     phoneNumber?: string | null
-    userId: number
     bankName: string
     bankNumber: number
     balance?: number
@@ -17222,7 +17217,6 @@ export namespace Prisma {
     name: string
     imageUrl?: string | null
     phoneNumber?: string | null
-    userId: number
     bankName: string
     bankNumber: number
     balance?: number
@@ -17237,7 +17231,6 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    userId?: IntFieldUpdateOperationsInput | number
     bankName?: StringFieldUpdateOperationsInput | string
     bankNumber?: IntFieldUpdateOperationsInput | number
     balance?: IntFieldUpdateOperationsInput | number
@@ -17253,7 +17246,6 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    userId?: IntFieldUpdateOperationsInput | number
     bankName?: StringFieldUpdateOperationsInput | string
     bankNumber?: IntFieldUpdateOperationsInput | number
     balance?: IntFieldUpdateOperationsInput | number
@@ -17269,7 +17261,6 @@ export namespace Prisma {
     name: string
     imageUrl?: string | null
     phoneNumber?: string | null
-    userId: number
     bankName: string
     bankNumber: number
     balance?: number
@@ -17283,7 +17274,6 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    userId?: IntFieldUpdateOperationsInput | number
     bankName?: StringFieldUpdateOperationsInput | string
     bankNumber?: IntFieldUpdateOperationsInput | number
     balance?: IntFieldUpdateOperationsInput | number
@@ -17298,7 +17288,6 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    userId?: IntFieldUpdateOperationsInput | number
     bankName?: StringFieldUpdateOperationsInput | string
     bankNumber?: IntFieldUpdateOperationsInput | number
     balance?: IntFieldUpdateOperationsInput | number
@@ -17652,7 +17641,8 @@ export namespace Prisma {
 
   export type PeakSeasonRateCreateInput = {
     price: number
-    date: Date | string
+    startDate: Date | string
+    endDate: Date | string
     isDeleted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -17662,7 +17652,8 @@ export namespace Prisma {
   export type PeakSeasonRateUncheckedCreateInput = {
     id?: number
     price: number
-    date: Date | string
+    startDate: Date | string
+    endDate: Date | string
     isDeleted?: boolean
     roomId: number
     createdAt?: Date | string
@@ -17671,7 +17662,8 @@ export namespace Prisma {
 
   export type PeakSeasonRateUpdateInput = {
     price?: IntFieldUpdateOperationsInput | number
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17681,7 +17673,8 @@ export namespace Prisma {
   export type PeakSeasonRateUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     price?: IntFieldUpdateOperationsInput | number
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     roomId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17691,7 +17684,8 @@ export namespace Prisma {
   export type PeakSeasonRateCreateManyInput = {
     id?: number
     price: number
-    date: Date | string
+    startDate: Date | string
+    endDate: Date | string
     isDeleted?: boolean
     roomId: number
     createdAt?: Date | string
@@ -17700,7 +17694,8 @@ export namespace Prisma {
 
   export type PeakSeasonRateUpdateManyMutationInput = {
     price?: IntFieldUpdateOperationsInput | number
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17709,7 +17704,8 @@ export namespace Prisma {
   export type PeakSeasonRateUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     price?: IntFieldUpdateOperationsInput | number
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     roomId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -18383,7 +18379,6 @@ export namespace Prisma {
     name?: SortOrder
     imageUrl?: SortOrder
     phoneNumber?: SortOrder
-    userId?: SortOrder
     bankName?: SortOrder
     bankNumber?: SortOrder
     balance?: SortOrder
@@ -18395,7 +18390,6 @@ export namespace Prisma {
 
   export type TenantAvgOrderByAggregateInput = {
     id?: SortOrder
-    userId?: SortOrder
     bankNumber?: SortOrder
     balance?: SortOrder
   }
@@ -18405,7 +18399,6 @@ export namespace Prisma {
     name?: SortOrder
     imageUrl?: SortOrder
     phoneNumber?: SortOrder
-    userId?: SortOrder
     bankName?: SortOrder
     bankNumber?: SortOrder
     balance?: SortOrder
@@ -18420,7 +18413,6 @@ export namespace Prisma {
     name?: SortOrder
     imageUrl?: SortOrder
     phoneNumber?: SortOrder
-    userId?: SortOrder
     bankName?: SortOrder
     bankNumber?: SortOrder
     balance?: SortOrder
@@ -18432,7 +18424,6 @@ export namespace Prisma {
 
   export type TenantSumOrderByAggregateInput = {
     id?: SortOrder
-    userId?: SortOrder
     bankNumber?: SortOrder
     balance?: SortOrder
   }
@@ -18743,7 +18734,8 @@ export namespace Prisma {
   export type PeakSeasonRateCountOrderByAggregateInput = {
     id?: SortOrder
     price?: SortOrder
-    date?: SortOrder
+    startDate?: SortOrder
+    endDate?: SortOrder
     isDeleted?: SortOrder
     roomId?: SortOrder
     createdAt?: SortOrder
@@ -18759,7 +18751,8 @@ export namespace Prisma {
   export type PeakSeasonRateMaxOrderByAggregateInput = {
     id?: SortOrder
     price?: SortOrder
-    date?: SortOrder
+    startDate?: SortOrder
+    endDate?: SortOrder
     isDeleted?: SortOrder
     roomId?: SortOrder
     createdAt?: SortOrder
@@ -18769,7 +18762,8 @@ export namespace Prisma {
   export type PeakSeasonRateMinOrderByAggregateInput = {
     id?: SortOrder
     price?: SortOrder
-    date?: SortOrder
+    startDate?: SortOrder
+    endDate?: SortOrder
     isDeleted?: SortOrder
     roomId?: SortOrder
     createdAt?: SortOrder
@@ -20456,7 +20450,6 @@ export namespace Prisma {
     name: string
     imageUrl?: string | null
     phoneNumber?: string | null
-    userId: number
     bankName: string
     bankNumber: number
     balance?: number
@@ -20471,7 +20464,6 @@ export namespace Prisma {
     name: string
     imageUrl?: string | null
     phoneNumber?: string | null
-    userId: number
     bankName: string
     bankNumber: number
     balance?: number
@@ -20617,7 +20609,6 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    userId?: IntFieldUpdateOperationsInput | number
     bankName?: StringFieldUpdateOperationsInput | string
     bankNumber?: IntFieldUpdateOperationsInput | number
     balance?: IntFieldUpdateOperationsInput | number
@@ -20632,7 +20623,6 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    userId?: IntFieldUpdateOperationsInput | number
     bankName?: StringFieldUpdateOperationsInput | string
     bankNumber?: IntFieldUpdateOperationsInput | number
     balance?: IntFieldUpdateOperationsInput | number
@@ -20840,7 +20830,8 @@ export namespace Prisma {
 
   export type PeakSeasonRateCreateWithoutRoomInput = {
     price: number
-    date: Date | string
+    startDate: Date | string
+    endDate: Date | string
     isDeleted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -20849,7 +20840,8 @@ export namespace Prisma {
   export type PeakSeasonRateUncheckedCreateWithoutRoomInput = {
     id?: number
     price: number
-    date: Date | string
+    startDate: Date | string
+    endDate: Date | string
     isDeleted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -21051,7 +21043,8 @@ export namespace Prisma {
     NOT?: PeakSeasonRateScalarWhereInput | PeakSeasonRateScalarWhereInput[]
     id?: IntFilter<"PeakSeasonRate"> | number
     price?: IntFilter<"PeakSeasonRate"> | number
-    date?: DateTimeFilter<"PeakSeasonRate"> | Date | string
+    startDate?: DateTimeFilter<"PeakSeasonRate"> | Date | string
+    endDate?: DateTimeFilter<"PeakSeasonRate"> | Date | string
     isDeleted?: BoolFilter<"PeakSeasonRate"> | boolean
     roomId?: IntFilter<"PeakSeasonRate"> | number
     createdAt?: DateTimeFilter<"PeakSeasonRate"> | Date | string
@@ -21531,7 +21524,7 @@ export namespace Prisma {
     isDeleted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    Review?: ReviewCreateNestedManyWithoutUserInput
+    review?: ReviewCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutTransactionInput = {
@@ -21547,7 +21540,7 @@ export namespace Prisma {
     isDeleted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    Review?: ReviewUncheckedCreateNestedManyWithoutUserInput
+    review?: ReviewUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutTransactionInput = {
@@ -21643,7 +21636,7 @@ export namespace Prisma {
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    Review?: ReviewUpdateManyWithoutUserNestedInput
+    review?: ReviewUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTransactionInput = {
@@ -21659,7 +21652,7 @@ export namespace Prisma {
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    Review?: ReviewUncheckedUpdateManyWithoutUserNestedInput
+    review?: ReviewUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type RoomUpsertWithoutTransactionInput = {
@@ -21732,7 +21725,7 @@ export namespace Prisma {
     isDeleted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    Transaction?: TransactionCreateNestedManyWithoutUserInput
+    transaction?: TransactionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutReviewInput = {
@@ -21748,7 +21741,7 @@ export namespace Prisma {
     isDeleted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    Transaction?: TransactionUncheckedCreateNestedManyWithoutUserInput
+    transaction?: TransactionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutReviewInput = {
@@ -21861,7 +21854,7 @@ export namespace Prisma {
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    Transaction?: TransactionUpdateManyWithoutUserNestedInput
+    transaction?: TransactionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReviewInput = {
@@ -21877,7 +21870,7 @@ export namespace Prisma {
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    Transaction?: TransactionUncheckedUpdateManyWithoutUserNestedInput
+    transaction?: TransactionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type TransactionUpsertWithoutReviewInput = {
@@ -22306,7 +22299,8 @@ export namespace Prisma {
   export type PeakSeasonRateCreateManyRoomInput = {
     id?: number
     price: number
-    date: Date | string
+    startDate: Date | string
+    endDate: Date | string
     isDeleted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -22356,7 +22350,8 @@ export namespace Prisma {
 
   export type PeakSeasonRateUpdateWithoutRoomInput = {
     price?: IntFieldUpdateOperationsInput | number
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -22365,7 +22360,8 @@ export namespace Prisma {
   export type PeakSeasonRateUncheckedUpdateWithoutRoomInput = {
     id?: IntFieldUpdateOperationsInput | number
     price?: IntFieldUpdateOperationsInput | number
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -22374,7 +22370,8 @@ export namespace Prisma {
   export type PeakSeasonRateUncheckedUpdateManyWithoutRoomInput = {
     id?: IntFieldUpdateOperationsInput | number
     price?: IntFieldUpdateOperationsInput | number
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string

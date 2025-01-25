@@ -31,8 +31,8 @@ model User {
   isDeleted   Boolean       @default(false)
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
-  Transaction Transaction[]
-  Review      Review[]
+  transaction Transaction[]
+  review      Review[]
 
   @@map("users")
 }
@@ -52,7 +52,6 @@ model Tenant {
   name        String
   imageUrl    String?
   phoneNumber String?
-  userId      Int
   bankName    String
   bankNumber  Int
   balance     Int      @default(0)
@@ -153,7 +152,8 @@ enum Type {
 model PeakSeasonRate {
   id        Int      @id @default(autoincrement())
   price     Int
-  date      DateTime
+  startDate DateTime
+  endDate   DateTime
   isDeleted Boolean  @default(false)
   roomId    Int
   createdAt DateTime @default(now())

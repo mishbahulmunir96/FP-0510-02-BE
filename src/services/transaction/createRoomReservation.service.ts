@@ -1,4 +1,5 @@
 import { StatusTransaction } from "../../../prisma/generated/client";
+import { checkRoomAvailability } from "../../lib/checkRoomAvailability";
 import prisma from "../../lib/prisma";
 
 interface CreateRoomReservationBody {
@@ -7,36 +8,6 @@ interface CreateRoomReservationBody {
   startDate: Date;
   endDate: Date;
 }
-
-const checkRoomAvailability = async (
-  roomId: number,
-  startDate: Date,
-  endDate: Date
-) => {
-  const reservations = await prisma.transaction.findMany({
-    where: {
-      roomId,
-      OR: [
-        {
-          startDate: { lt: endDate },
-          endDate: { gt: startDate },
-        },
-      ],
-    },
-  });
-
-  const room = await prisma.room.findUnique({
-    where: { id: roomId },
-    select: { stock: true },
-  });
-
-  const availableStock = room?.stock || 0;
-  const bookedRooms = reservations.length;
-
-  const isRoomAvailable = bookedRooms < availableStock;
-
-  return isRoomAvailable;
-};
 
 export const createRoomReservationService = async (
   body: CreateRoomReservationBody
@@ -67,20 +38,28 @@ export const createRoomReservationService = async (
   }
 
   const transactions = [];
-
   for (let i = 0; i < diffDays; i++) {
     const currentStartDate = new Date(start);
     currentStartDate.setDate(currentStartDate.getDate() + i);
-
     const currentEndDate = new Date(currentStartDate);
     currentEndDate.setDate(currentStartDate.getDate() + 1);
+
+    const peakRate = await prisma.peakSeasonRate.findFirst({
+      where: {
+        roomId,
+        startDate: { lte: currentEndDate },
+        endDate: { gte: currentStartDate },
+      },
+    });
+
+    const total = peakRate ? peakRate.price : room.price;
 
     transactions.push({
       userId,
       roomId,
       startDate: currentStartDate,
       endDate: currentEndDate,
-      total: room.price,
+      total,
       status: StatusTransaction.WAITING_FOR_PAYMENT,
     });
   }
