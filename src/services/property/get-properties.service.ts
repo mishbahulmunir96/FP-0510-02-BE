@@ -151,3 +151,4 @@ export const getPropertiesService = async (query: GetPropertyQuery) => {
     },
   };
 };
+//
