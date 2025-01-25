@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import { createRoomReservationService } from "../services/transaction/createRoomReservation.service";
+import { createRoomReservationService } from "../services/transaction/create-room-reservation.service";
+import { uploadPaymentProofService } from "../services/transaction/upload-payment-proof.service";
 
 export const createRoomReservationController = async (
   req: Request,
@@ -21,5 +22,30 @@ export const createRoomReservationController = async (
     res.status(201).send(result);
   } catch (error) {
     next(error);
+  }
+};
+
+export const uploadPaymentProofController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const proofFile = req.file as Express.Multer.File;
+    const transactionId = Number(req.params.id);
+
+    if (!proofFile) {
+      res.status(400).send("Payment proof is required."); // Mengembalikan kesalahan jika file tidak ada
+      return;
+    }
+
+    const updatedTransaction = await uploadPaymentProofService({
+      transactionId,
+      paymentProof: proofFile,
+    });
+
+    res.status(200).json(updatedTransaction); // Mengembalikan respon dengan transaksi yang diperbarui
+  } catch (error) {
+    next(error); // Melempar kesalahan ke middleware penanganan kesalahan
   }
 };

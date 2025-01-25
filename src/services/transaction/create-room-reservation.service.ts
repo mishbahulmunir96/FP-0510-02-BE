@@ -1,6 +1,7 @@
 import { StatusTransaction } from "../../../prisma/generated/client";
 import { checkRoomAvailability } from "../../lib/checkRoomAvailability";
 import prisma from "../../lib/prisma";
+import schedule from "node-schedule";
 
 interface CreateRoomReservationBody {
   userId: number;
@@ -16,7 +17,7 @@ export const createRoomReservationService = async (
 
   const isAvailable = await checkRoomAvailability(roomId, startDate, endDate);
   if (!isAvailable) {
-    throw new Error("Kamar tidak tersedia pada tanggal yang dipilih.");
+    throw new Error("The room is not available on the selected date.");
   }
 
   const start = new Date(startDate);
@@ -25,7 +26,7 @@ export const createRoomReservationService = async (
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
   if (diffDays < 1) {
-    throw new Error("Durasi reservasi harus minimal 1 malam.");
+    throw new Error("The reservation duration must be at least 1 night.");
   }
 
   const room = await prisma.room.findUnique({
@@ -34,7 +35,7 @@ export const createRoomReservationService = async (
   });
 
   if (!room || room.price === undefined) {
-    throw new Error("Harga ruangan tidak ditemukan.");
+    throw new Error("Room price not found.");
   }
 
   const transactions = [];
@@ -66,6 +67,18 @@ export const createRoomReservationService = async (
 
   await prisma.transaction.createMany({
     data: transactions,
+  });
+
+  schedule.scheduleJob(Date.now() + 2 * 60 * 60 * 1000, async () => {
+    await prisma.transaction.updateMany({
+      where: {
+        userId,
+        status: StatusTransaction.WAITING_FOR_PAYMENT,
+      },
+      data: {
+        status: StatusTransaction.CANCELLED,
+      },
+    });
   });
 
   return transactions;
