@@ -1,5 +1,4 @@
 import * as streamifier from "streamifier";
-
 import { v2 as cloudinary, UploadApiResponse } from "cloudinary";
 import {
   CLOUDINARY_API_KEY,
@@ -18,18 +17,24 @@ export const cloudinaryUpload = (
 ): Promise<UploadApiResponse> => {
   return new Promise((resolve, reject) => {
     const uploadStream = cloudinary.uploader.upload_stream(
-      (error, result: UploadApiResponse) => {
-        if (error) return reject(error);
-        resolve(result);
+
+      (error: any, result: UploadApiResponse) => {
+        if (error) {
+          return reject(error);
+        } else {
+          resolve(result);
+        }
       }
     );
+
     streamifier.createReadStream(file.buffer).pipe(uploadStream);
   });
 };
+
 const extractPublicIdFromUrl = (url: string) => {
-  const UrlParts = url.split("/");
-  const publicIdWithExtension = UrlParts[UrlParts.length - 1];
-  const publicId = publicIdWithExtension.split(".")[0];
+  const urlParts = url.split("/");
+  const publicIdWithExtention = urlParts[urlParts.length - 1];
+  const publicId = publicIdWithExtention.split(".")[0];
   return publicId;
 };
 
