@@ -60,7 +60,7 @@ model Tenant {
   phoneNumber String?
   userId      Int
   bankName    String
-  bankNumber  Int
+  bankNumber  String
   balance     Int      @default(0)
   role        Role     @default(TENANT)
   isDeleted   Boolean  @default(false)
@@ -73,19 +73,19 @@ model Tenant {
 }
 
 model Property {
-  id          Int              @id @default(autoincrement())
-  slug        String           @unique
-  title       String
-  description String           @db.Text()
-  latitude    String
-  longitude   String
-  status      StatusProperty
-  isDeleted   Boolean          @default(false)
-  category    PropertyCategory
-  tenantId    Int
-  createdAt   DateTime         @default(now())
-  updatedAt   DateTime         @updatedAt
-
+  id               Int                @id @default(autoincrement())
+  slug             String             @unique
+  title            String
+  description      String             @db.Text()
+  latitude         String
+  longitude        String
+  status           StatusProperty
+  isDeleted        Boolean            @default(false)
+  category         String
+  tenantId         Int
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  location         String
   propertyImage    PropertyImage[]
   propertyFacility PropertyFacility[]
   room             Room[]
@@ -99,12 +99,6 @@ model Property {
 enum StatusProperty {
   PUBLISHED
   DRAFT
-}
-
-enum PropertyCategory {
-  Hotel
-  Villa
-  Apartment
 }
 
 model PropertyImage {
@@ -164,7 +158,8 @@ enum Type {
 model PeakSeasonRate {
   id        Int      @id @default(autoincrement())
   price     Int
-  date      DateTime
+  startDate DateTime
+  endDate   DateTime
   isDeleted Boolean  @default(false)
   roomId    Int
   createdAt DateTime @default(now())
