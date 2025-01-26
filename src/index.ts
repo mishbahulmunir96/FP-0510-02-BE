@@ -4,6 +4,7 @@ import cors from "cors";
 import sampleRouter from "./routes/sample.router";
 import transactionRouter from "./routes/transaction.router";
 import propertyRouter from "./routes/property.router";
+import authRouter from "./routes/auth.router";
 
 const app = express();
 
@@ -14,6 +15,7 @@ app.use(express.json());
 app.use("/samples", sampleRouter);
 app.use("/transaction", transactionRouter);
 app.use("/properties", propertyRouter);
+app.use("/auth", authRouter);
 
 // middleware error
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {

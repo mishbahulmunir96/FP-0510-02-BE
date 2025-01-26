@@ -8,7 +8,7 @@ export const getPropertiesController = async (
 ) => {
   try {
     const query = {
-      take: parseInt(req.query.take as string) || 4,
+      take: parseInt(req.query.take as string) || 8,
       page: parseInt(req.query.page as string) || 1,
       sortBy: (req.query.sortBy as string) || "createdAt",
       sortOrder: (req.query.sortOrder as string) || "desc",
