@@ -12,7 +12,7 @@ app.use(express.json());
 
 //router, harus diatas middleware error
 app.use("/samples", sampleRouter);
-app.use("/transaction", transactionRouter);
+app.use("/transactions", transactionRouter);
 app.use("/properties", propertyRouter);
 
 // middleware error

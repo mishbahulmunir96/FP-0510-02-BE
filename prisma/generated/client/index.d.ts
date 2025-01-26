@@ -4184,15 +4184,11 @@ export namespace Prisma {
 
   export type TenantAvgAggregateOutputType = {
     id: number | null
-    bankNumber: number | null
-    userId: number | null
     balance: number | null
   }
 
   export type TenantSumAggregateOutputType = {
     id: number | null
-    bankNumber: number | null
-    userId: number | null
     balance: number | null
   }
 
@@ -4242,15 +4238,11 @@ export namespace Prisma {
 
   export type TenantAvgAggregateInputType = {
     id?: true
-    bankNumber?: true
-    userId?: true
     balance?: true
   }
 
   export type TenantSumAggregateInputType = {
     id?: true
-    bankNumber?: true
-    userId?: true
     balance?: true
   }
 
@@ -18394,8 +18386,6 @@ export namespace Prisma {
 
   export type TenantAvgOrderByAggregateInput = {
     id?: SortOrder
-    bankNumber?: SortOrder
-    userId?: SortOrder
     balance?: SortOrder
   }
 
@@ -18429,8 +18419,6 @@ export namespace Prisma {
 
   export type TenantSumOrderByAggregateInput = {
     id?: SortOrder
-    bankNumber?: SortOrder
-    userId?: SortOrder
     balance?: SortOrder
   }
 
