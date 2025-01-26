@@ -69,7 +69,7 @@ export const createRoomReservationService = async (
     data: transactions,
   });
 
-  schedule.scheduleJob(Date.now() + 2 * 60 * 60 * 1000, async () => {
+  schedule.scheduleJob(Date.now() + 1 * 60 * 60 * 1000, async () => {
     await prisma.transaction.updateMany({
       where: {
         userId,
