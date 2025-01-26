@@ -14,113 +14,117 @@ interface CreateRoomReservationBody {
 export const createRoomReservationService = async (
   body: CreateRoomReservationBody
 ) => {
-  const { userId, roomId, startDate, endDate } = body;
+  try {
+    const { userId, roomId, startDate, endDate } = body;
 
-  const isAvailable = await checkRoomAvailability(roomId, startDate, endDate);
-  if (!isAvailable) {
-    throw new Error("The room is not available on the selected date.");
-  }
-
-  const start = new Date(startDate);
-  const end = new Date(endDate);
-  const diffTime = Math.abs(end.getTime() - start.getTime());
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-  if (diffDays < 1) {
-    throw new Error("The reservation duration must be at least 1 night.");
-  }
-
-  const room = await prisma.room.findUnique({
-    where: { id: roomId },
-    select: { price: true },
-  });
-
-  if (!room || room.price === undefined) {
-    throw new Error("Room price not found.");
-  }
-
-  let totalPrice = 0;
-
-  // Loop untuk menghitung totalPrice berdasarkan tanggal reservasi
-  for (let i = 0; i < diffDays; i++) {
-    const currentDate = new Date(start);
-    currentDate.setDate(currentDate.getDate() + i);
-
-    // Cek harga di PeakSeasonRate
-    const peakRate = await prisma.peakSeasonRate.findFirst({
-      where: {
-        roomId: roomId,
-        startDate: { lte: currentDate },
-        endDate: { gte: currentDate },
-        isDeleted: false, // pastikan tidak mengambil yang dihapus
-      },
-    });
-
-    if (peakRate) {
-      totalPrice += peakRate.price;
-    } else {
-      totalPrice += room.price; // harga normal kamar
+    const isAvailable = await checkRoomAvailability(roomId, startDate, endDate);
+    if (!isAvailable) {
+      throw new Error("The room is not available on the selected date.");
     }
-  }
 
-  // Buat pembayaran
-  const payment = await prisma.payment.create({
-    data: {
-      userId,
-      totalPrice,
-      duration: diffDays,
-      paymentMethode: "MANUAL",
-      paymentProof: null,
-      status: StatusPayment.WAITING_FOR_PAYMENT,
-    },
-  });
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    const diffTime = Math.abs(end.getTime() - start.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-  const reservations = [];
-  for (let i = 0; i < diffDays; i++) {
-    const currentStartDate = new Date(start);
-    currentStartDate.setDate(currentStartDate.getDate() + i);
+    if (diffDays < 1) {
+      throw new Error("The reservation duration must be at least 1 night.");
+    }
 
-    const currentEndDate = new Date(currentStartDate);
-    currentEndDate.setDate(currentStartDate.getDate() + 1);
-
-    // Calculate peakRate for each day
-    const peakRate = await prisma.peakSeasonRate.findFirst({
-      where: {
-        roomId: roomId,
-        startDate: { lte: currentStartDate },
-        endDate: { gte: currentStartDate },
-        isDeleted: false, // pastikan tidak mengambil yang dihapus
-      },
+    const room = await prisma.room.findUnique({
+      where: { id: roomId },
+      select: { price: true },
     });
 
-    reservations.push({
-      roomId,
-      price: peakRate ? peakRate.price : room.price, // Gunakan harga peakRate jika ada
-      paymentId: payment.id,
-      startDate: currentStartDate,
-      endDate: currentEndDate,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    });
-  }
+    if (!room || room.price === undefined) {
+      throw new Error("Room price not found.");
+    }
 
-  await prisma.reservation.createMany({
-    data: reservations,
-  });
+    let totalPrice = 0;
 
-  const expirationTime = addMinutes(new Date(), 1);
+    // Loop untuk menghitung totalPrice berdasarkan tanggal reservasi
+    for (let i = 0; i < diffDays; i++) {
+      const currentDate = new Date(start);
+      currentDate.setDate(currentDate.getDate() + i);
 
-  schedule.scheduleJob(Date.now() + 60 * 1000, async () => {
-    await prisma.payment.update({
-      where: {
-        id: payment.id,
+      // Cek harga di PeakSeasonRate
+      const peakRate = await prisma.peakSeasonRate.findFirst({
+        where: {
+          roomId: roomId,
+          startDate: { lte: currentDate },
+          endDate: { gte: currentDate },
+          isDeleted: false, // pastikan tidak mengambil yang dihapus
+        },
+      });
+
+      if (peakRate) {
+        totalPrice += peakRate.price;
+      } else {
+        totalPrice += room.price; // harga normal kamar
+      }
+    }
+
+    // Buat pembayaran
+    const payment = await prisma.payment.create({
+      data: {
+        userId,
+        totalPrice,
+        duration: diffDays,
+        paymentMethode: "MANUAL",
+        paymentProof: null,
         status: StatusPayment.WAITING_FOR_PAYMENT,
       },
-      data: {
-        status: StatusPayment.CANCELLED,
-        expiredAt: expirationTime,
-      },
     });
-  });
-  return { payment, reservations };
+
+    const reservations = [];
+    for (let i = 0; i < diffDays; i++) {
+      const currentStartDate = new Date(start);
+      currentStartDate.setDate(currentStartDate.getDate() + i);
+
+      const currentEndDate = new Date(currentStartDate);
+      currentEndDate.setDate(currentStartDate.getDate() + 1);
+
+      // Calculate peakRate for each day
+      const peakRate = await prisma.peakSeasonRate.findFirst({
+        where: {
+          roomId: roomId,
+          startDate: { lte: currentStartDate },
+          endDate: { gte: currentStartDate },
+          isDeleted: false, // pastikan tidak mengambil yang dihapus
+        },
+      });
+
+      reservations.push({
+        roomId,
+        price: peakRate ? peakRate.price : room.price, // Gunakan harga peakRate jika ada
+        paymentId: payment.id,
+        startDate: currentStartDate,
+        endDate: currentEndDate,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+    }
+
+    await prisma.reservation.createMany({
+      data: reservations,
+    });
+
+    const expirationTime = addMinutes(new Date(), 1);
+
+    schedule.scheduleJob(Date.now() + 60 * 1000, async () => {
+      await prisma.payment.update({
+        where: {
+          id: payment.id,
+          status: StatusPayment.WAITING_FOR_PAYMENT,
+        },
+        data: {
+          status: StatusPayment.CANCELLED,
+          expiredAt: expirationTime,
+        },
+      });
+    });
+    return { payment, reservations };
+  } catch (error) {
+    throw error;
+  }
 };

@@ -1,17 +1,73 @@
-// import prisma from "../../lib/prisma";
+import prisma from "../../lib/prisma";
+import { PaginationQueryParams } from "../../types/pagination";
 
-// export const getTransactionsByUserService = async (userId: number) => {
-//   try {
-//     const transactions = await prisma.transaction.findMany({
-//       where: { userId },
-//     });
+export const getTransactionsByUserService = async (
+  userId: number,
+  query: PaginationQueryParams
+) => {
+  try {
+    const { page, take, sortBy, sortOrder } = query;
+    const transactions = await prisma.payment.findMany({
+      where: { userId },
+      include: {
+        Reservation: {
+          include: {
+            room: {
+              select: {
+                type: true,
+              },
+            },
+          },
+        },
+      },
+      skip: (page - 1) * take,
+      take: take,
+      orderBy: { [sortBy]: sortOrder },
+    });
 
-//     if (transactions.length === 0) {
-//       throw new Error("No transactions found for this user.");
-//     }
+    const count = await prisma.payment.count({
+      where: { userId }, // Hitung total transaksi untuk user ini
+    });
 
-//     return transactions;
-//   } catch (error) {
-//     throw error;
-//   }
-// };
+    if (transactions.length === 0) {
+      throw new Error("No transactions found for this user.");
+    }
+
+    return {
+      data: transactions.map((transaction) => {
+        const checkInDate =
+          transaction.Reservation.length > 0
+            ? transaction.Reservation[0].startDate
+            : null;
+
+        const checkOutDate =
+          transaction.Reservation.length > 0
+            ? transaction.Reservation[transaction.Reservation.length - 1]
+                .endDate
+            : null;
+
+        return {
+          id: transaction.id,
+          uuid: transaction.uuid,
+          totalPrice: transaction.totalPrice,
+          duration: transaction.duration,
+          createdAt: transaction.createdAt,
+          updatedAt: transaction.updatedAt,
+          checkIn: checkInDate,
+          checkOut: checkOutDate,
+          reservations: [
+            {
+              roomType:
+                transaction.Reservation.length > 0
+                  ? transaction.Reservation[0].room.type
+                  : null,
+            },
+          ],
+        };
+      }),
+      meta: { page, take, total: count }, // Menambahkan metadata untuk pagination
+    };
+  } catch (error) {
+    throw error;
+  }
+};
