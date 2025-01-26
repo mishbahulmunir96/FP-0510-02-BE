@@ -53,7 +53,7 @@ model Tenant {
   imageUrl    String?
   phoneNumber String?
   bankName    String
-  bankNumber  Int
+  bankNumber  String
   balance     Int      @default(0)
   role        Role     @default(TENANT)
   isDeleted   Boolean  @default(false)
@@ -66,19 +66,19 @@ model Tenant {
 }
 
 model Property {
-  id          Int            @id @default(autoincrement())
-  slug        String         @unique
-  title       String
-  description String         @db.Text()
-  latitude    String
-  longitude   String
-  status      StatusProperty
-  isDeleted   Boolean        @default(false)
-  category    String
-  tenantId    Int
-  createdAt   DateTime       @default(now())
-  updatedAt   DateTime       @updatedAt
-  location    String
+  id               Int                @id @default(autoincrement())
+  slug             String             @unique
+  title            String
+  description      String             @db.Text()
+  latitude         String
+  longitude        String
+  status           StatusProperty
+  isDeleted        Boolean            @default(false)
+  category         String
+  tenantId         Int
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  location         String
 
   propertyImage    PropertyImage[]
   propertyFacility PropertyFacility[]

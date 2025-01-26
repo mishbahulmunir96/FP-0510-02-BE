@@ -4185,12 +4185,14 @@ export namespace Prisma {
   export type TenantAvgAggregateOutputType = {
     id: number | null
     bankNumber: number | null
+    userId: number | null
     balance: number | null
   }
 
   export type TenantSumAggregateOutputType = {
     id: number | null
     bankNumber: number | null
+    userId: number | null
     balance: number | null
   }
 
@@ -4200,7 +4202,7 @@ export namespace Prisma {
     imageUrl: string | null
     phoneNumber: string | null
     bankName: string | null
-    bankNumber: number | null
+    bankNumber: string | null
     balance: number | null
     role: $Enums.Role | null
     isDeleted: boolean | null
@@ -4214,7 +4216,7 @@ export namespace Prisma {
     imageUrl: string | null
     phoneNumber: string | null
     bankName: string | null
-    bankNumber: number | null
+    bankNumber: string | null
     balance: number | null
     role: $Enums.Role | null
     isDeleted: boolean | null
@@ -4241,12 +4243,14 @@ export namespace Prisma {
   export type TenantAvgAggregateInputType = {
     id?: true
     bankNumber?: true
+    userId?: true
     balance?: true
   }
 
   export type TenantSumAggregateInputType = {
     id?: true
     bankNumber?: true
+    userId?: true
     balance?: true
   }
 
@@ -4385,7 +4389,7 @@ export namespace Prisma {
     imageUrl: string | null
     phoneNumber: string | null
     bankName: string
-    bankNumber: number
+    bankNumber: string
     balance: number
     role: $Enums.Role
     isDeleted: boolean
@@ -4473,7 +4477,7 @@ export namespace Prisma {
       imageUrl: string | null
       phoneNumber: string | null
       bankName: string
-      bankNumber: number
+      bankNumber: string
       balance: number
       role: $Enums.Role
       isDeleted: boolean
@@ -4878,7 +4882,7 @@ export namespace Prisma {
     readonly imageUrl: FieldRef<"Tenant", 'String'>
     readonly phoneNumber: FieldRef<"Tenant", 'String'>
     readonly bankName: FieldRef<"Tenant", 'String'>
-    readonly bankNumber: FieldRef<"Tenant", 'Int'>
+    readonly bankNumber: FieldRef<"Tenant", 'String'>
     readonly balance: FieldRef<"Tenant", 'Int'>
     readonly role: FieldRef<"Tenant", 'Role'>
     readonly isDeleted: FieldRef<"Tenant", 'Boolean'>
@@ -16185,7 +16189,7 @@ export namespace Prisma {
     imageUrl?: StringNullableFilter<"Tenant"> | string | null
     phoneNumber?: StringNullableFilter<"Tenant"> | string | null
     bankName?: StringFilter<"Tenant"> | string
-    bankNumber?: IntFilter<"Tenant"> | number
+    bankNumber?: StringFilter<"Tenant"> | string
     balance?: IntFilter<"Tenant"> | number
     role?: EnumRoleFilter<"Tenant"> | $Enums.Role
     isDeleted?: BoolFilter<"Tenant"> | boolean
@@ -16218,7 +16222,7 @@ export namespace Prisma {
     imageUrl?: StringNullableFilter<"Tenant"> | string | null
     phoneNumber?: StringNullableFilter<"Tenant"> | string | null
     bankName?: StringFilter<"Tenant"> | string
-    bankNumber?: IntFilter<"Tenant"> | number
+    bankNumber?: StringFilter<"Tenant"> | string
     balance?: IntFilter<"Tenant"> | number
     role?: EnumRoleFilter<"Tenant"> | $Enums.Role
     isDeleted?: BoolFilter<"Tenant"> | boolean
@@ -16255,7 +16259,7 @@ export namespace Prisma {
     imageUrl?: StringNullableWithAggregatesFilter<"Tenant"> | string | null
     phoneNumber?: StringNullableWithAggregatesFilter<"Tenant"> | string | null
     bankName?: StringWithAggregatesFilter<"Tenant"> | string
-    bankNumber?: IntWithAggregatesFilter<"Tenant"> | number
+    bankNumber?: StringWithAggregatesFilter<"Tenant"> | string
     balance?: IntWithAggregatesFilter<"Tenant"> | number
     role?: EnumRoleWithAggregatesFilter<"Tenant"> | $Enums.Role
     isDeleted?: BoolWithAggregatesFilter<"Tenant"> | boolean
@@ -17203,7 +17207,7 @@ export namespace Prisma {
     imageUrl?: string | null
     phoneNumber?: string | null
     bankName: string
-    bankNumber: number
+    bankNumber: string
     balance?: number
     role?: $Enums.Role
     isDeleted?: boolean
@@ -17218,7 +17222,7 @@ export namespace Prisma {
     imageUrl?: string | null
     phoneNumber?: string | null
     bankName: string
-    bankNumber: number
+    bankNumber: string
     balance?: number
     role?: $Enums.Role
     isDeleted?: boolean
@@ -17232,7 +17236,7 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: StringFieldUpdateOperationsInput | string
-    bankNumber?: IntFieldUpdateOperationsInput | number
+    bankNumber?: StringFieldUpdateOperationsInput | string
     balance?: IntFieldUpdateOperationsInput | number
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -17247,7 +17251,7 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: StringFieldUpdateOperationsInput | string
-    bankNumber?: IntFieldUpdateOperationsInput | number
+    bankNumber?: StringFieldUpdateOperationsInput | string
     balance?: IntFieldUpdateOperationsInput | number
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -17262,7 +17266,7 @@ export namespace Prisma {
     imageUrl?: string | null
     phoneNumber?: string | null
     bankName: string
-    bankNumber: number
+    bankNumber: string
     balance?: number
     role?: $Enums.Role
     isDeleted?: boolean
@@ -17275,7 +17279,7 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: StringFieldUpdateOperationsInput | string
-    bankNumber?: IntFieldUpdateOperationsInput | number
+    bankNumber?: StringFieldUpdateOperationsInput | string
     balance?: IntFieldUpdateOperationsInput | number
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -17289,7 +17293,7 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: StringFieldUpdateOperationsInput | string
-    bankNumber?: IntFieldUpdateOperationsInput | number
+    bankNumber?: StringFieldUpdateOperationsInput | string
     balance?: IntFieldUpdateOperationsInput | number
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -18391,6 +18395,7 @@ export namespace Prisma {
   export type TenantAvgOrderByAggregateInput = {
     id?: SortOrder
     bankNumber?: SortOrder
+    userId?: SortOrder
     balance?: SortOrder
   }
 
@@ -18425,6 +18430,7 @@ export namespace Prisma {
   export type TenantSumOrderByAggregateInput = {
     id?: SortOrder
     bankNumber?: SortOrder
+    userId?: SortOrder
     balance?: SortOrder
   }
 
@@ -20451,7 +20457,7 @@ export namespace Prisma {
     imageUrl?: string | null
     phoneNumber?: string | null
     bankName: string
-    bankNumber: number
+    bankNumber: string
     balance?: number
     role?: $Enums.Role
     isDeleted?: boolean
@@ -20465,7 +20471,7 @@ export namespace Prisma {
     imageUrl?: string | null
     phoneNumber?: string | null
     bankName: string
-    bankNumber: number
+    bankNumber: string
     balance?: number
     role?: $Enums.Role
     isDeleted?: boolean
@@ -20610,7 +20616,7 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: StringFieldUpdateOperationsInput | string
-    bankNumber?: IntFieldUpdateOperationsInput | number
+    bankNumber?: StringFieldUpdateOperationsInput | string
     balance?: IntFieldUpdateOperationsInput | number
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -20624,7 +20630,7 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: StringFieldUpdateOperationsInput | string
-    bankNumber?: IntFieldUpdateOperationsInput | number
+    bankNumber?: StringFieldUpdateOperationsInput | string
     balance?: IntFieldUpdateOperationsInput | number
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
