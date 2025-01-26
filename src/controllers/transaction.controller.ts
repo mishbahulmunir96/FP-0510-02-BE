@@ -1,26 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import { createRoomReservationService } from "../services/transaction/create-room-reservation.service";
-// import { getTransactionByUserService } from "../services/transaction/get-transaction-by-user.service";
+import { getTransactionByUserService } from "../services/transaction/get-transaction-by-user.service";
 import { uploadPaymentProofService } from "../services/transaction/upload-payment-proof.service";
 import { getTransactionsByUserService } from "../services/transaction/get-transactions-by-user.service";
-
-// interface Transaction {
-//   id: number;
-//   uuid: string;
-//   userId: number;
-//   roomId: number;
-//   status: string;
-//   total: number;
-//   startDate: Date;
-//   endDate: Date;
-//   paymentMethode: string;
-//   paymentProof: string | null;
-//   snapToken: string | null;
-//   snapRedirectUrl: string | null;
-//   expiredAt: Date | null;
-//   createdAt: Date;
-//   updatedAt: Date;
-// }
 
 export const createRoomReservationController = async (
   req: Request,
@@ -70,19 +52,19 @@ export const uploadPaymentProofController = async (
   }
 };
 
-// export const getTransactionByUserController = async (
-//   req: Request,
-//   res: Response,
-//   next: NextFunction
-// ): Promise<void> => {
-//   try {
-//     const id = Number(req.params.id); // Mengambil ID dari parameter
-//     const result = await getTransactionByUserService(id); // Memanggil service
-//     res.status(200).send(result); // Mengembalikan hasil
-//   } catch (error) {
-//     next(error); // Menangani kesalahan
-//   }
-// };
+export const getTransactionByUserController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const id = Number(req.params.id);
+    const result = await getTransactionByUserService(id);
+    res.status(200).send(result);
+  } catch (error) {
+    next(error);
+  }
+};
 
 export const getTransactionsByUserController = async (
   req: Request,
@@ -92,10 +74,10 @@ export const getTransactionsByUserController = async (
   try {
     const userId = res.locals.user.id;
     const query = {
-      take: parseInt(req.query.take as string) || 10, // Misalnya default 10
-      page: parseInt(req.query.page as string) || 1, // Misalnya default 1
-      sortBy: (req.query.sortBy as string) || "createdAt", // Kolom untuk di-sort
-      sortOrder: (req.query.sortOrder as string) || "desc", // Urutan: asc atau desc
+      take: parseInt(req.query.take as string) || 10,
+      page: parseInt(req.query.page as string) || 1,
+      sortBy: (req.query.sortBy as string) || "createdAt",
+      sortOrder: (req.query.sortOrder as string) || "desc",
     };
 
     const result = await getTransactionsByUserService(userId, query);

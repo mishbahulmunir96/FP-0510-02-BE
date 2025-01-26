@@ -1,54 +1,51 @@
-// import prisma from "../../lib/prisma";
+import prisma from "../../lib/prisma";
 
-// export const getTransactionByUserService = async (id: number) => {
-//   try {
-//     const transaction = await prisma.transaction.findUnique({
-//       where: { id },
-//       include: {
-//         // Mengambil transaksi terkait lainnya berdasarkan roomId dan rentang tanggal
-//         room: true, // Menyertakan data kamar jika diperlukan
-//       },
-//     });
+export const getTransactionByUserService = async (id: number) => {
+  try {
+    const transaction = await prisma.payment.findUnique({
+      where: { id },
+      include: {
+        reservation: {
+          include: {
+            room: {
+              select: {
+                type: true,
+              },
+            },
+          },
+        },
+      },
+    });
 
-//     if (!transaction) {
-//       throw new Error("Invalid transaction id");
-//     }
+    if (!transaction) {
+      throw new Error("Invalid transaction id");
+    }
 
-//     // Mengambil semua transaksi terkait berdasarkan roomId
-//     const relatedTransactions = await prisma.transaction.findMany({
-//       where: {
-//         userId: transaction.userId,
-//         roomId: transaction.roomId,
-//         startDate: { lte: transaction.endDate }, // Memastikan overlap tanggal
-//         endDate: { gte: transaction.startDate },
-//       },
-//     });
+    const checkInDate =
+      transaction.reservation.length > 0
+        ? transaction.reservation[0].startDate
+        : null;
 
-//     // Menghitung durasi menginap
-//     const stayDays = Math.ceil(
-//       (new Date(transaction.endDate).getTime() -
-//         new Date(transaction.startDate).getTime()) /
-//         (1000 * 60 * 60 * 24)
-//     ); // Menghitung jumlah malam
+    const checkOutDate =
+      transaction.reservation.length > 0
+        ? transaction.reservation[transaction.reservation.length - 1].endDate
+        : null;
 
-//     // Besar harapan untuk data output
-//     return {
-//       id: transaction.id,
-//       uuid: transaction.uuid,
-//       userId: transaction.userId,
-//       roomId: transaction.roomId,
-//       status: transaction.status,
-//       totalPrice: relatedTransactions.reduce(
-//         (sum, trans) => sum + trans.total,
-//         0
-//       ), // Hitung total dari semua transaksi terkait
-//       stay: stayDays, // Menyimpan durasi menginap
-//       startDate: transaction.startDate,
-//       endDate: transaction.endDate,
-//       createdAt: transaction.createdAt,
-//       transactions: relatedTransactions, // Kembalikan semua transaksi terkait jika diperlukan
-//     };
-//   } catch (error) {
-//     throw error;
-//   }
-// };
+    return {
+      id: transaction.id,
+      uuid: transaction.uuid,
+      userId: transaction.userId,
+      totalPrice: transaction.totalPrice,
+      paymentMethode: transaction.paymentMethode,
+      status: transaction.status,
+      paymentProof: transaction.paymentProof,
+      checkInDate,
+      checkOutDate,
+      reservations: transaction.reservation.map((reserv) => ({
+        roomType: reserv.room.type,
+      })),
+    };
+  } catch (error) {
+    throw error;
+  }
+};

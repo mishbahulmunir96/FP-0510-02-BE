@@ -10,7 +10,7 @@ export const getTransactionsByUserService = async (
     const transactions = await prisma.payment.findMany({
       where: { userId },
       include: {
-        Reservation: {
+        reservation: {
           include: {
             room: {
               select: {
@@ -36,13 +36,13 @@ export const getTransactionsByUserService = async (
     return {
       data: transactions.map((transaction) => {
         const checkInDate =
-          transaction.Reservation.length > 0
-            ? transaction.Reservation[0].startDate
+          transaction.reservation.length > 0
+            ? transaction.reservation[0].startDate
             : null;
 
         const checkOutDate =
-          transaction.Reservation.length > 0
-            ? transaction.Reservation[transaction.Reservation.length - 1]
+          transaction.reservation.length > 0
+            ? transaction.reservation[transaction.reservation.length - 1]
                 .endDate
             : null;
 
@@ -58,8 +58,8 @@ export const getTransactionsByUserService = async (
           reservations: [
             {
               roomType:
-                transaction.Reservation.length > 0
-                  ? transaction.Reservation[0].room.type
+                transaction.reservation.length > 0
+                  ? transaction.reservation[0].room.type
                   : null,
             },
           ],

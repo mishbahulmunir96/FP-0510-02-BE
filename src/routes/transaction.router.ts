@@ -1,7 +1,7 @@
 import { Router } from "express";
 import {
   createRoomReservationController,
-  // getTransactionByUserController,
+  getTransactionByUserController,
   getTransactionsByUserController,
   uploadPaymentProofController,
 } from "../controllers/transaction.controller";
@@ -12,7 +12,7 @@ import { verifyToken } from "../lib/verifyDummy";
 const router = Router();
 
 router.get("/", verifyToken, getTransactionsByUserController);
-// router.get("/:id", verifyToken, getTransactionByUserController);
+router.get("/:id", verifyToken, getTransactionByUserController);
 router.post("/", verifyToken, createRoomReservationController);
 router.patch(
   "/:id",

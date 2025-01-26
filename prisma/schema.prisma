@@ -85,7 +85,7 @@ model Property {
   room             Room[]
 
   tenant Tenant   @relation(fields: [tenantId], references: [id])
-  Review Review[]
+  review Review[]
 
   @@map("properties")
 }
@@ -138,7 +138,7 @@ model Room {
   roomNonAvailability RoomNonAvailability[]
 
   property    Property      @relation(fields: [propertyId], references: [id])
-  Reservation Reservation[]
+  reservation Reservation[]
 
   @@map("rooms")
 }
@@ -221,7 +221,7 @@ model Payment {
 
   review      Review[]
   user        User          @relation(fields: [userId], references: [id])
-  Reservation Reservation[]
+  reservation Reservation[]
 
   @@map("payments")
 }

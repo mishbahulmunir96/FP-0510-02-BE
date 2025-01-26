@@ -2114,14 +2114,14 @@ export namespace Prisma {
     propertyImage: number
     propertyFacility: number
     room: number
-    Review: number
+    review: number
   }
 
   export type PropertyCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     propertyImage?: boolean | PropertyCountOutputTypeCountPropertyImageArgs
     propertyFacility?: boolean | PropertyCountOutputTypeCountPropertyFacilityArgs
     room?: boolean | PropertyCountOutputTypeCountRoomArgs
-    Review?: boolean | PropertyCountOutputTypeCountReviewArgs
+    review?: boolean | PropertyCountOutputTypeCountReviewArgs
   }
 
   // Custom InputTypes
@@ -2173,7 +2173,7 @@ export namespace Prisma {
     roomFacility: number
     roomImage: number
     roomNonAvailability: number
-    Reservation: number
+    reservation: number
   }
 
   export type RoomCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2181,7 +2181,7 @@ export namespace Prisma {
     roomFacility?: boolean | RoomCountOutputTypeCountRoomFacilityArgs
     roomImage?: boolean | RoomCountOutputTypeCountRoomImageArgs
     roomNonAvailability?: boolean | RoomCountOutputTypeCountRoomNonAvailabilityArgs
-    Reservation?: boolean | RoomCountOutputTypeCountReservationArgs
+    reservation?: boolean | RoomCountOutputTypeCountReservationArgs
   }
 
   // Custom InputTypes
@@ -2237,12 +2237,12 @@ export namespace Prisma {
 
   export type PaymentCountOutputType = {
     review: number
-    Reservation: number
+    reservation: number
   }
 
   export type PaymentCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     review?: boolean | PaymentCountOutputTypeCountReviewArgs
-    Reservation?: boolean | PaymentCountOutputTypeCountReservationArgs
+    reservation?: boolean | PaymentCountOutputTypeCountReservationArgs
   }
 
   // Custom InputTypes
@@ -5593,7 +5593,7 @@ export namespace Prisma {
     propertyFacility?: boolean | Property$propertyFacilityArgs<ExtArgs>
     room?: boolean | Property$roomArgs<ExtArgs>
     tenant?: boolean | TenantDefaultArgs<ExtArgs>
-    Review?: boolean | Property$ReviewArgs<ExtArgs>
+    review?: boolean | Property$reviewArgs<ExtArgs>
     _count?: boolean | PropertyCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["property"]>
 
@@ -5635,7 +5635,7 @@ export namespace Prisma {
     propertyFacility?: boolean | Property$propertyFacilityArgs<ExtArgs>
     room?: boolean | Property$roomArgs<ExtArgs>
     tenant?: boolean | TenantDefaultArgs<ExtArgs>
-    Review?: boolean | Property$ReviewArgs<ExtArgs>
+    review?: boolean | Property$reviewArgs<ExtArgs>
     _count?: boolean | PropertyCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type PropertyIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5649,7 +5649,7 @@ export namespace Prisma {
       propertyFacility: Prisma.$PropertyFacilityPayload<ExtArgs>[]
       room: Prisma.$RoomPayload<ExtArgs>[]
       tenant: Prisma.$TenantPayload<ExtArgs>
-      Review: Prisma.$ReviewPayload<ExtArgs>[]
+      review: Prisma.$ReviewPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -6033,7 +6033,7 @@ export namespace Prisma {
     propertyFacility<T extends Property$propertyFacilityArgs<ExtArgs> = {}>(args?: Subset<T, Property$propertyFacilityArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PropertyFacilityPayload<ExtArgs>, T, "findMany"> | Null>
     room<T extends Property$roomArgs<ExtArgs> = {}>(args?: Subset<T, Property$roomArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RoomPayload<ExtArgs>, T, "findMany"> | Null>
     tenant<T extends TenantDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TenantDefaultArgs<ExtArgs>>): Prisma__TenantClient<$Result.GetResult<Prisma.$TenantPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
-    Review<T extends Property$ReviewArgs<ExtArgs> = {}>(args?: Subset<T, Property$ReviewArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findMany"> | Null>
+    review<T extends Property$reviewArgs<ExtArgs> = {}>(args?: Subset<T, Property$reviewArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findMany"> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6454,9 +6454,9 @@ export namespace Prisma {
   }
 
   /**
-   * Property.Review
+   * Property.review
    */
-  export type Property$ReviewArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Property$reviewArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Review
      */
@@ -8705,7 +8705,7 @@ export namespace Prisma {
     roomImage?: boolean | Room$roomImageArgs<ExtArgs>
     roomNonAvailability?: boolean | Room$roomNonAvailabilityArgs<ExtArgs>
     property?: boolean | PropertyDefaultArgs<ExtArgs>
-    Reservation?: boolean | Room$ReservationArgs<ExtArgs>
+    reservation?: boolean | Room$reservationArgs<ExtArgs>
     _count?: boolean | RoomCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["room"]>
 
@@ -8740,7 +8740,7 @@ export namespace Prisma {
     roomImage?: boolean | Room$roomImageArgs<ExtArgs>
     roomNonAvailability?: boolean | Room$roomNonAvailabilityArgs<ExtArgs>
     property?: boolean | PropertyDefaultArgs<ExtArgs>
-    Reservation?: boolean | Room$ReservationArgs<ExtArgs>
+    reservation?: boolean | Room$reservationArgs<ExtArgs>
     _count?: boolean | RoomCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type RoomIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -8755,7 +8755,7 @@ export namespace Prisma {
       roomImage: Prisma.$RoomImagePayload<ExtArgs>[]
       roomNonAvailability: Prisma.$RoomNonAvailabilityPayload<ExtArgs>[]
       property: Prisma.$PropertyPayload<ExtArgs>
-      Reservation: Prisma.$ReservationPayload<ExtArgs>[]
+      reservation: Prisma.$ReservationPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -9136,7 +9136,7 @@ export namespace Prisma {
     roomImage<T extends Room$roomImageArgs<ExtArgs> = {}>(args?: Subset<T, Room$roomImageArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RoomImagePayload<ExtArgs>, T, "findMany"> | Null>
     roomNonAvailability<T extends Room$roomNonAvailabilityArgs<ExtArgs> = {}>(args?: Subset<T, Room$roomNonAvailabilityArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RoomNonAvailabilityPayload<ExtArgs>, T, "findMany"> | Null>
     property<T extends PropertyDefaultArgs<ExtArgs> = {}>(args?: Subset<T, PropertyDefaultArgs<ExtArgs>>): Prisma__PropertyClient<$Result.GetResult<Prisma.$PropertyPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
-    Reservation<T extends Room$ReservationArgs<ExtArgs> = {}>(args?: Subset<T, Room$ReservationArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReservationPayload<ExtArgs>, T, "findMany"> | Null>
+    reservation<T extends Room$reservationArgs<ExtArgs> = {}>(args?: Subset<T, Room$reservationArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReservationPayload<ExtArgs>, T, "findMany"> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -9573,9 +9573,9 @@ export namespace Prisma {
   }
 
   /**
-   * Room.Reservation
+   * Room.reservation
    */
-  export type Room$ReservationArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Room$reservationArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Reservation
      */
@@ -13855,7 +13855,7 @@ export namespace Prisma {
     updatedAt?: boolean
     review?: boolean | Payment$reviewArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
-    Reservation?: boolean | Payment$ReservationArgs<ExtArgs>
+    reservation?: boolean | Payment$reservationArgs<ExtArgs>
     _count?: boolean | PaymentCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["payment"]>
 
@@ -13895,7 +13895,7 @@ export namespace Prisma {
   export type PaymentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     review?: boolean | Payment$reviewArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
-    Reservation?: boolean | Payment$ReservationArgs<ExtArgs>
+    reservation?: boolean | Payment$reservationArgs<ExtArgs>
     _count?: boolean | PaymentCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type PaymentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -13907,7 +13907,7 @@ export namespace Prisma {
     objects: {
       review: Prisma.$ReviewPayload<ExtArgs>[]
       user: Prisma.$UserPayload<ExtArgs>
-      Reservation: Prisma.$ReservationPayload<ExtArgs>[]
+      reservation: Prisma.$ReservationPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -14289,7 +14289,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     review<T extends Payment$reviewArgs<ExtArgs> = {}>(args?: Subset<T, Payment$reviewArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findMany"> | Null>
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
-    Reservation<T extends Payment$ReservationArgs<ExtArgs> = {}>(args?: Subset<T, Payment$ReservationArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReservationPayload<ExtArgs>, T, "findMany"> | Null>
+    reservation<T extends Payment$reservationArgs<ExtArgs> = {}>(args?: Subset<T, Payment$reservationArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReservationPayload<ExtArgs>, T, "findMany"> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -14670,9 +14670,9 @@ export namespace Prisma {
   }
 
   /**
-   * Payment.Reservation
+   * Payment.reservation
    */
-  export type Payment$ReservationArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Payment$reservationArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Reservation
      */
@@ -17415,7 +17415,7 @@ export namespace Prisma {
     propertyFacility?: PropertyFacilityListRelationFilter
     room?: RoomListRelationFilter
     tenant?: XOR<TenantScalarRelationFilter, TenantWhereInput>
-    Review?: ReviewListRelationFilter
+    review?: ReviewListRelationFilter
   }
 
   export type PropertyOrderByWithRelationInput = {
@@ -17436,7 +17436,7 @@ export namespace Prisma {
     propertyFacility?: PropertyFacilityOrderByRelationAggregateInput
     room?: RoomOrderByRelationAggregateInput
     tenant?: TenantOrderByWithRelationInput
-    Review?: ReviewOrderByRelationAggregateInput
+    review?: ReviewOrderByRelationAggregateInput
   }
 
   export type PropertyWhereUniqueInput = Prisma.AtLeast<{
@@ -17460,7 +17460,7 @@ export namespace Prisma {
     propertyFacility?: PropertyFacilityListRelationFilter
     room?: RoomListRelationFilter
     tenant?: XOR<TenantScalarRelationFilter, TenantWhereInput>
-    Review?: ReviewListRelationFilter
+    review?: ReviewListRelationFilter
   }, "id" | "slug">
 
   export type PropertyOrderByWithAggregationInput = {
@@ -17645,7 +17645,7 @@ export namespace Prisma {
     roomImage?: RoomImageListRelationFilter
     roomNonAvailability?: RoomNonAvailabilityListRelationFilter
     property?: XOR<PropertyScalarRelationFilter, PropertyWhereInput>
-    Reservation?: ReservationListRelationFilter
+    reservation?: ReservationListRelationFilter
   }
 
   export type RoomOrderByWithRelationInput = {
@@ -17663,7 +17663,7 @@ export namespace Prisma {
     roomImage?: RoomImageOrderByRelationAggregateInput
     roomNonAvailability?: RoomNonAvailabilityOrderByRelationAggregateInput
     property?: PropertyOrderByWithRelationInput
-    Reservation?: ReservationOrderByRelationAggregateInput
+    reservation?: ReservationOrderByRelationAggregateInput
   }
 
   export type RoomWhereUniqueInput = Prisma.AtLeast<{
@@ -17684,7 +17684,7 @@ export namespace Prisma {
     roomImage?: RoomImageListRelationFilter
     roomNonAvailability?: RoomNonAvailabilityListRelationFilter
     property?: XOR<PropertyScalarRelationFilter, PropertyWhereInput>
-    Reservation?: ReservationListRelationFilter
+    reservation?: ReservationListRelationFilter
   }, "id">
 
   export type RoomOrderByWithAggregationInput = {
@@ -18001,7 +18001,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Payment"> | Date | string
     review?: ReviewListRelationFilter
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
-    Reservation?: ReservationListRelationFilter
+    reservation?: ReservationListRelationFilter
   }
 
   export type PaymentOrderByWithRelationInput = {
@@ -18020,7 +18020,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     review?: ReviewOrderByRelationAggregateInput
     user?: UserOrderByWithRelationInput
-    Reservation?: ReservationOrderByRelationAggregateInput
+    reservation?: ReservationOrderByRelationAggregateInput
   }
 
   export type PaymentWhereUniqueInput = Prisma.AtLeast<{
@@ -18042,7 +18042,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Payment"> | Date | string
     review?: ReviewListRelationFilter
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
-    Reservation?: ReservationListRelationFilter
+    reservation?: ReservationListRelationFilter
   }, "id">
 
   export type PaymentOrderByWithAggregationInput = {
@@ -18514,7 +18514,7 @@ export namespace Prisma {
     propertyFacility?: PropertyFacilityCreateNestedManyWithoutPropertyInput
     room?: RoomCreateNestedManyWithoutPropertyInput
     tenant: TenantCreateNestedOneWithoutPropertyInput
-    Review?: ReviewCreateNestedManyWithoutPropertyInput
+    review?: ReviewCreateNestedManyWithoutPropertyInput
   }
 
   export type PropertyUncheckedCreateInput = {
@@ -18534,7 +18534,7 @@ export namespace Prisma {
     propertyImage?: PropertyImageUncheckedCreateNestedManyWithoutPropertyInput
     propertyFacility?: PropertyFacilityUncheckedCreateNestedManyWithoutPropertyInput
     room?: RoomUncheckedCreateNestedManyWithoutPropertyInput
-    Review?: ReviewUncheckedCreateNestedManyWithoutPropertyInput
+    review?: ReviewUncheckedCreateNestedManyWithoutPropertyInput
   }
 
   export type PropertyUpdateInput = {
@@ -18553,7 +18553,7 @@ export namespace Prisma {
     propertyFacility?: PropertyFacilityUpdateManyWithoutPropertyNestedInput
     room?: RoomUpdateManyWithoutPropertyNestedInput
     tenant?: TenantUpdateOneRequiredWithoutPropertyNestedInput
-    Review?: ReviewUpdateManyWithoutPropertyNestedInput
+    review?: ReviewUpdateManyWithoutPropertyNestedInput
   }
 
   export type PropertyUncheckedUpdateInput = {
@@ -18573,7 +18573,7 @@ export namespace Prisma {
     propertyImage?: PropertyImageUncheckedUpdateManyWithoutPropertyNestedInput
     propertyFacility?: PropertyFacilityUncheckedUpdateManyWithoutPropertyNestedInput
     room?: RoomUncheckedUpdateManyWithoutPropertyNestedInput
-    Review?: ReviewUncheckedUpdateManyWithoutPropertyNestedInput
+    review?: ReviewUncheckedUpdateManyWithoutPropertyNestedInput
   }
 
   export type PropertyCreateManyInput = {
@@ -18753,7 +18753,7 @@ export namespace Prisma {
     roomImage?: RoomImageCreateNestedManyWithoutRoomInput
     roomNonAvailability?: RoomNonAvailabilityCreateNestedManyWithoutRoomInput
     property: PropertyCreateNestedOneWithoutRoomInput
-    Reservation?: ReservationCreateNestedManyWithoutRoomInput
+    reservation?: ReservationCreateNestedManyWithoutRoomInput
   }
 
   export type RoomUncheckedCreateInput = {
@@ -18770,7 +18770,7 @@ export namespace Prisma {
     roomFacility?: RoomFacilityUncheckedCreateNestedManyWithoutRoomInput
     roomImage?: RoomImageUncheckedCreateNestedManyWithoutRoomInput
     roomNonAvailability?: RoomNonAvailabilityUncheckedCreateNestedManyWithoutRoomInput
-    Reservation?: ReservationUncheckedCreateNestedManyWithoutRoomInput
+    reservation?: ReservationUncheckedCreateNestedManyWithoutRoomInput
   }
 
   export type RoomUpdateInput = {
@@ -18786,7 +18786,7 @@ export namespace Prisma {
     roomImage?: RoomImageUpdateManyWithoutRoomNestedInput
     roomNonAvailability?: RoomNonAvailabilityUpdateManyWithoutRoomNestedInput
     property?: PropertyUpdateOneRequiredWithoutRoomNestedInput
-    Reservation?: ReservationUpdateManyWithoutRoomNestedInput
+    reservation?: ReservationUpdateManyWithoutRoomNestedInput
   }
 
   export type RoomUncheckedUpdateInput = {
@@ -18803,7 +18803,7 @@ export namespace Prisma {
     roomFacility?: RoomFacilityUncheckedUpdateManyWithoutRoomNestedInput
     roomImage?: RoomImageUncheckedUpdateManyWithoutRoomNestedInput
     roomNonAvailability?: RoomNonAvailabilityUncheckedUpdateManyWithoutRoomNestedInput
-    Reservation?: ReservationUncheckedUpdateManyWithoutRoomNestedInput
+    reservation?: ReservationUncheckedUpdateManyWithoutRoomNestedInput
   }
 
   export type RoomCreateManyInput = {
@@ -19111,7 +19111,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     review?: ReviewCreateNestedManyWithoutPaymentInput
     user: UserCreateNestedOneWithoutPaymentInput
-    Reservation?: ReservationCreateNestedManyWithoutPayemntInput
+    reservation?: ReservationCreateNestedManyWithoutPayemntInput
   }
 
   export type PaymentUncheckedCreateInput = {
@@ -19129,7 +19129,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     review?: ReviewUncheckedCreateNestedManyWithoutPaymentInput
-    Reservation?: ReservationUncheckedCreateNestedManyWithoutPayemntInput
+    reservation?: ReservationUncheckedCreateNestedManyWithoutPayemntInput
   }
 
   export type PaymentUpdateInput = {
@@ -19146,7 +19146,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     review?: ReviewUpdateManyWithoutPaymentNestedInput
     user?: UserUpdateOneRequiredWithoutPaymentNestedInput
-    Reservation?: ReservationUpdateManyWithoutPayemntNestedInput
+    reservation?: ReservationUpdateManyWithoutPayemntNestedInput
   }
 
   export type PaymentUncheckedUpdateInput = {
@@ -19164,7 +19164,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     review?: ReviewUncheckedUpdateManyWithoutPaymentNestedInput
-    Reservation?: ReservationUncheckedUpdateManyWithoutPayemntNestedInput
+    reservation?: ReservationUncheckedUpdateManyWithoutPayemntNestedInput
   }
 
   export type PaymentCreateManyInput = {
@@ -21553,7 +21553,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     review?: ReviewCreateNestedManyWithoutPaymentInput
-    Reservation?: ReservationCreateNestedManyWithoutPayemntInput
+    reservation?: ReservationCreateNestedManyWithoutPayemntInput
   }
 
   export type PaymentUncheckedCreateWithoutUserInput = {
@@ -21570,7 +21570,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     review?: ReviewUncheckedCreateNestedManyWithoutPaymentInput
-    Reservation?: ReservationUncheckedCreateNestedManyWithoutPayemntInput
+    reservation?: ReservationUncheckedCreateNestedManyWithoutPayemntInput
   }
 
   export type PaymentCreateOrConnectWithoutUserInput = {
@@ -21663,7 +21663,7 @@ export namespace Prisma {
     propertyImage?: PropertyImageCreateNestedManyWithoutPropertyInput
     propertyFacility?: PropertyFacilityCreateNestedManyWithoutPropertyInput
     room?: RoomCreateNestedManyWithoutPropertyInput
-    Review?: ReviewCreateNestedManyWithoutPropertyInput
+    review?: ReviewCreateNestedManyWithoutPropertyInput
   }
 
   export type PropertyUncheckedCreateWithoutTenantInput = {
@@ -21682,7 +21682,7 @@ export namespace Prisma {
     propertyImage?: PropertyImageUncheckedCreateNestedManyWithoutPropertyInput
     propertyFacility?: PropertyFacilityUncheckedCreateNestedManyWithoutPropertyInput
     room?: RoomUncheckedCreateNestedManyWithoutPropertyInput
-    Review?: ReviewUncheckedCreateNestedManyWithoutPropertyInput
+    review?: ReviewUncheckedCreateNestedManyWithoutPropertyInput
   }
 
   export type PropertyCreateOrConnectWithoutTenantInput = {
@@ -21792,7 +21792,7 @@ export namespace Prisma {
     roomFacility?: RoomFacilityCreateNestedManyWithoutRoomInput
     roomImage?: RoomImageCreateNestedManyWithoutRoomInput
     roomNonAvailability?: RoomNonAvailabilityCreateNestedManyWithoutRoomInput
-    Reservation?: ReservationCreateNestedManyWithoutRoomInput
+    reservation?: ReservationCreateNestedManyWithoutRoomInput
   }
 
   export type RoomUncheckedCreateWithoutPropertyInput = {
@@ -21808,7 +21808,7 @@ export namespace Prisma {
     roomFacility?: RoomFacilityUncheckedCreateNestedManyWithoutRoomInput
     roomImage?: RoomImageUncheckedCreateNestedManyWithoutRoomInput
     roomNonAvailability?: RoomNonAvailabilityUncheckedCreateNestedManyWithoutRoomInput
-    Reservation?: ReservationUncheckedCreateNestedManyWithoutRoomInput
+    reservation?: ReservationUncheckedCreateNestedManyWithoutRoomInput
   }
 
   export type RoomCreateOrConnectWithoutPropertyInput = {
@@ -22038,7 +22038,7 @@ export namespace Prisma {
     propertyFacility?: PropertyFacilityCreateNestedManyWithoutPropertyInput
     room?: RoomCreateNestedManyWithoutPropertyInput
     tenant: TenantCreateNestedOneWithoutPropertyInput
-    Review?: ReviewCreateNestedManyWithoutPropertyInput
+    review?: ReviewCreateNestedManyWithoutPropertyInput
   }
 
   export type PropertyUncheckedCreateWithoutPropertyImageInput = {
@@ -22057,7 +22057,7 @@ export namespace Prisma {
     location: string
     propertyFacility?: PropertyFacilityUncheckedCreateNestedManyWithoutPropertyInput
     room?: RoomUncheckedCreateNestedManyWithoutPropertyInput
-    Review?: ReviewUncheckedCreateNestedManyWithoutPropertyInput
+    review?: ReviewUncheckedCreateNestedManyWithoutPropertyInput
   }
 
   export type PropertyCreateOrConnectWithoutPropertyImageInput = {
@@ -22091,7 +22091,7 @@ export namespace Prisma {
     propertyFacility?: PropertyFacilityUpdateManyWithoutPropertyNestedInput
     room?: RoomUpdateManyWithoutPropertyNestedInput
     tenant?: TenantUpdateOneRequiredWithoutPropertyNestedInput
-    Review?: ReviewUpdateManyWithoutPropertyNestedInput
+    review?: ReviewUpdateManyWithoutPropertyNestedInput
   }
 
   export type PropertyUncheckedUpdateWithoutPropertyImageInput = {
@@ -22110,7 +22110,7 @@ export namespace Prisma {
     location?: StringFieldUpdateOperationsInput | string
     propertyFacility?: PropertyFacilityUncheckedUpdateManyWithoutPropertyNestedInput
     room?: RoomUncheckedUpdateManyWithoutPropertyNestedInput
-    Review?: ReviewUncheckedUpdateManyWithoutPropertyNestedInput
+    review?: ReviewUncheckedUpdateManyWithoutPropertyNestedInput
   }
 
   export type PropertyCreateWithoutPropertyFacilityInput = {
@@ -22128,7 +22128,7 @@ export namespace Prisma {
     propertyImage?: PropertyImageCreateNestedManyWithoutPropertyInput
     room?: RoomCreateNestedManyWithoutPropertyInput
     tenant: TenantCreateNestedOneWithoutPropertyInput
-    Review?: ReviewCreateNestedManyWithoutPropertyInput
+    review?: ReviewCreateNestedManyWithoutPropertyInput
   }
 
   export type PropertyUncheckedCreateWithoutPropertyFacilityInput = {
@@ -22147,7 +22147,7 @@ export namespace Prisma {
     location: string
     propertyImage?: PropertyImageUncheckedCreateNestedManyWithoutPropertyInput
     room?: RoomUncheckedCreateNestedManyWithoutPropertyInput
-    Review?: ReviewUncheckedCreateNestedManyWithoutPropertyInput
+    review?: ReviewUncheckedCreateNestedManyWithoutPropertyInput
   }
 
   export type PropertyCreateOrConnectWithoutPropertyFacilityInput = {
@@ -22181,7 +22181,7 @@ export namespace Prisma {
     propertyImage?: PropertyImageUpdateManyWithoutPropertyNestedInput
     room?: RoomUpdateManyWithoutPropertyNestedInput
     tenant?: TenantUpdateOneRequiredWithoutPropertyNestedInput
-    Review?: ReviewUpdateManyWithoutPropertyNestedInput
+    review?: ReviewUpdateManyWithoutPropertyNestedInput
   }
 
   export type PropertyUncheckedUpdateWithoutPropertyFacilityInput = {
@@ -22200,7 +22200,7 @@ export namespace Prisma {
     location?: StringFieldUpdateOperationsInput | string
     propertyImage?: PropertyImageUncheckedUpdateManyWithoutPropertyNestedInput
     room?: RoomUncheckedUpdateManyWithoutPropertyNestedInput
-    Review?: ReviewUncheckedUpdateManyWithoutPropertyNestedInput
+    review?: ReviewUncheckedUpdateManyWithoutPropertyNestedInput
   }
 
   export type PeakSeasonRateCreateWithoutRoomInput = {
@@ -22324,7 +22324,7 @@ export namespace Prisma {
     propertyImage?: PropertyImageCreateNestedManyWithoutPropertyInput
     propertyFacility?: PropertyFacilityCreateNestedManyWithoutPropertyInput
     tenant: TenantCreateNestedOneWithoutPropertyInput
-    Review?: ReviewCreateNestedManyWithoutPropertyInput
+    review?: ReviewCreateNestedManyWithoutPropertyInput
   }
 
   export type PropertyUncheckedCreateWithoutRoomInput = {
@@ -22343,7 +22343,7 @@ export namespace Prisma {
     location: string
     propertyImage?: PropertyImageUncheckedCreateNestedManyWithoutPropertyInput
     propertyFacility?: PropertyFacilityUncheckedCreateNestedManyWithoutPropertyInput
-    Review?: ReviewUncheckedCreateNestedManyWithoutPropertyInput
+    review?: ReviewUncheckedCreateNestedManyWithoutPropertyInput
   }
 
   export type PropertyCreateOrConnectWithoutRoomInput = {
@@ -22523,7 +22523,7 @@ export namespace Prisma {
     propertyImage?: PropertyImageUpdateManyWithoutPropertyNestedInput
     propertyFacility?: PropertyFacilityUpdateManyWithoutPropertyNestedInput
     tenant?: TenantUpdateOneRequiredWithoutPropertyNestedInput
-    Review?: ReviewUpdateManyWithoutPropertyNestedInput
+    review?: ReviewUpdateManyWithoutPropertyNestedInput
   }
 
   export type PropertyUncheckedUpdateWithoutRoomInput = {
@@ -22542,7 +22542,7 @@ export namespace Prisma {
     location?: StringFieldUpdateOperationsInput | string
     propertyImage?: PropertyImageUncheckedUpdateManyWithoutPropertyNestedInput
     propertyFacility?: PropertyFacilityUncheckedUpdateManyWithoutPropertyNestedInput
-    Review?: ReviewUncheckedUpdateManyWithoutPropertyNestedInput
+    review?: ReviewUncheckedUpdateManyWithoutPropertyNestedInput
   }
 
   export type ReservationUpsertWithWhereUniqueWithoutRoomInput = {
@@ -22588,7 +22588,7 @@ export namespace Prisma {
     roomImage?: RoomImageCreateNestedManyWithoutRoomInput
     roomNonAvailability?: RoomNonAvailabilityCreateNestedManyWithoutRoomInput
     property: PropertyCreateNestedOneWithoutRoomInput
-    Reservation?: ReservationCreateNestedManyWithoutRoomInput
+    reservation?: ReservationCreateNestedManyWithoutRoomInput
   }
 
   export type RoomUncheckedCreateWithoutPeakSeasonRateInput = {
@@ -22604,7 +22604,7 @@ export namespace Prisma {
     roomFacility?: RoomFacilityUncheckedCreateNestedManyWithoutRoomInput
     roomImage?: RoomImageUncheckedCreateNestedManyWithoutRoomInput
     roomNonAvailability?: RoomNonAvailabilityUncheckedCreateNestedManyWithoutRoomInput
-    Reservation?: ReservationUncheckedCreateNestedManyWithoutRoomInput
+    reservation?: ReservationUncheckedCreateNestedManyWithoutRoomInput
   }
 
   export type RoomCreateOrConnectWithoutPeakSeasonRateInput = {
@@ -22635,7 +22635,7 @@ export namespace Prisma {
     roomImage?: RoomImageUpdateManyWithoutRoomNestedInput
     roomNonAvailability?: RoomNonAvailabilityUpdateManyWithoutRoomNestedInput
     property?: PropertyUpdateOneRequiredWithoutRoomNestedInput
-    Reservation?: ReservationUpdateManyWithoutRoomNestedInput
+    reservation?: ReservationUpdateManyWithoutRoomNestedInput
   }
 
   export type RoomUncheckedUpdateWithoutPeakSeasonRateInput = {
@@ -22651,7 +22651,7 @@ export namespace Prisma {
     roomFacility?: RoomFacilityUncheckedUpdateManyWithoutRoomNestedInput
     roomImage?: RoomImageUncheckedUpdateManyWithoutRoomNestedInput
     roomNonAvailability?: RoomNonAvailabilityUncheckedUpdateManyWithoutRoomNestedInput
-    Reservation?: ReservationUncheckedUpdateManyWithoutRoomNestedInput
+    reservation?: ReservationUncheckedUpdateManyWithoutRoomNestedInput
   }
 
   export type RoomCreateWithoutRoomFacilityInput = {
@@ -22666,7 +22666,7 @@ export namespace Prisma {
     roomImage?: RoomImageCreateNestedManyWithoutRoomInput
     roomNonAvailability?: RoomNonAvailabilityCreateNestedManyWithoutRoomInput
     property: PropertyCreateNestedOneWithoutRoomInput
-    Reservation?: ReservationCreateNestedManyWithoutRoomInput
+    reservation?: ReservationCreateNestedManyWithoutRoomInput
   }
 
   export type RoomUncheckedCreateWithoutRoomFacilityInput = {
@@ -22682,7 +22682,7 @@ export namespace Prisma {
     peakSeasonRate?: PeakSeasonRateUncheckedCreateNestedManyWithoutRoomInput
     roomImage?: RoomImageUncheckedCreateNestedManyWithoutRoomInput
     roomNonAvailability?: RoomNonAvailabilityUncheckedCreateNestedManyWithoutRoomInput
-    Reservation?: ReservationUncheckedCreateNestedManyWithoutRoomInput
+    reservation?: ReservationUncheckedCreateNestedManyWithoutRoomInput
   }
 
   export type RoomCreateOrConnectWithoutRoomFacilityInput = {
@@ -22713,7 +22713,7 @@ export namespace Prisma {
     roomImage?: RoomImageUpdateManyWithoutRoomNestedInput
     roomNonAvailability?: RoomNonAvailabilityUpdateManyWithoutRoomNestedInput
     property?: PropertyUpdateOneRequiredWithoutRoomNestedInput
-    Reservation?: ReservationUpdateManyWithoutRoomNestedInput
+    reservation?: ReservationUpdateManyWithoutRoomNestedInput
   }
 
   export type RoomUncheckedUpdateWithoutRoomFacilityInput = {
@@ -22729,7 +22729,7 @@ export namespace Prisma {
     peakSeasonRate?: PeakSeasonRateUncheckedUpdateManyWithoutRoomNestedInput
     roomImage?: RoomImageUncheckedUpdateManyWithoutRoomNestedInput
     roomNonAvailability?: RoomNonAvailabilityUncheckedUpdateManyWithoutRoomNestedInput
-    Reservation?: ReservationUncheckedUpdateManyWithoutRoomNestedInput
+    reservation?: ReservationUncheckedUpdateManyWithoutRoomNestedInput
   }
 
   export type RoomCreateWithoutRoomImageInput = {
@@ -22744,7 +22744,7 @@ export namespace Prisma {
     roomFacility?: RoomFacilityCreateNestedManyWithoutRoomInput
     roomNonAvailability?: RoomNonAvailabilityCreateNestedManyWithoutRoomInput
     property: PropertyCreateNestedOneWithoutRoomInput
-    Reservation?: ReservationCreateNestedManyWithoutRoomInput
+    reservation?: ReservationCreateNestedManyWithoutRoomInput
   }
 
   export type RoomUncheckedCreateWithoutRoomImageInput = {
@@ -22760,7 +22760,7 @@ export namespace Prisma {
     peakSeasonRate?: PeakSeasonRateUncheckedCreateNestedManyWithoutRoomInput
     roomFacility?: RoomFacilityUncheckedCreateNestedManyWithoutRoomInput
     roomNonAvailability?: RoomNonAvailabilityUncheckedCreateNestedManyWithoutRoomInput
-    Reservation?: ReservationUncheckedCreateNestedManyWithoutRoomInput
+    reservation?: ReservationUncheckedCreateNestedManyWithoutRoomInput
   }
 
   export type RoomCreateOrConnectWithoutRoomImageInput = {
@@ -22791,7 +22791,7 @@ export namespace Prisma {
     roomFacility?: RoomFacilityUpdateManyWithoutRoomNestedInput
     roomNonAvailability?: RoomNonAvailabilityUpdateManyWithoutRoomNestedInput
     property?: PropertyUpdateOneRequiredWithoutRoomNestedInput
-    Reservation?: ReservationUpdateManyWithoutRoomNestedInput
+    reservation?: ReservationUpdateManyWithoutRoomNestedInput
   }
 
   export type RoomUncheckedUpdateWithoutRoomImageInput = {
@@ -22807,7 +22807,7 @@ export namespace Prisma {
     peakSeasonRate?: PeakSeasonRateUncheckedUpdateManyWithoutRoomNestedInput
     roomFacility?: RoomFacilityUncheckedUpdateManyWithoutRoomNestedInput
     roomNonAvailability?: RoomNonAvailabilityUncheckedUpdateManyWithoutRoomNestedInput
-    Reservation?: ReservationUncheckedUpdateManyWithoutRoomNestedInput
+    reservation?: ReservationUncheckedUpdateManyWithoutRoomNestedInput
   }
 
   export type RoomCreateWithoutRoomNonAvailabilityInput = {
@@ -22822,7 +22822,7 @@ export namespace Prisma {
     roomFacility?: RoomFacilityCreateNestedManyWithoutRoomInput
     roomImage?: RoomImageCreateNestedManyWithoutRoomInput
     property: PropertyCreateNestedOneWithoutRoomInput
-    Reservation?: ReservationCreateNestedManyWithoutRoomInput
+    reservation?: ReservationCreateNestedManyWithoutRoomInput
   }
 
   export type RoomUncheckedCreateWithoutRoomNonAvailabilityInput = {
@@ -22838,7 +22838,7 @@ export namespace Prisma {
     peakSeasonRate?: PeakSeasonRateUncheckedCreateNestedManyWithoutRoomInput
     roomFacility?: RoomFacilityUncheckedCreateNestedManyWithoutRoomInput
     roomImage?: RoomImageUncheckedCreateNestedManyWithoutRoomInput
-    Reservation?: ReservationUncheckedCreateNestedManyWithoutRoomInput
+    reservation?: ReservationUncheckedCreateNestedManyWithoutRoomInput
   }
 
   export type RoomCreateOrConnectWithoutRoomNonAvailabilityInput = {
@@ -22869,7 +22869,7 @@ export namespace Prisma {
     roomFacility?: RoomFacilityUpdateManyWithoutRoomNestedInput
     roomImage?: RoomImageUpdateManyWithoutRoomNestedInput
     property?: PropertyUpdateOneRequiredWithoutRoomNestedInput
-    Reservation?: ReservationUpdateManyWithoutRoomNestedInput
+    reservation?: ReservationUpdateManyWithoutRoomNestedInput
   }
 
   export type RoomUncheckedUpdateWithoutRoomNonAvailabilityInput = {
@@ -22885,7 +22885,7 @@ export namespace Prisma {
     peakSeasonRate?: PeakSeasonRateUncheckedUpdateManyWithoutRoomNestedInput
     roomFacility?: RoomFacilityUncheckedUpdateManyWithoutRoomNestedInput
     roomImage?: RoomImageUncheckedUpdateManyWithoutRoomNestedInput
-    Reservation?: ReservationUncheckedUpdateManyWithoutRoomNestedInput
+    reservation?: ReservationUncheckedUpdateManyWithoutRoomNestedInput
   }
 
   export type ReviewCreateWithoutPaymentInput = {
@@ -23309,7 +23309,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutPaymentInput
-    Reservation?: ReservationCreateNestedManyWithoutPayemntInput
+    reservation?: ReservationCreateNestedManyWithoutPayemntInput
   }
 
   export type PaymentUncheckedCreateWithoutReviewInput = {
@@ -23326,7 +23326,7 @@ export namespace Prisma {
     expiredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    Reservation?: ReservationUncheckedCreateNestedManyWithoutPayemntInput
+    reservation?: ReservationUncheckedCreateNestedManyWithoutPayemntInput
   }
 
   export type PaymentCreateOrConnectWithoutReviewInput = {
@@ -23448,7 +23448,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutPaymentNestedInput
-    Reservation?: ReservationUpdateManyWithoutPayemntNestedInput
+    reservation?: ReservationUpdateManyWithoutPayemntNestedInput
   }
 
   export type PaymentUncheckedUpdateWithoutReviewInput = {
@@ -23465,7 +23465,7 @@ export namespace Prisma {
     expiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    Reservation?: ReservationUncheckedUpdateManyWithoutPayemntNestedInput
+    reservation?: ReservationUncheckedUpdateManyWithoutPayemntNestedInput
   }
 
   export type ReviewCreateManyUserInput = {
@@ -23535,7 +23535,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     review?: ReviewUpdateManyWithoutPaymentNestedInput
-    Reservation?: ReservationUpdateManyWithoutPayemntNestedInput
+    reservation?: ReservationUpdateManyWithoutPayemntNestedInput
   }
 
   export type PaymentUncheckedUpdateWithoutUserInput = {
@@ -23552,7 +23552,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     review?: ReviewUncheckedUpdateManyWithoutPaymentNestedInput
-    Reservation?: ReservationUncheckedUpdateManyWithoutPayemntNestedInput
+    reservation?: ReservationUncheckedUpdateManyWithoutPayemntNestedInput
   }
 
   export type PaymentUncheckedUpdateManyWithoutUserInput = {
@@ -23600,7 +23600,7 @@ export namespace Prisma {
     propertyImage?: PropertyImageUpdateManyWithoutPropertyNestedInput
     propertyFacility?: PropertyFacilityUpdateManyWithoutPropertyNestedInput
     room?: RoomUpdateManyWithoutPropertyNestedInput
-    Review?: ReviewUpdateManyWithoutPropertyNestedInput
+    review?: ReviewUpdateManyWithoutPropertyNestedInput
   }
 
   export type PropertyUncheckedUpdateWithoutTenantInput = {
@@ -23619,7 +23619,7 @@ export namespace Prisma {
     propertyImage?: PropertyImageUncheckedUpdateManyWithoutPropertyNestedInput
     propertyFacility?: PropertyFacilityUncheckedUpdateManyWithoutPropertyNestedInput
     room?: RoomUncheckedUpdateManyWithoutPropertyNestedInput
-    Review?: ReviewUncheckedUpdateManyWithoutPropertyNestedInput
+    review?: ReviewUncheckedUpdateManyWithoutPropertyNestedInput
   }
 
   export type PropertyUncheckedUpdateManyWithoutTenantInput = {
@@ -23732,7 +23732,7 @@ export namespace Prisma {
     roomFacility?: RoomFacilityUpdateManyWithoutRoomNestedInput
     roomImage?: RoomImageUpdateManyWithoutRoomNestedInput
     roomNonAvailability?: RoomNonAvailabilityUpdateManyWithoutRoomNestedInput
-    Reservation?: ReservationUpdateManyWithoutRoomNestedInput
+    reservation?: ReservationUpdateManyWithoutRoomNestedInput
   }
 
   export type RoomUncheckedUpdateWithoutPropertyInput = {
@@ -23748,7 +23748,7 @@ export namespace Prisma {
     roomFacility?: RoomFacilityUncheckedUpdateManyWithoutRoomNestedInput
     roomImage?: RoomImageUncheckedUpdateManyWithoutRoomNestedInput
     roomNonAvailability?: RoomNonAvailabilityUncheckedUpdateManyWithoutRoomNestedInput
-    Reservation?: ReservationUncheckedUpdateManyWithoutRoomNestedInput
+    reservation?: ReservationUncheckedUpdateManyWithoutRoomNestedInput
   }
 
   export type RoomUncheckedUpdateManyWithoutPropertyInput = {
