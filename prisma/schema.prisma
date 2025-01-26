@@ -1,18 +1,12 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
   output   = "./generated/client"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-  // directUrl = env("DIRECT_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model Sample {
@@ -29,16 +23,16 @@ model User {
   name        String
   email       String        @unique
   password    String
-  imageUrl    String
-  token       String
+  imageUrl    String?
+  token       String?
   role        Role          @default(USER)
   provider    Provider      @default(CREDENTIAL)
   isVerified  Boolean       @default(false)
   isDeleted   Boolean       @default(false)
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
-  Transaction Transaction[]
-  Review      Review[]
+  transaction Transaction[]
+  review      Review[]
 
   @@map("users")
 }
@@ -58,7 +52,6 @@ model Tenant {
   name        String
   imageUrl    String?
   phoneNumber String?
-  userId      Int
   bankName    String
   bankNumber  String
   balance     Int      @default(0)
@@ -86,6 +79,7 @@ model Property {
   createdAt        DateTime           @default(now())
   updatedAt        DateTime           @updatedAt
   location         String
+
   propertyImage    PropertyImage[]
   propertyFacility PropertyFacility[]
   room             Room[]
