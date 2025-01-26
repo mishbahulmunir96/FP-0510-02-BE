@@ -1,7 +1,8 @@
-import { StatusTransaction } from "../../../prisma/generated/client";
+import { StatusPayment } from "../../../prisma/generated/client";
 import { checkRoomAvailability } from "../../lib/checkRoomAvailability";
 import prisma from "../../lib/prisma";
 import schedule from "node-schedule";
+import { addMinutes } from "date-fns";
 
 interface CreateRoomReservationBody {
   userId: number;
@@ -38,48 +39,88 @@ export const createRoomReservationService = async (
     throw new Error("Room price not found.");
   }
 
-  const transactions = [];
+  let totalPrice = 0;
+
+  // Loop untuk menghitung totalPrice berdasarkan tanggal reservasi
+  for (let i = 0; i < diffDays; i++) {
+    const currentDate = new Date(start);
+    currentDate.setDate(currentDate.getDate() + i);
+
+    // Cek harga di PeakSeasonRate
+    const peakRate = await prisma.peakSeasonRate.findFirst({
+      where: {
+        roomId: roomId,
+        startDate: { lte: currentDate },
+        endDate: { gte: currentDate },
+        isDeleted: false, // pastikan tidak mengambil yang dihapus
+      },
+    });
+
+    if (peakRate) {
+      totalPrice += peakRate.price;
+    } else {
+      totalPrice += room.price; // harga normal kamar
+    }
+  }
+
+  // Buat pembayaran
+  const payment = await prisma.payment.create({
+    data: {
+      userId,
+      totalPrice,
+      duration: diffDays,
+      paymentMethode: "MANUAL",
+      paymentProof: null,
+      status: StatusPayment.WAITING_FOR_PAYMENT,
+    },
+  });
+
+  const reservations = [];
   for (let i = 0; i < diffDays; i++) {
     const currentStartDate = new Date(start);
     currentStartDate.setDate(currentStartDate.getDate() + i);
+
     const currentEndDate = new Date(currentStartDate);
     currentEndDate.setDate(currentStartDate.getDate() + 1);
 
+    // Calculate peakRate for each day
     const peakRate = await prisma.peakSeasonRate.findFirst({
       where: {
-        roomId,
-        startDate: { lte: currentEndDate },
+        roomId: roomId,
+        startDate: { lte: currentStartDate },
         endDate: { gte: currentStartDate },
+        isDeleted: false, // pastikan tidak mengambil yang dihapus
       },
     });
 
-    const total = peakRate ? peakRate.price : room.price;
-
-    transactions.push({
-      userId,
+    reservations.push({
       roomId,
+      price: peakRate ? peakRate.price : room.price, // Gunakan harga peakRate jika ada
+      paymentId: payment.id,
       startDate: currentStartDate,
       endDate: currentEndDate,
-      total,
-      status: StatusTransaction.WAITING_FOR_PAYMENT,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     });
   }
 
-  await prisma.transaction.createMany({
-    data: transactions,
+  await prisma.reservation.createMany({
+    data: reservations,
   });
 
-  schedule.scheduleJob(Date.now() + 1 * 60 * 60 * 1000, async () => {
-    await prisma.transaction.updateMany({
+  const expirationTime = addMinutes(new Date(), 1);
+
+  schedule.scheduleJob(Date.now() + 60 * 1000, async () => {
+    await prisma.payment.update({
       where: {
-        userId,
-        status: StatusTransaction.WAITING_FOR_PAYMENT,
+        id: payment.id,
+        status: StatusPayment.WAITING_FOR_PAYMENT,
       },
       data: {
-        status: StatusTransaction.CANCELLED,
+        status: StatusPayment.CANCELLED,
+        expiredAt: expirationTime,
       },
     });
   });
-
-  return transactions;
+  return { payment, reservations };
 };

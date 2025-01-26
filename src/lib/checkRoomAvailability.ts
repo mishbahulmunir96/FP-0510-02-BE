@@ -5,7 +5,7 @@ export const checkRoomAvailability = async (
   startDate: Date,
   endDate: Date
 ) => {
-  const reservations = await prisma.transaction.findMany({
+  const reservations = await prisma.reservation.findMany({
     where: {
       roomId,
       OR: [
@@ -22,10 +22,13 @@ export const checkRoomAvailability = async (
     select: { stock: true },
   });
 
-  const availableStock = room?.stock || 0;
+  if (!room) {
+    throw new Error("Room not found.");
+  }
+
+  const availableStock = room.stock || 0;
   const bookedRooms = reservations.length;
 
   const isRoomAvailable = bookedRooms < availableStock;
-
   return isRoomAvailable;
 };

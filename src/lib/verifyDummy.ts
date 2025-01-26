@@ -10,7 +10,7 @@ export const verifyToken = (
   const token = req.headers.authorization?.split(" ")[1];
 
   if (token === DUMMY_TOKEN) {
-    res.locals.user = { id: 3 };
+    res.locals.user = { id: 1 };
     return next();
   }
 
