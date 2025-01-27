@@ -3,6 +3,7 @@ import { createRoomReservationService } from "../services/transaction/create-roo
 import { getTransactionByUserService } from "../services/transaction/get-transaction-by-user.service";
 import { uploadPaymentProofService } from "../services/transaction/upload-payment-proof.service";
 import { getTransactionsByUserService } from "../services/transaction/get-transactions-by-user.service";
+import { cancelTransactionByUserService } from "../services/transaction/cancel-transaction-by-user";
 
 export const createRoomReservationController = async (
   req: Request,
@@ -35,6 +36,7 @@ export const uploadPaymentProofController = async (
   try {
     const proofFile = req.file as Express.Multer.File;
     const paymentId = Number(req.params.id);
+    const userId = res.locals.user.id;
 
     if (!proofFile) {
       res.status(400).send("Payment proof is required.");
@@ -42,6 +44,7 @@ export const uploadPaymentProofController = async (
     }
 
     const updatedTransaction = await uploadPaymentProofService({
+      userId,
       paymentId,
       paymentProof: proofFile,
     });
@@ -59,7 +62,8 @@ export const getTransactionByUserController = async (
 ): Promise<void> => {
   try {
     const id = Number(req.params.id);
-    const result = await getTransactionByUserService(id);
+    const userId = res.locals.user.id;
+    const result = await getTransactionByUserService(id, userId);
     res.status(200).send(result);
   } catch (error) {
     next(error);
@@ -83,6 +87,21 @@ export const getTransactionsByUserController = async (
     const result = await getTransactionsByUserService(userId, query);
 
     res.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const cancelTransactionByUserController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const paymentId = Number(req.params.id);
+    const userId = res.locals.user.id;
+    const result = await cancelTransactionByUserService(paymentId, userId);
+    res.status(200).send(result);
   } catch (error) {
     next(error);
   }
