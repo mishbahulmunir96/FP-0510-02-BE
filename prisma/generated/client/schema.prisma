@@ -33,6 +33,7 @@ model User {
   updatedAt  DateTime  @updatedAt
   review     Review[]
   payment    Payment[]
+  Tenant     Tenant[]
 
   @@map("users")
 }
@@ -54,11 +55,13 @@ model Tenant {
   phoneNumber String?
   bankName    String
   bankNumber  String
+  userId      Int
   balance     Int      @default(0)
   role        Role     @default(TENANT)
   isDeleted   Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  user        User     @relation(fields: [userId], references: [id])
 
   property Property[]
 
@@ -85,7 +88,7 @@ model Property {
   room             Room[]
 
   tenant Tenant   @relation(fields: [tenantId], references: [id])
-  Review Review[]
+  review Review[]
 
   @@map("properties")
 }
@@ -138,7 +141,7 @@ model Room {
   roomNonAvailability RoomNonAvailability[]
 
   property    Property      @relation(fields: [propertyId], references: [id])
-  Reservation Reservation[]
+  reservation Reservation[]
 
   @@map("rooms")
 }
@@ -209,7 +212,8 @@ model Payment {
   uuid            String         @default(uuid())
   userId          Int
   status          StatusPayment
-  total           Int
+  totalPrice      Int
+  duration        Int
   paymentMethode  PaymentMethode @default(MANUAL)
   paymentProof    String?
   snapToken       String?
@@ -218,8 +222,9 @@ model Payment {
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
 
-  review Review[]
-  user   User     @relation(fields: [userId], references: [id])
+  review      Review[]
+  user        User          @relation(fields: [userId], references: [id])
+  reservation Reservation[]
 
   @@map("payments")
 }
@@ -228,12 +233,14 @@ model Reservation {
   id        Int      @id @default(autoincrement())
   uuid      String   @default(uuid())
   roomId    Int
+  paymentId Int
   price     Int
   startDate DateTime
   endDate   DateTime
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   room      Room     @relation(fields: [roomId], references: [id])
+  payemnt   Payment  @relation(fields: [paymentId], references: [id])
 
   @@map("reservations")
 }

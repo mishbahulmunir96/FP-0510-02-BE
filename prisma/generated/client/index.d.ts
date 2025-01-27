@@ -2042,11 +2042,13 @@ export namespace Prisma {
   export type UserCountOutputType = {
     review: number
     payment: number
+    Tenant: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     review?: boolean | UserCountOutputTypeCountReviewArgs
     payment?: boolean | UserCountOutputTypeCountPaymentArgs
+    Tenant?: boolean | UserCountOutputTypeCountTenantArgs
   }
 
   // Custom InputTypes
@@ -2072,6 +2074,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountPaymentArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: PaymentWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountTenantArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TenantWhereInput
   }
 
 
@@ -3431,6 +3440,7 @@ export namespace Prisma {
     updatedAt?: boolean
     review?: boolean | User$reviewArgs<ExtArgs>
     payment?: boolean | User$paymentArgs<ExtArgs>
+    Tenant?: boolean | User$TenantArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -3467,6 +3477,7 @@ export namespace Prisma {
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     review?: boolean | User$reviewArgs<ExtArgs>
     payment?: boolean | User$paymentArgs<ExtArgs>
+    Tenant?: boolean | User$TenantArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -3476,6 +3487,7 @@ export namespace Prisma {
     objects: {
       review: Prisma.$ReviewPayload<ExtArgs>[]
       payment: Prisma.$PaymentPayload<ExtArgs>[]
+      Tenant: Prisma.$TenantPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -3856,6 +3868,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     review<T extends User$reviewArgs<ExtArgs> = {}>(args?: Subset<T, User$reviewArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findMany"> | Null>
     payment<T extends User$paymentArgs<ExtArgs> = {}>(args?: Subset<T, User$paymentArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany"> | Null>
+    Tenant<T extends User$TenantArgs<ExtArgs> = {}>(args?: Subset<T, User$TenantArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TenantPayload<ExtArgs>, T, "findMany"> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4251,6 +4264,26 @@ export namespace Prisma {
   }
 
   /**
+   * User.Tenant
+   */
+  export type User$TenantArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Tenant
+     */
+    select?: TenantSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TenantInclude<ExtArgs> | null
+    where?: TenantWhereInput
+    orderBy?: TenantOrderByWithRelationInput | TenantOrderByWithRelationInput[]
+    cursor?: TenantWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TenantScalarFieldEnum | TenantScalarFieldEnum[]
+  }
+
+  /**
    * User without action
    */
   export type UserDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4279,11 +4312,13 @@ export namespace Prisma {
 
   export type TenantAvgAggregateOutputType = {
     id: number | null
+    userId: number | null
     balance: number | null
   }
 
   export type TenantSumAggregateOutputType = {
     id: number | null
+    userId: number | null
     balance: number | null
   }
 
@@ -4294,6 +4329,7 @@ export namespace Prisma {
     phoneNumber: string | null
     bankName: string | null
     bankNumber: string | null
+    userId: number | null
     balance: number | null
     role: $Enums.Role | null
     isDeleted: boolean | null
@@ -4308,6 +4344,7 @@ export namespace Prisma {
     phoneNumber: string | null
     bankName: string | null
     bankNumber: string | null
+    userId: number | null
     balance: number | null
     role: $Enums.Role | null
     isDeleted: boolean | null
@@ -4322,6 +4359,7 @@ export namespace Prisma {
     phoneNumber: number
     bankName: number
     bankNumber: number
+    userId: number
     balance: number
     role: number
     isDeleted: number
@@ -4333,11 +4371,13 @@ export namespace Prisma {
 
   export type TenantAvgAggregateInputType = {
     id?: true
+    userId?: true
     balance?: true
   }
 
   export type TenantSumAggregateInputType = {
     id?: true
+    userId?: true
     balance?: true
   }
 
@@ -4348,6 +4388,7 @@ export namespace Prisma {
     phoneNumber?: true
     bankName?: true
     bankNumber?: true
+    userId?: true
     balance?: true
     role?: true
     isDeleted?: true
@@ -4362,6 +4403,7 @@ export namespace Prisma {
     phoneNumber?: true
     bankName?: true
     bankNumber?: true
+    userId?: true
     balance?: true
     role?: true
     isDeleted?: true
@@ -4376,6 +4418,7 @@ export namespace Prisma {
     phoneNumber?: true
     bankName?: true
     bankNumber?: true
+    userId?: true
     balance?: true
     role?: true
     isDeleted?: true
@@ -4477,6 +4520,7 @@ export namespace Prisma {
     phoneNumber: string | null
     bankName: string
     bankNumber: string
+    userId: number
     balance: number
     role: $Enums.Role
     isDeleted: boolean
@@ -4510,11 +4554,13 @@ export namespace Prisma {
     phoneNumber?: boolean
     bankName?: boolean
     bankNumber?: boolean
+    userId?: boolean
     balance?: boolean
     role?: boolean
     isDeleted?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
     property?: boolean | Tenant$propertyArgs<ExtArgs>
     _count?: boolean | TenantCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["tenant"]>
@@ -4526,11 +4572,13 @@ export namespace Prisma {
     phoneNumber?: boolean
     bankName?: boolean
     bankNumber?: boolean
+    userId?: boolean
     balance?: boolean
     role?: boolean
     isDeleted?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["tenant"]>
 
   export type TenantSelectScalar = {
@@ -4540,6 +4588,7 @@ export namespace Prisma {
     phoneNumber?: boolean
     bankName?: boolean
     bankNumber?: boolean
+    userId?: boolean
     balance?: boolean
     role?: boolean
     isDeleted?: boolean
@@ -4548,14 +4597,18 @@ export namespace Prisma {
   }
 
   export type TenantInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
     property?: boolean | Tenant$propertyArgs<ExtArgs>
     _count?: boolean | TenantCountOutputTypeDefaultArgs<ExtArgs>
   }
-  export type TenantIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type TenantIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
 
   export type $TenantPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Tenant"
     objects: {
+      user: Prisma.$UserPayload<ExtArgs>
       property: Prisma.$PropertyPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -4565,6 +4618,7 @@ export namespace Prisma {
       phoneNumber: string | null
       bankName: string
       bankNumber: string
+      userId: number
       balance: number
       role: $Enums.Role
       isDeleted: boolean
@@ -4934,6 +4988,7 @@ export namespace Prisma {
    */
   export interface Prisma__TenantClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     property<T extends Tenant$propertyArgs<ExtArgs> = {}>(args?: Subset<T, Tenant$propertyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PropertyPayload<ExtArgs>, T, "findMany"> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -4970,6 +5025,7 @@ export namespace Prisma {
     readonly phoneNumber: FieldRef<"Tenant", 'String'>
     readonly bankName: FieldRef<"Tenant", 'String'>
     readonly bankNumber: FieldRef<"Tenant", 'String'>
+    readonly userId: FieldRef<"Tenant", 'Int'>
     readonly balance: FieldRef<"Tenant", 'Int'>
     readonly role: FieldRef<"Tenant", 'Role'>
     readonly isDeleted: FieldRef<"Tenant", 'Boolean'>
@@ -5196,6 +5252,10 @@ export namespace Prisma {
      */
     data: TenantCreateManyInput | TenantCreateManyInput[]
     skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TenantIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -16817,6 +16877,7 @@ export namespace Prisma {
     phoneNumber: 'phoneNumber',
     bankName: 'bankName',
     bankNumber: 'bankNumber',
+    userId: 'userId',
     balance: 'balance',
     role: 'role',
     isDeleted: 'isDeleted',
@@ -17230,6 +17291,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"User"> | Date | string
     review?: ReviewListRelationFilter
     payment?: PaymentListRelationFilter
+    Tenant?: TenantListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -17247,6 +17309,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     review?: ReviewOrderByRelationAggregateInput
     payment?: PaymentOrderByRelationAggregateInput
+    Tenant?: TenantOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -17267,6 +17330,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"User"> | Date | string
     review?: ReviewListRelationFilter
     payment?: PaymentListRelationFilter
+    Tenant?: TenantListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -17317,11 +17381,13 @@ export namespace Prisma {
     phoneNumber?: StringNullableFilter<"Tenant"> | string | null
     bankName?: StringFilter<"Tenant"> | string
     bankNumber?: StringFilter<"Tenant"> | string
+    userId?: IntFilter<"Tenant"> | number
     balance?: IntFilter<"Tenant"> | number
     role?: EnumRoleFilter<"Tenant"> | $Enums.Role
     isDeleted?: BoolFilter<"Tenant"> | boolean
     createdAt?: DateTimeFilter<"Tenant"> | Date | string
     updatedAt?: DateTimeFilter<"Tenant"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
     property?: PropertyListRelationFilter
   }
 
@@ -17332,11 +17398,13 @@ export namespace Prisma {
     phoneNumber?: SortOrderInput | SortOrder
     bankName?: SortOrder
     bankNumber?: SortOrder
+    userId?: SortOrder
     balance?: SortOrder
     role?: SortOrder
     isDeleted?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
     property?: PropertyOrderByRelationAggregateInput
   }
 
@@ -17350,11 +17418,13 @@ export namespace Prisma {
     phoneNumber?: StringNullableFilter<"Tenant"> | string | null
     bankName?: StringFilter<"Tenant"> | string
     bankNumber?: StringFilter<"Tenant"> | string
+    userId?: IntFilter<"Tenant"> | number
     balance?: IntFilter<"Tenant"> | number
     role?: EnumRoleFilter<"Tenant"> | $Enums.Role
     isDeleted?: BoolFilter<"Tenant"> | boolean
     createdAt?: DateTimeFilter<"Tenant"> | Date | string
     updatedAt?: DateTimeFilter<"Tenant"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
     property?: PropertyListRelationFilter
   }, "id">
 
@@ -17365,6 +17435,7 @@ export namespace Prisma {
     phoneNumber?: SortOrderInput | SortOrder
     bankName?: SortOrder
     bankNumber?: SortOrder
+    userId?: SortOrder
     balance?: SortOrder
     role?: SortOrder
     isDeleted?: SortOrder
@@ -17387,6 +17458,7 @@ export namespace Prisma {
     phoneNumber?: StringNullableWithAggregatesFilter<"Tenant"> | string | null
     bankName?: StringWithAggregatesFilter<"Tenant"> | string
     bankNumber?: StringWithAggregatesFilter<"Tenant"> | string
+    userId?: IntWithAggregatesFilter<"Tenant"> | number
     balance?: IntWithAggregatesFilter<"Tenant"> | number
     role?: EnumRoleWithAggregatesFilter<"Tenant"> | $Enums.Role
     isDeleted?: BoolWithAggregatesFilter<"Tenant"> | boolean
@@ -18303,6 +18375,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     review?: ReviewCreateNestedManyWithoutUserInput
     payment?: PaymentCreateNestedManyWithoutUserInput
+    Tenant?: TenantCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -18320,6 +18393,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     review?: ReviewUncheckedCreateNestedManyWithoutUserInput
     payment?: PaymentUncheckedCreateNestedManyWithoutUserInput
+    Tenant?: TenantUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -18336,6 +18410,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     review?: ReviewUpdateManyWithoutUserNestedInput
     payment?: PaymentUpdateManyWithoutUserNestedInput
+    Tenant?: TenantUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -18353,6 +18428,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     review?: ReviewUncheckedUpdateManyWithoutUserNestedInput
     payment?: PaymentUncheckedUpdateManyWithoutUserNestedInput
+    Tenant?: TenantUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -18410,6 +18486,7 @@ export namespace Prisma {
     isDeleted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutTenantInput
     property?: PropertyCreateNestedManyWithoutTenantInput
   }
 
@@ -18420,6 +18497,7 @@ export namespace Prisma {
     phoneNumber?: string | null
     bankName: string
     bankNumber: string
+    userId: number
     balance?: number
     role?: $Enums.Role
     isDeleted?: boolean
@@ -18439,6 +18517,7 @@ export namespace Prisma {
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutTenantNestedInput
     property?: PropertyUpdateManyWithoutTenantNestedInput
   }
 
@@ -18449,6 +18528,7 @@ export namespace Prisma {
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: StringFieldUpdateOperationsInput | string
     bankNumber?: StringFieldUpdateOperationsInput | string
+    userId?: IntFieldUpdateOperationsInput | number
     balance?: IntFieldUpdateOperationsInput | number
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -18464,6 +18544,7 @@ export namespace Prisma {
     phoneNumber?: string | null
     bankName: string
     bankNumber: string
+    userId: number
     balance?: number
     role?: $Enums.Role
     isDeleted?: boolean
@@ -18491,6 +18572,7 @@ export namespace Prisma {
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: StringFieldUpdateOperationsInput | string
     bankNumber?: StringFieldUpdateOperationsInput | string
+    userId?: IntFieldUpdateOperationsInput | number
     balance?: IntFieldUpdateOperationsInput | number
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -19523,6 +19605,12 @@ export namespace Prisma {
     none?: PaymentWhereInput
   }
 
+  export type TenantListRelationFilter = {
+    every?: TenantWhereInput
+    some?: TenantWhereInput
+    none?: TenantWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -19533,6 +19621,10 @@ export namespace Prisma {
   }
 
   export type PaymentOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type TenantOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -19635,6 +19727,11 @@ export namespace Prisma {
     _max?: NestedBoolFilter<$PrismaModel>
   }
 
+  export type UserScalarRelationFilter = {
+    is?: UserWhereInput
+    isNot?: UserWhereInput
+  }
+
   export type PropertyListRelationFilter = {
     every?: PropertyWhereInput
     some?: PropertyWhereInput
@@ -19652,6 +19749,7 @@ export namespace Prisma {
     phoneNumber?: SortOrder
     bankName?: SortOrder
     bankNumber?: SortOrder
+    userId?: SortOrder
     balance?: SortOrder
     role?: SortOrder
     isDeleted?: SortOrder
@@ -19661,6 +19759,7 @@ export namespace Prisma {
 
   export type TenantAvgOrderByAggregateInput = {
     id?: SortOrder
+    userId?: SortOrder
     balance?: SortOrder
   }
 
@@ -19671,6 +19770,7 @@ export namespace Prisma {
     phoneNumber?: SortOrder
     bankName?: SortOrder
     bankNumber?: SortOrder
+    userId?: SortOrder
     balance?: SortOrder
     role?: SortOrder
     isDeleted?: SortOrder
@@ -19685,6 +19785,7 @@ export namespace Prisma {
     phoneNumber?: SortOrder
     bankName?: SortOrder
     bankNumber?: SortOrder
+    userId?: SortOrder
     balance?: SortOrder
     role?: SortOrder
     isDeleted?: SortOrder
@@ -19694,6 +19795,7 @@ export namespace Prisma {
 
   export type TenantSumOrderByAggregateInput = {
     id?: SortOrder
+    userId?: SortOrder
     balance?: SortOrder
   }
 
@@ -20194,11 +20296,6 @@ export namespace Prisma {
     not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
-  export type UserScalarRelationFilter = {
-    is?: UserWhereInput
-    isNot?: UserWhereInput
-  }
-
   export type PaymentCountOrderByAggregateInput = {
     id?: SortOrder
     uuid?: SortOrder
@@ -20429,6 +20526,13 @@ export namespace Prisma {
     connect?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
   }
 
+  export type TenantCreateNestedManyWithoutUserInput = {
+    create?: XOR<TenantCreateWithoutUserInput, TenantUncheckedCreateWithoutUserInput> | TenantCreateWithoutUserInput[] | TenantUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TenantCreateOrConnectWithoutUserInput | TenantCreateOrConnectWithoutUserInput[]
+    createMany?: TenantCreateManyUserInputEnvelope
+    connect?: TenantWhereUniqueInput | TenantWhereUniqueInput[]
+  }
+
   export type ReviewUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<ReviewCreateWithoutUserInput, ReviewUncheckedCreateWithoutUserInput> | ReviewCreateWithoutUserInput[] | ReviewUncheckedCreateWithoutUserInput[]
     connectOrCreate?: ReviewCreateOrConnectWithoutUserInput | ReviewCreateOrConnectWithoutUserInput[]
@@ -20441,6 +20545,13 @@ export namespace Prisma {
     connectOrCreate?: PaymentCreateOrConnectWithoutUserInput | PaymentCreateOrConnectWithoutUserInput[]
     createMany?: PaymentCreateManyUserInputEnvelope
     connect?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
+  }
+
+  export type TenantUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<TenantCreateWithoutUserInput, TenantUncheckedCreateWithoutUserInput> | TenantCreateWithoutUserInput[] | TenantUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TenantCreateOrConnectWithoutUserInput | TenantCreateOrConnectWithoutUserInput[]
+    createMany?: TenantCreateManyUserInputEnvelope
+    connect?: TenantWhereUniqueInput | TenantWhereUniqueInput[]
   }
 
   export type NullableStringFieldUpdateOperationsInput = {
@@ -20487,6 +20598,20 @@ export namespace Prisma {
     deleteMany?: PaymentScalarWhereInput | PaymentScalarWhereInput[]
   }
 
+  export type TenantUpdateManyWithoutUserNestedInput = {
+    create?: XOR<TenantCreateWithoutUserInput, TenantUncheckedCreateWithoutUserInput> | TenantCreateWithoutUserInput[] | TenantUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TenantCreateOrConnectWithoutUserInput | TenantCreateOrConnectWithoutUserInput[]
+    upsert?: TenantUpsertWithWhereUniqueWithoutUserInput | TenantUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: TenantCreateManyUserInputEnvelope
+    set?: TenantWhereUniqueInput | TenantWhereUniqueInput[]
+    disconnect?: TenantWhereUniqueInput | TenantWhereUniqueInput[]
+    delete?: TenantWhereUniqueInput | TenantWhereUniqueInput[]
+    connect?: TenantWhereUniqueInput | TenantWhereUniqueInput[]
+    update?: TenantUpdateWithWhereUniqueWithoutUserInput | TenantUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: TenantUpdateManyWithWhereWithoutUserInput | TenantUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: TenantScalarWhereInput | TenantScalarWhereInput[]
+  }
+
   export type ReviewUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<ReviewCreateWithoutUserInput, ReviewUncheckedCreateWithoutUserInput> | ReviewCreateWithoutUserInput[] | ReviewUncheckedCreateWithoutUserInput[]
     connectOrCreate?: ReviewCreateOrConnectWithoutUserInput | ReviewCreateOrConnectWithoutUserInput[]
@@ -20515,6 +20640,26 @@ export namespace Prisma {
     deleteMany?: PaymentScalarWhereInput | PaymentScalarWhereInput[]
   }
 
+  export type TenantUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<TenantCreateWithoutUserInput, TenantUncheckedCreateWithoutUserInput> | TenantCreateWithoutUserInput[] | TenantUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TenantCreateOrConnectWithoutUserInput | TenantCreateOrConnectWithoutUserInput[]
+    upsert?: TenantUpsertWithWhereUniqueWithoutUserInput | TenantUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: TenantCreateManyUserInputEnvelope
+    set?: TenantWhereUniqueInput | TenantWhereUniqueInput[]
+    disconnect?: TenantWhereUniqueInput | TenantWhereUniqueInput[]
+    delete?: TenantWhereUniqueInput | TenantWhereUniqueInput[]
+    connect?: TenantWhereUniqueInput | TenantWhereUniqueInput[]
+    update?: TenantUpdateWithWhereUniqueWithoutUserInput | TenantUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: TenantUpdateManyWithWhereWithoutUserInput | TenantUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: TenantScalarWhereInput | TenantScalarWhereInput[]
+  }
+
+  export type UserCreateNestedOneWithoutTenantInput = {
+    create?: XOR<UserCreateWithoutTenantInput, UserUncheckedCreateWithoutTenantInput>
+    connectOrCreate?: UserCreateOrConnectWithoutTenantInput
+    connect?: UserWhereUniqueInput
+  }
+
   export type PropertyCreateNestedManyWithoutTenantInput = {
     create?: XOR<PropertyCreateWithoutTenantInput, PropertyUncheckedCreateWithoutTenantInput> | PropertyCreateWithoutTenantInput[] | PropertyUncheckedCreateWithoutTenantInput[]
     connectOrCreate?: PropertyCreateOrConnectWithoutTenantInput | PropertyCreateOrConnectWithoutTenantInput[]
@@ -20527,6 +20672,14 @@ export namespace Prisma {
     connectOrCreate?: PropertyCreateOrConnectWithoutTenantInput | PropertyCreateOrConnectWithoutTenantInput[]
     createMany?: PropertyCreateManyTenantInputEnvelope
     connect?: PropertyWhereUniqueInput | PropertyWhereUniqueInput[]
+  }
+
+  export type UserUpdateOneRequiredWithoutTenantNestedInput = {
+    create?: XOR<UserCreateWithoutTenantInput, UserUncheckedCreateWithoutTenantInput>
+    connectOrCreate?: UserCreateOrConnectWithoutTenantInput
+    upsert?: UserUpsertWithoutTenantInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutTenantInput, UserUpdateWithoutTenantInput>, UserUncheckedUpdateWithoutTenantInput>
   }
 
   export type PropertyUpdateManyWithoutTenantNestedInput = {
@@ -21583,6 +21736,45 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type TenantCreateWithoutUserInput = {
+    name: string
+    imageUrl?: string | null
+    phoneNumber?: string | null
+    bankName: string
+    bankNumber: string
+    balance?: number
+    role?: $Enums.Role
+    isDeleted?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    property?: PropertyCreateNestedManyWithoutTenantInput
+  }
+
+  export type TenantUncheckedCreateWithoutUserInput = {
+    id?: number
+    name: string
+    imageUrl?: string | null
+    phoneNumber?: string | null
+    bankName: string
+    bankNumber: string
+    balance?: number
+    role?: $Enums.Role
+    isDeleted?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    property?: PropertyUncheckedCreateNestedManyWithoutTenantInput
+  }
+
+  export type TenantCreateOrConnectWithoutUserInput = {
+    where: TenantWhereUniqueInput
+    create: XOR<TenantCreateWithoutUserInput, TenantUncheckedCreateWithoutUserInput>
+  }
+
+  export type TenantCreateManyUserInputEnvelope = {
+    data: TenantCreateManyUserInput | TenantCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type ReviewUpsertWithWhereUniqueWithoutUserInput = {
     where: ReviewWhereUniqueInput
     update: XOR<ReviewUpdateWithoutUserInput, ReviewUncheckedUpdateWithoutUserInput>
@@ -21648,6 +21840,78 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Payment"> | Date | string
   }
 
+  export type TenantUpsertWithWhereUniqueWithoutUserInput = {
+    where: TenantWhereUniqueInput
+    update: XOR<TenantUpdateWithoutUserInput, TenantUncheckedUpdateWithoutUserInput>
+    create: XOR<TenantCreateWithoutUserInput, TenantUncheckedCreateWithoutUserInput>
+  }
+
+  export type TenantUpdateWithWhereUniqueWithoutUserInput = {
+    where: TenantWhereUniqueInput
+    data: XOR<TenantUpdateWithoutUserInput, TenantUncheckedUpdateWithoutUserInput>
+  }
+
+  export type TenantUpdateManyWithWhereWithoutUserInput = {
+    where: TenantScalarWhereInput
+    data: XOR<TenantUpdateManyMutationInput, TenantUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type TenantScalarWhereInput = {
+    AND?: TenantScalarWhereInput | TenantScalarWhereInput[]
+    OR?: TenantScalarWhereInput[]
+    NOT?: TenantScalarWhereInput | TenantScalarWhereInput[]
+    id?: IntFilter<"Tenant"> | number
+    name?: StringFilter<"Tenant"> | string
+    imageUrl?: StringNullableFilter<"Tenant"> | string | null
+    phoneNumber?: StringNullableFilter<"Tenant"> | string | null
+    bankName?: StringFilter<"Tenant"> | string
+    bankNumber?: StringFilter<"Tenant"> | string
+    userId?: IntFilter<"Tenant"> | number
+    balance?: IntFilter<"Tenant"> | number
+    role?: EnumRoleFilter<"Tenant"> | $Enums.Role
+    isDeleted?: BoolFilter<"Tenant"> | boolean
+    createdAt?: DateTimeFilter<"Tenant"> | Date | string
+    updatedAt?: DateTimeFilter<"Tenant"> | Date | string
+  }
+
+  export type UserCreateWithoutTenantInput = {
+    name: string
+    email: string
+    password: string
+    imageUrl?: string | null
+    token?: string | null
+    role?: $Enums.Role
+    provider?: $Enums.Provider
+    isVerified?: boolean
+    isDeleted?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    review?: ReviewCreateNestedManyWithoutUserInput
+    payment?: PaymentCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutTenantInput = {
+    id?: number
+    name: string
+    email: string
+    password: string
+    imageUrl?: string | null
+    token?: string | null
+    role?: $Enums.Role
+    provider?: $Enums.Provider
+    isVerified?: boolean
+    isDeleted?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    review?: ReviewUncheckedCreateNestedManyWithoutUserInput
+    payment?: PaymentUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutTenantInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutTenantInput, UserUncheckedCreateWithoutTenantInput>
+  }
+
   export type PropertyCreateWithoutTenantInput = {
     slug: string
     title: string
@@ -21693,6 +21957,50 @@ export namespace Prisma {
   export type PropertyCreateManyTenantInputEnvelope = {
     data: PropertyCreateManyTenantInput | PropertyCreateManyTenantInput[]
     skipDuplicates?: boolean
+  }
+
+  export type UserUpsertWithoutTenantInput = {
+    update: XOR<UserUpdateWithoutTenantInput, UserUncheckedUpdateWithoutTenantInput>
+    create: XOR<UserCreateWithoutTenantInput, UserUncheckedCreateWithoutTenantInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutTenantInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutTenantInput, UserUncheckedUpdateWithoutTenantInput>
+  }
+
+  export type UserUpdateWithoutTenantInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    token?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    provider?: EnumProviderFieldUpdateOperationsInput | $Enums.Provider
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    review?: ReviewUpdateManyWithoutUserNestedInput
+    payment?: PaymentUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutTenantInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    token?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    provider?: EnumProviderFieldUpdateOperationsInput | $Enums.Provider
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    review?: ReviewUncheckedUpdateManyWithoutUserNestedInput
+    payment?: PaymentUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type PropertyUpsertWithWhereUniqueWithoutTenantInput = {
@@ -21832,6 +22140,7 @@ export namespace Prisma {
     isDeleted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutTenantInput
   }
 
   export type TenantUncheckedCreateWithoutPropertyInput = {
@@ -21841,6 +22150,7 @@ export namespace Prisma {
     phoneNumber?: string | null
     bankName: string
     bankNumber: string
+    userId: number
     balance?: number
     role?: $Enums.Role
     isDeleted?: boolean
@@ -21991,6 +22301,7 @@ export namespace Prisma {
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutTenantNestedInput
   }
 
   export type TenantUncheckedUpdateWithoutPropertyInput = {
@@ -22000,6 +22311,7 @@ export namespace Prisma {
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: StringFieldUpdateOperationsInput | string
     bankNumber?: StringFieldUpdateOperationsInput | string
+    userId?: IntFieldUpdateOperationsInput | number
     balance?: IntFieldUpdateOperationsInput | number
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -22930,6 +23242,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     review?: ReviewCreateNestedManyWithoutUserInput
+    Tenant?: TenantCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutPaymentInput = {
@@ -22946,6 +23259,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     review?: ReviewUncheckedCreateNestedManyWithoutUserInput
+    Tenant?: TenantUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutPaymentInput = {
@@ -23024,6 +23338,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     review?: ReviewUpdateManyWithoutUserNestedInput
+    Tenant?: TenantUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPaymentInput = {
@@ -23040,6 +23355,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     review?: ReviewUncheckedUpdateManyWithoutUserNestedInput
+    Tenant?: TenantUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ReservationUpsertWithWhereUniqueWithoutPayemntInput = {
@@ -23231,6 +23547,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     payment?: PaymentCreateNestedManyWithoutUserInput
+    Tenant?: TenantCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutReviewInput = {
@@ -23247,6 +23564,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     payment?: PaymentUncheckedCreateNestedManyWithoutUserInput
+    Tenant?: TenantUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutReviewInput = {
@@ -23358,6 +23676,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     payment?: PaymentUpdateManyWithoutUserNestedInput
+    Tenant?: TenantUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReviewInput = {
@@ -23374,6 +23693,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     payment?: PaymentUncheckedUpdateManyWithoutUserNestedInput
+    Tenant?: TenantUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type PropertyUpsertWithoutReviewInput = {
@@ -23493,6 +23813,20 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type TenantCreateManyUserInput = {
+    id?: number
+    name: string
+    imageUrl?: string | null
+    phoneNumber?: string | null
+    bankName: string
+    bankNumber: string
+    balance?: number
+    role?: $Enums.Role
+    isDeleted?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type ReviewUpdateWithoutUserInput = {
     rating?: IntFieldUpdateOperationsInput | number
     review?: StringFieldUpdateOperationsInput | string
@@ -23566,6 +23900,49 @@ export namespace Prisma {
     snapToken?: NullableStringFieldUpdateOperationsInput | string | null
     snapRedirectUrl?: NullableStringFieldUpdateOperationsInput | string | null
     expiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TenantUpdateWithoutUserInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    bankName?: StringFieldUpdateOperationsInput | string
+    bankNumber?: StringFieldUpdateOperationsInput | string
+    balance?: IntFieldUpdateOperationsInput | number
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    property?: PropertyUpdateManyWithoutTenantNestedInput
+  }
+
+  export type TenantUncheckedUpdateWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    bankName?: StringFieldUpdateOperationsInput | string
+    bankNumber?: StringFieldUpdateOperationsInput | string
+    balance?: IntFieldUpdateOperationsInput | number
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    property?: PropertyUncheckedUpdateManyWithoutTenantNestedInput
+  }
+
+  export type TenantUncheckedUpdateManyWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    bankName?: StringFieldUpdateOperationsInput | string
+    bankNumber?: StringFieldUpdateOperationsInput | string
+    balance?: IntFieldUpdateOperationsInput | number
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

@@ -111,7 +111,7 @@ export const createRoomReservationService = async (
 
     const expirationTime = addMinutes(new Date(), 1);
 
-    schedule.scheduleJob(Date.now() + 60 * 1000, async () => {
+    schedule.scheduleJob(Date.now() + 60 * 60 * 1000, async () => {
       await prisma.payment.update({
         where: {
           id: payment.id,

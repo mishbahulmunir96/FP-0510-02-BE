@@ -146,6 +146,7 @@ exports.Prisma.TenantScalarFieldEnum = {
   phoneNumber: 'phoneNumber',
   bankName: 'bankName',
   bankNumber: 'bankNumber',
+  userId: 'userId',
   balance: 'balance',
   role: 'role',
   isDeleted: 'isDeleted',

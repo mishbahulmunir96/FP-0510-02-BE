@@ -35,6 +35,7 @@ export const uploadPaymentProofController = async (
   try {
     const proofFile = req.file as Express.Multer.File;
     const paymentId = Number(req.params.id);
+    const userId = res.locals.user.id;
 
     if (!proofFile) {
       res.status(400).send("Payment proof is required.");
@@ -42,6 +43,7 @@ export const uploadPaymentProofController = async (
     }
 
     const updatedTransaction = await uploadPaymentProofService({
+      userId,
       paymentId,
       paymentProof: proofFile,
     });
