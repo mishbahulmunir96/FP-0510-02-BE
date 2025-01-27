@@ -4,18 +4,18 @@ import cors from "cors";
 import sampleRouter from "./routes/sample.router";
 import transactionRouter from "./routes/transaction.router";
 import propertyRouter from "./routes/property.router";
+import generateTokenRouter from "./routes/generateToken.router";
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-//router, harus diatas middleware error
 app.use("/samples", sampleRouter);
 app.use("/transactions", transactionRouter);
 app.use("/properties", propertyRouter);
+app.use("/generates-token", generateTokenRouter);
 
-// middleware error
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   res.status(400).send(err.message);
 });

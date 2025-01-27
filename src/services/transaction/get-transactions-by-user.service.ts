@@ -26,7 +26,7 @@ export const getTransactionsByUserService = async (
     });
 
     const count = await prisma.payment.count({
-      where: { userId }, // Hitung total transaksi untuk user ini
+      where: { userId },
     });
 
     if (transactions.length === 0) {
@@ -65,7 +65,7 @@ export const getTransactionsByUserService = async (
           ],
         };
       }),
-      meta: { page, take, total: count }, // Menambahkan metadata untuk pagination
+      meta: { page, take, total: count },
     };
   } catch (error) {
     throw error;

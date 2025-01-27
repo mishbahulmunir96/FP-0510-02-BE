@@ -7,16 +7,16 @@ import {
 } from "../controllers/transaction.controller";
 import { fileFilter } from "../lib/fileFilter";
 import { uploader } from "../lib/multer";
-import { verifyToken } from "../lib/verifyDummy";
+import { verifyTokenDummy } from "../lib/jwtDummy";
 
 const router = Router();
 
-router.get("/", verifyToken, getTransactionsByUserController);
-router.get("/:id", verifyToken, getTransactionByUserController);
-router.post("/", verifyToken, createRoomReservationController);
+router.get("/", verifyTokenDummy, getTransactionsByUserController);
+router.get("/:id", verifyTokenDummy, getTransactionByUserController);
+router.post("/", verifyTokenDummy, createRoomReservationController);
 router.patch(
   "/:id",
-  verifyToken,
+  verifyTokenDummy,
   fileFilter,
   uploader().single("paymentProof"),
   uploadPaymentProofController

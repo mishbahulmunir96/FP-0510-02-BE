@@ -4,6 +4,7 @@ dotenv.config();
 
 export const PORT = process.env.PORT;
 export const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
+export const JWT_SECRET_DUMMY = process.env.JWT_SECRET_DUMMY;
 export const JWT_SECRET_FORGOT_PASSWORD =
   process.env.JWT_SECRET_FORGOT_PASSWORD;
 export const GMAIL_EMAIL = process.env.GMAIL_EMAIL;
