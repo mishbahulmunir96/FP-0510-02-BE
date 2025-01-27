@@ -21,13 +21,14 @@ export const getPropertiesController = async (
       category: (req.query.category as string) || "",
     };
 
-    const properties = await getPropertiesService(query);
 
-    res.status(200).json({
-      message: "Success get property list",
-      data: properties,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
+   const properties = await getPropertiesService(query);
+
+     res.status(200).json({
+       message: "Success get property list",
+       data: properties,
+     });
+   } catch (error) {
+     next(error);
+   }
+ };
