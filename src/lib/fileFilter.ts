@@ -8,19 +8,22 @@ export const fileFilter = async (
 ) => {
   try {
     const files = req.files as { [fieldName: string]: Express.Multer.File[] };
-
-    const allowedTypes = ["image/jpg", "image/png"];
+    const allowedTypes = [
+      "image/jpeg",
+      "image/png",
+      "image/avif",
+      "image/jpg",
+      "image/webp",
+      "image/heif",
+      "image/heic",
+    ];
 
     for (const fieldName in files) {
       const fileArray = files[fieldName];
-
       for (const file of fileArray) {
         const type = await fromBuffer(file.buffer);
-
-        if (!type || !allowedTypes.includes(type.mime)) {
-          throw new Error(
-            `File type ${type?.mime} is not allowed. Only JPG and PNG are allowed.`
-          );
+        if (!type || !allowedTypes.includes(type?.mime)) {
+          throw new Error(`File type ${type?.mime} is not allowed`);
         }
       }
     }
