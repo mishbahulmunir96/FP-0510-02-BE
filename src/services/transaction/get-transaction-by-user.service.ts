@@ -1,6 +1,9 @@
 import prisma from "../../lib/prisma";
 
-export const getTransactionByUserService = async (id: number) => {
+export const getTransactionByUserService = async (
+  id: number,
+  userId: number
+) => {
   try {
     const transaction = await prisma.payment.findUnique({
       where: { id },
@@ -19,6 +22,9 @@ export const getTransactionByUserService = async (id: number) => {
 
     if (!transaction) {
       throw new Error("Invalid transaction id");
+    }
+    if (transaction.userId !== userId) {
+      throw new Error("You do not have permission to view this transaction.");
     }
 
     const checkInDate =

@@ -61,7 +61,8 @@ export const getTransactionByUserController = async (
 ): Promise<void> => {
   try {
     const id = Number(req.params.id);
-    const result = await getTransactionByUserService(id);
+    const userId = res.locals.user.id;
+    const result = await getTransactionByUserService(id, userId);
     res.status(200).send(result);
   } catch (error) {
     next(error);
