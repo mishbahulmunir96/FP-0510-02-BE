@@ -4,9 +4,9 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  // directUrl = env("DIRECT_URL")
 }
 
 model Sample {
@@ -22,7 +22,8 @@ model User {
   id         Int       @id @default(autoincrement())
   name       String
   email      String    @unique
-  password   String
+
+  password   String?
   imageUrl   String?
   token      String?
   role       Role      @default(USER)
@@ -57,10 +58,10 @@ model Tenant {
   bankNumber  String
   userId      Int
   balance     Int      @default(0)
-  role        Role     @default(TENANT)
   isDeleted   Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  userId      Int
   user        User     @relation(fields: [userId], references: [id])
 
   property Property[]

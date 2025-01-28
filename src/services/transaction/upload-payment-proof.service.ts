@@ -1,6 +1,7 @@
 import prisma from "../../lib/prisma";
 import { cloudinaryUpload } from "../../lib/cloudinary";
 
+
 interface UploadPaymentProofBody {
   userId: number;
   paymentId: number;
@@ -47,3 +48,4 @@ export const uploadPaymentProofService = async ({
     throw error;
   }
 };
+

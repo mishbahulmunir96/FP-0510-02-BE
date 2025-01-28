@@ -1,8 +1,10 @@
+
 import { StatusPayment } from "../../../prisma/generated/client";
 import { checkRoomAvailability } from "../../lib/checkRoomAvailability";
 import prisma from "../../lib/prisma";
 import schedule from "node-schedule";
 import { addMinutes } from "date-fns";
+
 
 interface CreateRoomReservationBody {
   userId: number;
@@ -10,6 +12,7 @@ interface CreateRoomReservationBody {
   startDate: Date;
   endDate: Date;
 }
+
 
 export const createRoomReservationService = async (
   body: CreateRoomReservationBody
@@ -128,3 +131,4 @@ export const createRoomReservationService = async (
     throw error;
   }
 };
+

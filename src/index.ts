@@ -2,7 +2,7 @@ import express, { NextFunction, Request, Response } from "express";
 import { PORT } from "./config";
 import cors from "cors";
 import sampleRouter from "./routes/sample.router";
-import transactionRouter from "./routes/transaction.router";
+// import transactionRouter from "./routes/transaction.router";
 import propertyRouter from "./routes/property.router";
 import generateTokenRouter from "./routes/generateToken.router";
 import authRouter from "./routes/auth.router";
