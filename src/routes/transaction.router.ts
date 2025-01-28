@@ -1,21 +1,35 @@
-// import { Router } from "express";
-// import {
-//   createRoomReservationController,
-//   uploadPaymentProofController,
-// } from "../controllers/transaction.controller";
-// import { verifyToken } from "../lib/verifyDummy";
-// import { uploader } from "../lib/multer";
-// import { fileFilter } from "../lib/fileFilter";
 
-// const router = Router();
+import { Router } from "express";
+import {
+  cancelTransactionByUserController,
+  createRoomReservationController,
+  getTransactionByUserController,
+  getTransactionsByUserController,
+  uploadPaymentProofController,
+} from "../controllers/transaction.controller";
+import { fileFilter } from "../lib/fileFilter";
+import { uploader } from "../lib/multer";
+import { verifyTokenDummy } from "../lib/jwtDummy";
 
-// router.post("/", verifyToken, createRoomReservationController);
-// router.patch(
-//   "/:id",
-//   verifyToken,
-//   fileFilter,
-//   uploader().single("paymentProof"),
-//   uploadPaymentProofController
-// );
 
-// export default router;
+const router = Router();
+
+
+router.get("/", verifyTokenDummy, getTransactionsByUserController);
+router.get("/:id", verifyTokenDummy, getTransactionByUserController);
+router.post("/", verifyTokenDummy, createRoomReservationController);
+router.patch(
+  "/:id",
+  verifyTokenDummy,
+  fileFilter,
+  uploader().single("paymentProof"),
+  uploadPaymentProofController
+);
+router.patch(
+  "/cancel/:id",
+  verifyTokenDummy,
+  cancelTransactionByUserController
+);
+
+
+export default router;

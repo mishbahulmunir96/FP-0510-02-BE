@@ -22,7 +22,9 @@ model User {
   id         Int       @id @default(autoincrement())
   name       String
   email      String    @unique
+
   password   String?
+
   imageUrl   String?
   token      String?
   role       Role      @default(USER)
@@ -33,6 +35,8 @@ model User {
   updatedAt  DateTime  @updatedAt
   review     Review[]
   payment    Payment[]
+  Tenant     Tenant[]
+
 
   @@map("users")
 }
@@ -54,11 +58,13 @@ model Tenant {
   phoneNumber String?
   bankName    String
   bankNumber  String
+  userId      Int
   balance     Int      @default(0)
   isDeleted   Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   userId      Int
+  user        User     @relation(fields: [userId], references: [id]
 
   property Property[]
 

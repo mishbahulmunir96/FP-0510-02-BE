@@ -1,86 +1,51 @@
-// import prisma from "../../lib/prisma";
-// import { cloudinaryUpload } from "../../lib/cloudinary";
+import prisma from "../../lib/prisma";
+import { cloudinaryUpload } from "../../lib/cloudinary";
 
-// interface UploadPaymentProofBody {
-//   transactionId: number; // ID transaksi awal yang diupload
-//   paymentProof: Express.Multer.File; // File bukti pembayaran
-// }
 
-// export const uploadPaymentProofService = async ({
-//   transactionId,
-//   paymentProof,
-// }: UploadPaymentProofBody) => {
-//   try {
-//     // Temukan transaksi yang sesuai dengan ID transaksi yang diberikan
-//     const initialTransaction = await prisma.transaction.findUnique({
-//       where: { id: transactionId },
-//     });
+interface UploadPaymentProofBody {
+  userId: number;
+  paymentId: number;
+  paymentProof: Express.Multer.File;
+}
 
-//     if (!initialTransaction) {
-//       throw new Error("Transaction not found.");
-//     }
+export const uploadPaymentProofService = async ({
+  userId,
+  paymentId,
+  paymentProof,
+}: UploadPaymentProofBody) => {
+  try {
+    const payment = await prisma.payment.findUnique({
+      where: { id: paymentId },
+      include: { user: true },
+    });
 
-//     // Verifikasi status transaksi
-//     if (initialTransaction.status === "CANCELLED") {
-//       throw new Error("Transaction has been cancelled. Cannot upload proof.");
-//     }
+    if (!paymentId) {
+      throw new Error("Transaction not found.");
+    }
 
-//     // Upload bukti pembayaran ke cloud
-//     const { secure_url } = await cloudinaryUpload(paymentProof);
+    if (payment?.status === "CANCELLED") {
+      throw new Error("Transaction has been cancelled. Cannot upload proof.");
+    }
 
-//     // Mencari semua transaksi terkait dengan roomId dan kesinambungan tanggal
-//     const relatedTransactions = await prisma.transaction.findMany({
-//       where: {
-//         roomId: initialTransaction.roomId,
-//         // Memeriksa kesinambungan tanggal
-//         OR: [
-//           {
-//             startDate: {
-//               gte: initialTransaction.startDate,
-//               lt: initialTransaction.endDate,
-//             },
-//           },
-//           {
-//             endDate: {
-//               gte: initialTransaction.startDate,
-//               lte: initialTransaction.endDate,
-//             },
-//           },
-//         ],
-//       },
-//       orderBy: {
-//         createdAt: "asc", // Pastikan urutan berdasarkan waktu penciptaan
-//       },
-//     });
+    if (payment?.userId !== userId) {
+      throw new Error(
+        "You are not allowed to upload proof for this transaction."
+      );
+    }
 
-//     // Filter transaksi berdasarkan waktu createdAt yang sama
-//     const groupedTransactions = relatedTransactions.filter((transaction) => {
-//       return (
-//         transaction.createdAt.getTime() ===
-//         initialTransaction.createdAt.getTime()
-//       );
-//     });
+    const { secure_url } = await cloudinaryUpload(paymentProof);
 
-//     // Jika ada transaksi dalam grup yang ditemukan
-//     if (groupedTransactions.length > 0) {
-//       await prisma.transaction.updateMany({
-//         where: {
-//           id: { in: groupedTransactions.map((t) => t.id) }, // Pahami ID transaksi yang teridentifikasi
-//         },
-//         data: {
-//           paymentProof: secure_url, // Memperbarui bukti pembayaran
-//           status: "WAITING_FOR_PAYMENT_CONFIRMATION", // Pembaruan status untuk semua transaksi dalam grup
-//         },
-//       });
+    const updatedTransaction = await prisma.payment.update({
+      where: { id: paymentId },
+      data: {
+        paymentProof: secure_url,
+        status: "WAITING_FOR_PAYMENT_CONFIRMATION",
+      },
+    });
 
-//       return {
-//         message:
-//           "Payment proof uploaded successfully for all related transactions.",
-//       };
-//     } else {
-//       throw new Error("No related transactions found with matching createdAt.");
-//     }
-//   } catch (error) {
-//     throw error; // Menangkap dan melempar kesalahan
-//   }
-// };
+    return updatedTransaction;
+  } catch (error) {
+    throw error;
+  }
+};
+
