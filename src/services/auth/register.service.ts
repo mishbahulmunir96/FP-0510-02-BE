@@ -6,8 +6,17 @@ import fs from "fs";
 import path from "path";
 import handlebars from "handlebars";
 
+interface RegisterInput {
+  email: string;
+  role: "USER" | "TENANT";
+  name: string;
+  phoneNumber?: string;
+  bankName?: string;
+  bankNumber?: string;
+}
+
 export const registerService = async (
-  data: any,
+  data: RegisterInput,
   file?: Express.Multer.File
 ) => {
   const { email, role, name } = data;
@@ -32,80 +41,100 @@ export const registerService = async (
     }
   }
 
-  // Buat token verifikasi email
-  const verificationToken = jwt.sign({ email }, process.env.JWT_SECRET!, {
-    expiresIn: "1h",
-  });
+  // Buat token verifikasi email dengan expiry 1 jam
+  const verificationToken = jwt.sign(
+    {
+      email,
+      createdAt: new Date().toISOString(),
+    },
+    process.env.JWT_SECRET!,
+    {
+      expiresIn: "1h",
+    }
+  );
 
-  // Buat User dan Tenant (jika diperlukan) dalam transaksi
-  const user = await prisma.$transaction(async (prisma) => {
-    const newUser = await prisma.user.create({
-      data: {
-        name: data.name,
-        email: data.email,
-        imageUrl,
-        token: verificationToken,
-        role: role, // Menetapkan role sesuai data
-      },
-    });
-
-    if (role === "TENANT") {
-      await prisma.tenant.create({
+  try {
+    // Buat User dan Tenant (jika diperlukan) dalam transaksi
+    const user = await prisma.$transaction(async (prisma) => {
+      const newUser = await prisma.user.create({
         data: {
           name: data.name,
-          phoneNumber: data.phoneNumber,
-          bankName: data.bankName,
-          bankNumber: data.bankNumber,
+          email: data.email,
           imageUrl,
-          userId: newUser.id,
+          token: verificationToken,
+          role: role,
+          isVerified: false, // Memastikan user belum terverifikasi
         },
       });
-    }
 
-    return newUser;
-  });
+      if (role === "TENANT") {
+        if (!data.phoneNumber || !data.bankName || !data.bankNumber) {
+          throw new Error("Tenant data incomplete");
+        }
 
-  // Load dan register partials
-  const partialsDir = path.join(__dirname, "../../templates/partials");
-  const partialFiles = fs.readdirSync(partialsDir);
-  partialFiles.forEach((file) => {
-    const matches = /^([^.]+).hbs$/.exec(file);
-    if (!matches) return;
-    const name = matches[1];
-    const filepath = path.join(partialsDir, file);
-    const source = fs.readFileSync(filepath, "utf8");
-    handlebars.registerPartial(name, source);
-  });
+        await prisma.tenant.create({
+          data: {
+            name: data.name,
+            phoneNumber: data.phoneNumber,
+            bankName: data.bankName,
+            bankNumber: data.bankNumber,
+            imageUrl,
+            userId: newUser.id,
+          },
+        });
+      }
 
-  // Load dan compile template utama
-  const mainTemplatePath = path.join(
-    __dirname,
-    "../../templates/verifyEmail.hbs"
-  );
-  const mainTemplateSource = fs.readFileSync(mainTemplatePath, "utf8");
-  const mainTemplate = handlebars.compile(mainTemplateSource);
+      return newUser;
+    });
 
-  // Data untuk template
-  const replacements = {
-    name: data.name,
-    verificationLink: `${process.env.BASE_URL_FE}/verify?token=${verificationToken}`,
-    logoUrl:
-      "https://res.cloudinary.com/andikalp/image/upload/w_1000,c_fill,ar_1:1,g_auto,r_max,bo_5px_solid_red,b_rgb:262c35/v1737980597/Biru_Hitam_Ilustrasi_Icon_Elegan_Properti_Logo_cqccfa.png",
-    appName: "RateHaven",
-    year: new Date().getFullYear(),
-    appAddress: "RateHaven Address, Yogyakarta, Indonesia",
-  };
+    // Load dan register partials
+    const partialsDir = path.join(__dirname, "../../templates/partials");
+    const partialFiles = fs.readdirSync(partialsDir);
+    partialFiles.forEach((file) => {
+      const matches = /^([^.]+).hbs$/.exec(file);
+      if (!matches) return;
+      const name = matches[1];
+      const filepath = path.join(partialsDir, file);
+      const source = fs.readFileSync(filepath, "utf8");
+      handlebars.registerPartial(name, source);
+    });
 
-  // Render HTML email
-  const emailHtml = mainTemplate(replacements);
+    // Load dan compile template utama
+    const mainTemplatePath = path.join(
+      __dirname,
+      "../../templates/verifyEmail.hbs"
+    );
+    const mainTemplateSource = fs.readFileSync(mainTemplatePath, "utf8");
+    const mainTemplate = handlebars.compile(mainTemplateSource);
 
-  // Kirim email verifikasi
-  await transporter.sendMail({
-    from: process.env.GMAIL_EMAIL,
-    to: email,
-    subject: "Verify Your Email",
-    html: emailHtml,
-  });
+    // Data untuk template
+    const replacements = {
+      name: data.name,
+      verificationLink: `${process.env.BASE_URL_FE}/verify?token=${verificationToken}`,
+      logoUrl: process.env.LOGO_URL,
+      appName: process.env.APP_NAME || "RateHaven",
+      year: new Date().getFullYear(),
+      appAddress:
+        process.env.APP_ADDRESS || "RateHaven Address, Yogyakarta, Indonesia",
+      expiryTime: "1 hour",
+    };
 
-  return { message: "Registration successful, please check your email" };
+    // Render HTML email
+    const emailHtml = mainTemplate(replacements);
+
+    // Kirim email verifikasi
+    await transporter.sendMail({
+      from: process.env.GMAIL_EMAIL,
+      to: email,
+      subject: "Verify Your Email",
+      html: emailHtml,
+    });
+
+    return {
+      message: "Registration successful, please check your email",
+      userId: user.id,
+    };
+  } catch (error: any) {
+    throw new Error(`Registration failed: ${error.message}`);
+  }
 };

@@ -22,7 +22,6 @@ model User {
   id         Int       @id @default(autoincrement())
   name       String
   email      String    @unique
-
   password   String?
   imageUrl   String?
   token      String?
@@ -61,7 +60,6 @@ model Tenant {
   isDeleted   Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  userId      Int
   user        User     @relation(fields: [userId], references: [id])
 
   property Property[]
@@ -241,7 +239,7 @@ model Reservation {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   room      Room     @relation(fields: [roomId], references: [id])
-  payemnt   Payment  @relation(fields: [paymentId], references: [id])
+  payment   Payment  @relation(fields: [paymentId], references: [id])
 
   @@map("reservations")
 }
