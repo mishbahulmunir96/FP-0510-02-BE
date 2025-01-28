@@ -22,7 +22,6 @@ export const checkRoomAvailability = async (
     select: { stock: true },
   });
 
-
   const availableStock = room?.stock || 0;
   const bookedRooms = reservations.length;
 
@@ -30,15 +29,3 @@ export const checkRoomAvailability = async (
 
   return isRoomAvailable;
 };
-
-  if (!room) {
-    throw new Error("Room not found.");
-  }
-
-  const availableStock = room.stock || 0;
-  const bookedRooms = reservations.length;
-
-  const isRoomAvailable = bookedRooms < availableStock;
-  return isRoomAvailable;
-};
-

@@ -80,7 +80,7 @@ export const getPropertiesService = async (query: GetPropertyQuery) => {
               none: {
                 AND: [
                   {
-                    payemnt: {
+                    payment: {
                       status: {
                         in: ["WAITING_FOR_PAYMENT_CONFIRMATION", "PROCESSED"],
                       },
@@ -138,7 +138,7 @@ export const getPropertiesService = async (query: GetPropertyQuery) => {
             peakSeasonRate: true,
             reservation: {
               include: {
-                payemnt: true,
+                payment: true,
               },
             },
             roomNonAvailability: {

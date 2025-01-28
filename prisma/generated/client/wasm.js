@@ -150,8 +150,7 @@ exports.Prisma.TenantScalarFieldEnum = {
   balance: 'balance',
   isDeleted: 'isDeleted',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  userId: 'userId'
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.PropertyScalarFieldEnum = {
