@@ -25,7 +25,7 @@ export const getPropertiesService = async (query: GetPropertyQuery) => {
     guest,
   } = query;
 
-  // Validasi tanggal
+  // Date validation
   if ((startDate && !endDate) || (!startDate && endDate)) {
     throw new Error("Both startDate and endDate are required for filtering");
   }
@@ -43,9 +43,7 @@ export const getPropertiesService = async (query: GetPropertyQuery) => {
 
   const whereClause: Prisma.PropertyWhereInput = {
     isDeleted: false,
-    status: {
-      not: "DRAFT",
-    },
+    status: "PUBLISHED",
     ...(location && { location: { contains: location, mode: "insensitive" } }),
     ...(category && { category: { contains: category, mode: "insensitive" } }),
     ...(search && {
@@ -77,12 +75,15 @@ export const getPropertiesService = async (query: GetPropertyQuery) => {
                   gte: guest,
                 }
               : undefined,
-            transaction: {
+            // Check for existing reservations
+            reservation: {
               none: {
                 AND: [
                   {
-                    status: {
-                      in: ["WAITING_FOR_PAYMENT_CONFIRMATION", "PROCESSED"],
+                    payemnt: {
+                      status: {
+                        in: ["WAITING_FOR_PAYMENT_CONFIRMATION", "PROCESSED"],
+                      },
                     },
                   },
                   {
@@ -92,8 +93,10 @@ export const getPropertiesService = async (query: GetPropertyQuery) => {
                 ],
               },
             },
+            // Check room non-availability dates
             roomNonAvailability: {
               none: {
+                isDeleted: false,
                 date: {
                   gte: new Date(startDate),
                   lte: new Date(endDate),
@@ -133,8 +136,16 @@ export const getPropertiesService = async (query: GetPropertyQuery) => {
             roomImage: true,
             roomFacility: true,
             peakSeasonRate: true,
-            transaction: true,
-            roomNonAvailability: true,
+            reservation: {
+              include: {
+                payemnt: true,
+              },
+            },
+            roomNonAvailability: {
+              where: {
+                isDeleted: false,
+              },
+            },
           },
         },
       },
@@ -151,4 +162,3 @@ export const getPropertiesService = async (query: GetPropertyQuery) => {
     },
   };
 };
-//

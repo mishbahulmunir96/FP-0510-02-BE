@@ -147,10 +147,10 @@ exports.Prisma.TenantScalarFieldEnum = {
   bankName: 'bankName',
   bankNumber: 'bankNumber',
   balance: 'balance',
-  role: 'role',
   isDeleted: 'isDeleted',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  userId: 'userId'
 };
 
 exports.Prisma.PropertyScalarFieldEnum = {
@@ -238,15 +238,13 @@ exports.Prisma.RoomNonAvailabilityScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
-exports.Prisma.TransactionScalarFieldEnum = {
+exports.Prisma.PaymentScalarFieldEnum = {
   id: 'id',
   uuid: 'uuid',
   userId: 'userId',
-  roomId: 'roomId',
   status: 'status',
-  total: 'total',
-  startDate: 'startDate',
-  endDate: 'endDate',
+  totalPrice: 'totalPrice',
+  duration: 'duration',
   paymentMethode: 'paymentMethode',
   paymentProof: 'paymentProof',
   snapToken: 'snapToken',
@@ -256,12 +254,24 @@ exports.Prisma.TransactionScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.ReservationScalarFieldEnum = {
+  id: 'id',
+  uuid: 'uuid',
+  roomId: 'roomId',
+  paymentId: 'paymentId',
+  price: 'price',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.ReviewScalarFieldEnum = {
   id: 'id',
   rating: 'rating',
   review: 'review',
   userId: 'userId',
-  transactionId: 'transactionId',
+  paymentId: 'paymentId',
   propertyId: 'propertyId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -302,7 +312,7 @@ exports.Type = exports.$Enums.Type = {
   Suite: 'Suite'
 };
 
-exports.StatusTransaction = exports.$Enums.StatusTransaction = {
+exports.StatusPayment = exports.$Enums.StatusPayment = {
   WAITING_FOR_PAYMENT: 'WAITING_FOR_PAYMENT',
   WAITING_FOR_PAYMENT_CONFIRMATION: 'WAITING_FOR_PAYMENT_CONFIRMATION',
   CANCELLED: 'CANCELLED',
@@ -326,7 +336,8 @@ exports.Prisma.ModelName = {
   RoomFacility: 'RoomFacility',
   RoomImage: 'RoomImage',
   RoomNonAvailability: 'RoomNonAvailability',
-  Transaction: 'Transaction',
+  Payment: 'Payment',
+  Reservation: 'Reservation',
   Review: 'Review'
 };
 

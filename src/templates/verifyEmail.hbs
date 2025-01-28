@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verify Your Email</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+      font-family: Arial, sans-serif;
+    }
+    .container {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #ffffff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    .body {
+      padding: 20px;
+      color: #333333;
+    }
+    .body h2 {
+      margin-top: 0;
+    }
+    @media only screen and (max-width: 600px) {
+      .container {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    {{> header }}
+    <div class="body">
+      <h2>Welcome, {{name}}!</h2>
+      <p>Thank you for creating an account with us. Please verify your email address by clicking the button below:</p>
+      {{> button }}
+      <p>If you did not create an account, you can safely ignore this email.</p>
+    </div>
+    {{> footer }}
+  </div>
+</body>
+</html>

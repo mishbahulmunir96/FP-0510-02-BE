@@ -1,9 +1,15 @@
 import express from "express";
-import { registerController } from "../controllers/auth.controller";
-import { validateRegister } from "../validators/auth.validators";
+import {
+  loginController,
+  registerController,
+  verifyController,
+} from "../controllers/auth.controller";
+import { validateLogin, validateRegister } from "../validators/auth.validators";
 import { uploader } from "../lib/multer";
 
 const router = express.Router();
+
+router.post("/login", validateLogin, loginController);
 
 router.post(
   "/register",
@@ -13,4 +19,5 @@ router.post(
   registerController
 );
 
+router.post("/verify", verifyController);
 export default router;
