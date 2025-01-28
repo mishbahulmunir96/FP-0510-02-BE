@@ -1,4 +1,3 @@
-
 import { Router } from "express";
 import {
   cancelTransactionByUserController,
@@ -9,27 +8,20 @@ import {
 } from "../controllers/transaction.controller";
 import { fileFilter } from "../lib/fileFilter";
 import { uploader } from "../lib/multer";
-import { verifyTokenDummy } from "../lib/jwtDummy";
-
+import { verifyToken } from "../lib/jwt";
 
 const router = Router();
 
-
-router.get("/", verifyTokenDummy, getTransactionsByUserController);
-router.get("/:id", verifyTokenDummy, getTransactionByUserController);
-router.post("/", verifyTokenDummy, createRoomReservationController);
+router.get("/", verifyToken, getTransactionsByUserController);
+router.get("/:id", verifyToken, getTransactionByUserController);
+router.post("/", verifyToken, createRoomReservationController);
 router.patch(
   "/:id",
-  verifyTokenDummy,
+  verifyToken,
   fileFilter,
   uploader().single("paymentProof"),
   uploadPaymentProofController
 );
-router.patch(
-  "/cancel/:id",
-  verifyTokenDummy,
-  cancelTransactionByUserController
-);
-
+router.patch("/cancel/:id", verifyToken, cancelTransactionByUserController);
 
 export default router;
