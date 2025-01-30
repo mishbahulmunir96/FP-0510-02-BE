@@ -13,8 +13,13 @@ export const getTransactionsByUserService = async (
         reservation: {
           include: {
             room: {
-              select: {
-                type: true,
+              include: {
+                property: {
+                  select: {
+                    title: true,
+                    location: true,
+                  },
+                },
               },
             },
           },
@@ -46,6 +51,8 @@ export const getTransactionsByUserService = async (
                 .endDate
             : null;
 
+        const firstReservation = transaction.reservation[0];
+
         return {
           id: transaction.id,
           uuid: transaction.uuid,
@@ -55,14 +62,11 @@ export const getTransactionsByUserService = async (
           updatedAt: transaction.updatedAt,
           checkIn: checkInDate,
           checkOut: checkOutDate,
-          reservations: [
-            {
-              roomType:
-                transaction.reservation.length > 0
-                  ? transaction.reservation[0].room.type
-                  : null,
-            },
-          ],
+          reservations: transaction.reservation.map((reserv) => ({
+            roomType: reserv.room.type,
+            propertyTitle: reserv.room.property.title,
+            propertyLocation: reserv.room.property.location,
+          })),
         };
       }),
       meta: { page, take, total: count },

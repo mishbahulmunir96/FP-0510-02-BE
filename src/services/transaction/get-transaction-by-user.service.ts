@@ -11,8 +11,26 @@ export const getTransactionByUserService = async (
         reservation: {
           include: {
             room: {
-              select: {
-                type: true,
+              include: {
+                property: {
+                  select: {
+                    title: true,
+                    location: true,
+                  },
+                },
+                roomImage: {
+                  select: {
+                    imageUrl: true,
+                  },
+                },
+                roomFacility: {
+                  where: {
+                    isDeleted: false,
+                  },
+                  select: {
+                    title: true,
+                  },
+                },
               },
             },
           },
@@ -49,6 +67,14 @@ export const getTransactionByUserService = async (
       checkOutDate,
       reservations: transaction.reservation.map((reserv) => ({
         roomType: reserv.room.type,
+        propertyTitle: reserv.room.property.title,
+        propertyLocation: reserv.room.property.location,
+        // Map array of room images
+        roomImages: reserv.room.roomImage.map((image) => image.imageUrl),
+        // Map array of room facility titles
+        roomFacilities: reserv.room.roomFacility.map(
+          (facility) => facility.title
+        ),
       })),
     };
   } catch (error) {
