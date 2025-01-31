@@ -1,0 +1,14 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const transaction_controller_1 = require("../controllers/transaction.controller");
+const fileFilter_1 = require("../lib/fileFilter");
+const multer_1 = require("../lib/multer");
+const jwt_1 = require("../lib/jwt");
+const router = (0, express_1.Router)();
+router.get("/", jwt_1.verifyToken, transaction_controller_1.getTransactionsByUserController);
+router.get("/:id", jwt_1.verifyToken, transaction_controller_1.getTransactionByUserController);
+router.post("/", jwt_1.verifyToken, transaction_controller_1.createRoomReservationController);
+router.patch("/:id", jwt_1.verifyToken, fileFilter_1.fileFilter, (0, multer_1.uploader)().single("paymentProof"), transaction_controller_1.uploadPaymentProofController);
+router.patch("/cancel/:id", jwt_1.verifyToken, transaction_controller_1.cancelTransactionByUserController);
+exports.default = router;

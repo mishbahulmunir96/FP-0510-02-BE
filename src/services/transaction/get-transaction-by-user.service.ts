@@ -31,6 +31,11 @@ export const getTransactionByUserService = async (
                     title: true,
                   },
                 },
+                peakSeasonRate: {
+                  where: {
+                    isDeleted: false,
+                  },
+                },
               },
             },
           },
@@ -65,13 +70,14 @@ export const getTransactionByUserService = async (
       paymentProof: transaction.paymentProof,
       checkInDate,
       checkOutDate,
+      duration: transaction.duration,
+      updatedAt: transaction.updatedAt,
       reservations: transaction.reservation.map((reserv) => ({
         roomType: reserv.room.type,
         propertyTitle: reserv.room.property.title,
+        roomPrice: reserv.room.price,
         propertyLocation: reserv.room.property.location,
-        // Map array of room images
         roomImages: reserv.room.roomImage.map((image) => image.imageUrl),
-        // Map array of room facility titles
         roomFacilities: reserv.room.roomFacility.map(
           (facility) => facility.title
         ),

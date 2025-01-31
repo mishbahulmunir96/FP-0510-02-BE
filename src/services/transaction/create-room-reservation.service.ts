@@ -1,10 +1,8 @@
-
 import { StatusPayment } from "../../../prisma/generated/client";
 import { checkRoomAvailability } from "../../lib/checkRoomAvailability";
 import prisma from "../../lib/prisma";
 import schedule from "node-schedule";
 import { addMinutes } from "date-fns";
-
 
 interface CreateRoomReservationBody {
   userId: number;
@@ -12,7 +10,6 @@ interface CreateRoomReservationBody {
   startDate: Date;
   endDate: Date;
 }
-
 
 export const createRoomReservationService = async (
   body: CreateRoomReservationBody
@@ -45,29 +42,26 @@ export const createRoomReservationService = async (
 
     let totalPrice = 0;
 
-    // Loop untuk menghitung totalPrice berdasarkan tanggal reservasi
     for (let i = 0; i < diffDays; i++) {
       const currentDate = new Date(start);
       currentDate.setDate(currentDate.getDate() + i);
 
-      // Cek harga di PeakSeasonRate
       const peakRate = await prisma.peakSeasonRate.findFirst({
         where: {
           roomId: roomId,
           startDate: { lte: currentDate },
           endDate: { gte: currentDate },
-          isDeleted: false, // pastikan tidak mengambil yang dihapus
+          isDeleted: false,
         },
       });
 
       if (peakRate) {
         totalPrice += peakRate.price;
       } else {
-        totalPrice += room.price; // harga normal kamar
+        totalPrice += room.price;
       }
     }
 
-    // Buat pembayaran
     const payment = await prisma.payment.create({
       data: {
         userId,
@@ -87,19 +81,18 @@ export const createRoomReservationService = async (
       const currentEndDate = new Date(currentStartDate);
       currentEndDate.setDate(currentStartDate.getDate() + 1);
 
-      // Calculate peakRate for each day
       const peakRate = await prisma.peakSeasonRate.findFirst({
         where: {
           roomId: roomId,
           startDate: { lte: currentStartDate },
           endDate: { gte: currentStartDate },
-          isDeleted: false, // pastikan tidak mengambil yang dihapus
+          isDeleted: false,
         },
       });
 
       reservations.push({
         roomId,
-        price: peakRate ? peakRate.price : room.price, // Gunakan harga peakRate jika ada
+        price: peakRate ? peakRate.price : room.price,
         paymentId: payment.id,
         startDate: currentStartDate,
         endDate: currentEndDate,
@@ -131,4 +124,3 @@ export const createRoomReservationService = async (
     throw error;
   }
 };
-
