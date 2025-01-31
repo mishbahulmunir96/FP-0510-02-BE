@@ -1,10 +1,10 @@
-
 import { NextFunction, Request, Response } from "express";
 import { createRoomReservationService } from "../services/transaction/create-room-reservation.service";
 import { getTransactionByUserService } from "../services/transaction/get-transaction-by-user.service";
 import { uploadPaymentProofService } from "../services/transaction/upload-payment-proof.service";
 import { getTransactionsByUserService } from "../services/transaction/get-transactions-by-user.service";
 import { cancelTransactionByUserService } from "../services/transaction/cancel-transaction-by-user";
+import { getTransactionsByTenantService } from "../services/transaction/get-transactions-by-tenant.service";
 
 export const createRoomReservationController = async (
   req: Request,
@@ -108,3 +108,23 @@ export const cancelTransactionByUserController = async (
   }
 };
 
+export const getTransactionsByTenantController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const tenantId = res.locals.id;
+    const query = {
+      take: parseInt(req.query.take as string) || 10,
+      page: parseInt(req.query.page as string) || 1,
+      sortBy: (req.query.sortBy as string) || "createdAt",
+      sortOrder: (req.query.sortOrder as string) || "desc",
+    };
+
+    const result = await getTransactionsByTenantService(tenantId, query);
+    res.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
