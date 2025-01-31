@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   cancelTransactionByUserController,
   createRoomReservationController,
+  getTransactionByTenantController,
   getTransactionByUserController,
   getTransactionsByTenantController,
   getTransactionsByUserController,
@@ -17,6 +18,12 @@ const router = Router();
 router.get("/", verifyToken, getTransactionsByUserController);
 router.get("/tenant", verifyToken, isTenant, getTransactionsByTenantController);
 router.get("/:id", verifyToken, getTransactionByUserController);
+router.get(
+  "/tenant/:id",
+  verifyToken,
+  isTenant,
+  getTransactionByTenantController
+);
 router.post("/", verifyToken, createRoomReservationController);
 router.patch(
   "/:id",
