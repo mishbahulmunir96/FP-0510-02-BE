@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  approveTransactionByTenantController,
   cancelTransactionByUserController,
   createRoomReservationController,
   getTransactionByTenantController,
@@ -33,5 +34,11 @@ router.patch(
   uploadPaymentProofController
 );
 router.patch("/cancel/:id", verifyToken, cancelTransactionByUserController);
+router.patch(
+  "/tenant/:id",
+  verifyToken,
+  isTenant,
+  approveTransactionByTenantController
+);
 
 export default router;
