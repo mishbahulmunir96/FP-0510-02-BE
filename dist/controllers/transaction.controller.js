@@ -9,12 +9,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.cancelTransactionByUserController = exports.getTransactionsByUserController = exports.getTransactionByUserController = exports.uploadPaymentProofController = exports.createRoomReservationController = void 0;
+exports.cancelTransactionByTenantController = exports.approveTransactionByTenantController = exports.getTransactionByTenantController = exports.getTransactionsByTenantController = exports.cancelTransactionByUserController = exports.getTransactionsByUserController = exports.getTransactionByUserController = exports.uploadPaymentProofController = exports.createRoomReservationController = void 0;
 const create_room_reservation_service_1 = require("../services/transaction/create-room-reservation.service");
 const get_transaction_by_user_service_1 = require("../services/transaction/get-transaction-by-user.service");
 const upload_payment_proof_service_1 = require("../services/transaction/upload-payment-proof.service");
 const get_transactions_by_user_service_1 = require("../services/transaction/get-transactions-by-user.service");
-const cancel_transaction_by_user_1 = require("../services/transaction/cancel-transaction-by-user");
+const cancel_transaction_by_user_service_1 = require("../services/transaction/cancel-transaction-by-user.service");
+const get_transactions_by_tenant_service_1 = require("../services/transaction/get-transactions-by-tenant.service");
+const get_transaction_by_tenant_tservice_1 = require("../services/transaction/get-transaction-by-tenant.tservice");
+const approve_transaction_by_tenant_service_1 = require("../services/transaction/approve-transaction-by-tenant.service");
+const cancel_transaction_by_tenant_service_1 = require("../services/transaction/cancel-transaction-by-tenant.service");
 const createRoomReservationController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const userId = res.locals.user.id;
@@ -86,7 +90,7 @@ const cancelTransactionByUserController = (req, res, next) => __awaiter(void 0, 
     try {
         const paymentId = Number(req.params.id);
         const userId = res.locals.user.id;
-        const result = yield (0, cancel_transaction_by_user_1.cancelTransactionByUserService)(paymentId, userId);
+        const result = yield (0, cancel_transaction_by_user_service_1.cancelTransactionByUserService)(paymentId, userId);
         res.status(200).send(result);
     }
     catch (error) {
@@ -94,3 +98,57 @@ const cancelTransactionByUserController = (req, res, next) => __awaiter(void 0, 
     }
 });
 exports.cancelTransactionByUserController = cancelTransactionByUserController;
+const getTransactionsByTenantController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const tenantId = res.locals.id;
+        const query = {
+            take: parseInt(req.query.take) || 10,
+            page: parseInt(req.query.page) || 1,
+            sortBy: req.query.sortBy || "createdAt",
+            sortOrder: req.query.sortOrder || "desc",
+        };
+        const result = yield (0, get_transactions_by_tenant_service_1.getTransactionsByTenantService)(tenantId, query);
+        res.status(200).json(result);
+    }
+    catch (error) {
+        next(error);
+    }
+});
+exports.getTransactionsByTenantController = getTransactionsByTenantController;
+const getTransactionByTenantController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const tenantId = res.locals.user.id;
+        const transactionId = parseInt(req.params.id);
+        const transaction = yield (0, get_transaction_by_tenant_tservice_1.getTransactionByTenantService)(transactionId, tenantId);
+        res.status(200).json(transaction);
+    }
+    catch (error) {
+        next(error);
+    }
+});
+exports.getTransactionByTenantController = getTransactionByTenantController;
+const approveTransactionByTenantController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const tenantId = res.locals.user.id;
+        const paymentId = parseInt(req.params.id);
+        const isApproved = req.body.isApproved === true;
+        const result = yield (0, approve_transaction_by_tenant_service_1.approveTransactionByTenantService)(paymentId, tenantId, isApproved);
+        res.status(200).json(result);
+    }
+    catch (error) {
+        next(error);
+    }
+});
+exports.approveTransactionByTenantController = approveTransactionByTenantController;
+const cancelTransactionByTenantController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const tenantId = res.locals.user.id;
+        const paymentId = parseInt(req.params.id);
+        const result = yield (0, cancel_transaction_by_tenant_service_1.cancelTransactionByTenantService)(paymentId, tenantId);
+        res.status(200).json(result);
+    }
+    catch (error) {
+        next(error);
+    }
+});
+exports.cancelTransactionByTenantController = cancelTransactionByTenantController;

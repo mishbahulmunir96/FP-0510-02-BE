@@ -40,27 +40,24 @@ const createRoomReservationService = (body) => __awaiter(void 0, void 0, void 0,
             throw new Error("Room price not found.");
         }
         let totalPrice = 0;
-        // Loop untuk menghitung totalPrice berdasarkan tanggal reservasi
         for (let i = 0; i < diffDays; i++) {
             const currentDate = new Date(start);
             currentDate.setDate(currentDate.getDate() + i);
-            // Cek harga di PeakSeasonRate
             const peakRate = yield prisma_1.default.peakSeasonRate.findFirst({
                 where: {
                     roomId: roomId,
                     startDate: { lte: currentDate },
                     endDate: { gte: currentDate },
-                    isDeleted: false, // pastikan tidak mengambil yang dihapus
+                    isDeleted: false,
                 },
             });
             if (peakRate) {
                 totalPrice += peakRate.price;
             }
             else {
-                totalPrice += room.price; // harga normal kamar
+                totalPrice += room.price;
             }
         }
-        // Buat pembayaran
         const payment = yield prisma_1.default.payment.create({
             data: {
                 userId,
@@ -77,18 +74,17 @@ const createRoomReservationService = (body) => __awaiter(void 0, void 0, void 0,
             currentStartDate.setDate(currentStartDate.getDate() + i);
             const currentEndDate = new Date(currentStartDate);
             currentEndDate.setDate(currentStartDate.getDate() + 1);
-            // Calculate peakRate for each day
             const peakRate = yield prisma_1.default.peakSeasonRate.findFirst({
                 where: {
                     roomId: roomId,
                     startDate: { lte: currentStartDate },
                     endDate: { gte: currentStartDate },
-                    isDeleted: false, // pastikan tidak mengambil yang dihapus
+                    isDeleted: false,
                 },
             });
             reservations.push({
                 roomId,
-                price: peakRate ? peakRate.price : room.price, // Gunakan harga peakRate jika ada
+                price: peakRate ? peakRate.price : room.price,
                 paymentId: payment.id,
                 startDate: currentStartDate,
                 endDate: currentEndDate,
