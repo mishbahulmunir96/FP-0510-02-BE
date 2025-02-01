@@ -1,0 +1,40 @@
+<html>
+  <head>
+    <style>
+      body { font-family: Arial, sans-serif; line-height: 1.6; color: #333;
+      max-width: 600px; margin: 0 auto; padding: 20px; } .header {
+      background-color: #ff4d4d; color: white; padding: 20px; text-align:
+      center; border-radius: 8px; } .content { padding: 20px; background: #fff;
+      border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); } .details {
+      background: #f9f9f9; padding: 15px; border-radius: 4px; margin: 15px 0; }
+      .action-button { display: inline-block; padding: 12px 24px;
+      background-color: #ff4d4d; color: white; text-decoration: none;
+      border-radius: 4px; margin: 20px 0; }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h2>Payment Rejected</h2>
+    </div>
+
+    <div class="content">
+      <p>Hello {{userName}},</p>
+
+      <p>Unfortunately, your payment for the following reservation has been
+        rejected.</p>
+
+      <div class="details">
+        <h3>Order Details:</h3>
+        <p>Transaction ID: {{transactionId}}</p>
+        <p>Property: {{propertyName}}</p>
+        <p>Total Amount: Rp. {{totalPrice}}</p>
+      </div>
+
+      <p>Please submit a new payment proof by clicking the button below:</p>
+
+      <center>
+        <a href="{{paymentLink}}" class="action-button">Upload New Payment Proof</a>
+      </center>
+    </div>
+  </body>
+</html>

@@ -60,8 +60,9 @@ export const getTransactionsByUserService = async (
           duration: transaction.duration,
           createdAt: transaction.createdAt,
           updatedAt: transaction.updatedAt,
-          checkIn: checkInDate,
-          checkOut: checkOutDate,
+          checkInDate,
+          checkOutDate,
+          status: transaction.status,
           reservations: transaction.reservation.map((reserv) => ({
             roomType: reserv.room.type,
             propertyTitle: reserv.room.property.title,
