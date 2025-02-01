@@ -7,6 +7,7 @@ import { cancelTransactionByUserService } from "../services/transaction/cancel-t
 import { getTransactionsByTenantService } from "../services/transaction/get-transactions-by-tenant.service";
 import { getTransactionByTenantService } from "../services/transaction/get-transaction-by-tenant.tservice";
 import { approveTransactionByTenantService } from "../services/transaction/approve-transaction-by-tenant.service";
+import { cancelTransactionByTenantService } from "../services/transaction/cancel-transaction-by-tenant.service";
 
 export const createRoomReservationController = async (
   req: Request,
@@ -165,6 +166,23 @@ export const approveTransactionByTenantController = async (
       tenantId,
       isApproved
     );
+
+    res.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const cancelTransactionByTenantController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const tenantId = res.locals.user.id;
+    const paymentId = parseInt(req.params.id);
+
+    const result = await cancelTransactionByTenantService(paymentId, tenantId);
 
     res.status(200).json(result);
   } catch (error) {
