@@ -48,7 +48,6 @@ export const approveTransactionByTenantService = async (
     },
   });
 
-  // Send email notification
   const templatePath = path.join(
     __dirname,
     `../../templates/${
