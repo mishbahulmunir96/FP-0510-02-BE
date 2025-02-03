@@ -5,6 +5,7 @@ import sampleRouter from "./routes/sample.router";
 import transactionRouter from "./routes/transaction.router";
 import propertyRouter from "./routes/property.router";
 import authRouter from "./routes/auth.router";
+import accountRouter from "./routes/account.router";
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.use("/samples", sampleRouter);
 app.use("/transactions", transactionRouter);
 app.use("/properties", propertyRouter);
 app.use("/auth", authRouter);
+app.use("/account", accountRouter);
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   res.status(400).send(err.message);
