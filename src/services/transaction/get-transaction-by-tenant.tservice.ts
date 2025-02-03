@@ -1,81 +1,112 @@
+import { differenceInDays } from "date-fns";
 import prisma from "../../lib/prisma";
 
 export const getTransactionByTenantService = async (
   id: number,
   tenantId: number
 ) => {
-  const transaction = await prisma.payment.findFirst({
-    where: {
-      id,
-      reservation: {
-        some: {
-          room: {
-            property: {
-              tenantId,
-            },
-          },
-        },
-      },
-    },
-    include: {
-      user: {
-        select: {
-          name: true,
-          email: true,
-          imageUrl: true,
-        },
-      },
-      reservation: {
-        include: {
-          room: {
-            include: {
+  try {
+    const transaction = await prisma.payment.findFirst({
+      where: {
+        id,
+        reservation: {
+          some: {
+            room: {
               property: {
-                select: {
-                  title: true,
-                  location: true,
-                },
-              },
-              roomImage: {
-                select: {
-                  imageUrl: true,
-                },
-              },
-              roomFacility: {
-                where: { isDeleted: false },
-                select: { title: true },
+                tenantId,
               },
             },
           },
         },
       },
-    },
-  });
+      include: {
+        user: {
+          select: {
+            name: true,
+            email: true,
+            imageUrl: true,
+          },
+        },
+        reservation: {
+          include: {
+            room: {
+              include: {
+                property: {
+                  select: {
+                    title: true,
+                    location: true,
+                  },
+                },
+                roomImage: {
+                  select: {
+                    imageUrl: true,
+                  },
+                },
+                roomFacility: {
+                  where: { isDeleted: false },
+                  select: { title: true },
+                },
+                peakSeasonRate: {
+                  where: { isDeleted: false },
+                  select: {
+                    price: true,
+                    startDate: true,
+                    endDate: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
 
-  if (!transaction) {
-    throw new Error("Transaction not found");
-  }
+    if (!transaction) {
+      throw new Error("Transaction not found");
+    }
 
-  return {
-    id: transaction.id,
-    uuid: transaction.uuid,
-    customer: transaction.user,
-    totalPrice: transaction.totalPrice,
-    paymentMethode: transaction.paymentMethode,
-    status: transaction.status,
-    paymentProof: transaction.paymentProof,
-    checkInDate: transaction.reservation[0]?.startDate,
-    checkOutDate: transaction.reservation[0]?.endDate,
-    duration: transaction.duration,
-    updatedAt: transaction.updatedAt,
-    reservations: transaction.reservation.map((reserv) => ({
-      roomType: reserv.room.type,
-      propertyTitle: reserv.room.property.title,
-      roomPrice: reserv.price,
-      propertyLocation: reserv.room.property.location,
-      roomImages: reserv.room.roomImage.map((image) => image.imageUrl),
-      roomFacilities: reserv.room.roomFacility.map(
-        (facility) => facility.title
-      ),
-    })),
-  };
+    return {
+      id: transaction.id,
+      uuid: transaction.uuid,
+      customer: transaction.user,
+      totalPrice: transaction.totalPrice,
+      paymentMethode: transaction.paymentMethode,
+      status: transaction.status,
+      paymentProof: transaction.paymentProof,
+      checkInDate: transaction.reservation[0]?.startDate,
+      checkOutDate: transaction.reservation[0]?.endDate,
+      duration: transaction.duration,
+      updatedAt: transaction.updatedAt,
+      reservations: transaction.reservation.map((reserv) => {
+        const peakSeason = reserv.room.peakSeasonRate.find(
+          (peak) =>
+            reserv.startDate <= peak.endDate && reserv.endDate >= peak.startDate
+        );
+
+        let peakSeasonDays = 0;
+        if (peakSeason) {
+          const overlapStart = new Date(
+            Math.max(reserv.startDate.getTime(), peakSeason.startDate.getTime())
+          );
+          const overlapEnd = new Date(
+            Math.min(reserv.endDate.getTime(), peakSeason.endDate.getTime())
+          );
+          peakSeasonDays = differenceInDays(overlapEnd, overlapStart);
+        }
+
+        return {
+          roomType: reserv.room.type,
+          propertyTitle: reserv.room.property.title,
+          roomPrice: reserv.price,
+          propertyLocation: reserv.room.property.location,
+          roomImages: reserv.room.roomImage.map((image) => image.imageUrl),
+          roomFacilities: reserv.room.roomFacility.map(
+            (facility) => facility.title
+          ),
+          peakSeasonDays,
+          peakSeasonPrice: peakSeason?.price || null,
+        };
+      }),
+    };
+  } catch (error) {}
 };

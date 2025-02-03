@@ -9,10 +9,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.verifyController = exports.registerController = exports.loginController = void 0;
+exports.loginWithGoogleController = exports.resetPasswordController = exports.forgotPasswordController = exports.verifyController = exports.registerController = exports.loginController = void 0;
 const register_service_1 = require("../services/auth/register.service");
 const verify_service_1 = require("../services/auth/verify.service");
 const login_service_1 = require("../services/auth/login.service");
+const forgot_password_service_1 = require("../services/auth/forgot-password.service");
+const reset_password_service_1 = require("../services/auth/reset-password.service");
+const google_service_1 = require("../services/auth/google.service");
 const loginController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const result = yield (0, login_service_1.loginService)(req.body);
@@ -66,3 +69,34 @@ const verifyController = (req, res, next) => __awaiter(void 0, void 0, void 0, f
     }
 });
 exports.verifyController = verifyController;
+const forgotPasswordController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const result = yield (0, forgot_password_service_1.forgotPasswordService)(req.body);
+        res.status(200).send(result);
+    }
+    catch (error) {
+        next(error);
+    }
+});
+exports.forgotPasswordController = forgotPasswordController;
+const resetPasswordController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const userId = Number(res.locals.user.id);
+        const result = yield (0, reset_password_service_1.resetPasswordService)(userId, req.body.password);
+        res.status(200).send(result);
+    }
+    catch (error) {
+        next(error);
+    }
+});
+exports.resetPasswordController = resetPasswordController;
+const loginWithGoogleController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const result = yield (0, google_service_1.loginWithGoogleService)(req.body.accessToken);
+        res.status(200).send(result);
+    }
+    catch (error) {
+        next(error);
+    }
+});
+exports.loginWithGoogleController = loginWithGoogleController;

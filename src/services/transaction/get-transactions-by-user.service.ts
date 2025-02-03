@@ -51,8 +51,6 @@ export const getTransactionsByUserService = async (
                 .endDate
             : null;
 
-        const firstReservation = transaction.reservation[0];
-
         return {
           id: transaction.id,
           uuid: transaction.uuid,

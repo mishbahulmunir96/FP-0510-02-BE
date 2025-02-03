@@ -97,10 +97,10 @@ const registerService = (data, file) => __awaiter(void 0, void 0, void 0, functi
         const replacements = {
             name: data.name,
             verificationLink: `${process.env.BASE_URL_FE}/verify?token=${verificationToken}`,
-            logoUrl: process.env.LOGO_URL,
-            appName: process.env.APP_NAME || "RateHaven",
+            logoUrl: "https://res.cloudinary.com/andikalp/image/upload/v1738209868/qdx0l3jzw4fsqoag71dl.png",
+            appName: "RateHaven",
             year: new Date().getFullYear(),
-            appAddress: process.env.APP_ADDRESS || "RateHaven Address, Yogyakarta, Indonesia",
+            appAddress: "RateHaven Address, Yogyakarta, Indonesia",
             expiryTime: "1 hour",
         };
         // Render HTML email
