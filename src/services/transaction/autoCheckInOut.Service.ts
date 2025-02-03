@@ -16,7 +16,6 @@ export const initializeAutoCheckInOut = () => {
 const autoCheckIn = async () => {
   const currentDate = new Date();
 
-  // Hanya jalankan jika waktu sudah lewat jam 14:00
   if (currentDate.getHours() < 14) {
     return;
   }
@@ -33,7 +32,7 @@ const autoCheckIn = async () => {
                 currentDate.getFullYear(),
                 currentDate.getMonth(),
                 currentDate.getDate(),
-                14, // 14:00
+                14,
                 0,
                 0
               ),
@@ -57,18 +56,16 @@ const autoCheckIn = async () => {
 const autoCheckOut = async () => {
   const currentDate = new Date();
 
-  // Hanya jalankan jika waktu sudah lewat jam 12:00
   if (currentDate.getHours() < 12) {
     return;
   }
 
   try {
-    // Set waktu checkout ke jam 12:00 hari ini
     const checkoutTime = new Date(
       currentDate.getFullYear(),
       currentDate.getMonth(),
       currentDate.getDate(),
-      12, // 12:00
+      12,
       0,
       0
     );
@@ -79,7 +76,6 @@ const autoCheckOut = async () => {
         reservation: {
           some: {
             endDate: {
-              // Cek apakah endDate adalah hari ini dan sudah lewat jam 12
               lte: currentDate,
               gte: checkoutTime,
             },
