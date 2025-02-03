@@ -65,6 +65,16 @@ export const getTransactionByTenantService = async (
       throw new Error("Transaction not found");
     }
 
+    const checkInDate =
+      transaction.reservation.length > 0
+        ? transaction.reservation[0].startDate
+        : null;
+
+    const checkOutDate =
+      transaction.reservation.length > 0
+        ? transaction.reservation[transaction.reservation.length - 1].endDate
+        : null;
+
     return {
       id: transaction.id,
       uuid: transaction.uuid,
@@ -73,8 +83,8 @@ export const getTransactionByTenantService = async (
       paymentMethode: transaction.paymentMethode,
       status: transaction.status,
       paymentProof: transaction.paymentProof,
-      checkInDate: transaction.reservation[0]?.startDate,
-      checkOutDate: transaction.reservation[0]?.endDate,
+      checkInDate,
+      checkOutDate,
       duration: transaction.duration,
       updatedAt: transaction.updatedAt,
       reservations: transaction.reservation.map((reserv) => {
