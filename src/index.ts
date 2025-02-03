@@ -6,6 +6,7 @@ import transactionRouter from "./routes/transaction.router";
 import propertyRouter from "./routes/property.router";
 import authRouter from "./routes/auth.router";
 import accountRouter from "./routes/account.router";
+import { initializeAutoCheckInOut } from "./services/transaction/autoCheckInOut.Service";
 
 const app = express();
 
@@ -21,6 +22,8 @@ app.use("/account", accountRouter);
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   res.status(400).send(err.message);
 });
+
+initializeAutoCheckInOut();
 
 app.listen(PORT, () => {
   console.log(`server running on PORT: ${PORT}`);
