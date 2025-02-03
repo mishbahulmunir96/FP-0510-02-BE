@@ -8,6 +8,7 @@ import {
   getTransactionByUserController,
   getTransactionsByTenantController,
   getTransactionsByUserController,
+  testCreateXenditController,
   uploadPaymentProofController,
 } from "../controllers/transaction.controller";
 import { fileFilter } from "../lib/fileFilter";
@@ -47,5 +48,6 @@ router.patch(
   isTenant,
   cancelTransactionByTenantController
 );
+router.post("/test-create-xendit", testCreateXenditController);
 
 export default router;
