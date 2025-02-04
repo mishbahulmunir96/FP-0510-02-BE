@@ -103,8 +103,12 @@ export const changeEmailController = async (
   next: NextFunction
 ) => {
   try {
-    const userId = Number(res.locals.user.id); // pastikan middleware auth set res.locals.user
+    const userId = Number(res.locals.user.id);
     const { email } = req.body;
+
+    if (!email) {
+      throw new Error("Email is required");
+    }
 
     const result = await changeEmailService(userId, email);
     res.status(200).json(result);
@@ -119,12 +123,17 @@ export const verifyChangeEmailController = async (
   next: NextFunction
 ) => {
   try {
-    // Misalnya userId dari res.locals.user.id (hasil verifikasi token)
-    const userId = Number(res.locals.user.id);
-    // Email baru diambil dari body
-    const { email } = req.body;
+    const { token, password } = req.body;
 
-    const result = await verifyChangeEmailService(userId, email);
+    if (!token) {
+      throw new Error("Token is required");
+    }
+
+    if (!password) {
+      throw new Error("Password is required");
+    }
+
+    const result = await verifyChangeEmailService({ token, password });
     res.status(200).json(result);
   } catch (error) {
     next(error);

@@ -11,7 +11,6 @@ import {
 import { verifyToken } from "../lib/jwt";
 import { uploader } from "../lib/multer";
 import { fileFilterProfile } from "../lib/profilePictureFilter";
-import { tenantGuard } from "../middlewares/tenantGuard";
 
 const router = Router();
 
@@ -24,6 +23,11 @@ router.patch(
   fileFilterProfile,
   updateProfileController
 );
+router.patch("/change-password", verifyToken, changePasswordController);
+router.post("/verify-change-email", verifyChangeEmailController);
+router.post("/change-email", verifyToken, changeEmailController);
+
+// Move parameter route last
 router.patch(
   "/:tenantId",
   verifyToken,
@@ -31,9 +35,5 @@ router.patch(
   fileFilterProfile,
   updateTenantProfileController
 );
-
-router.patch("/change-password", verifyToken, changePasswordController);
-router.post("/change-email", verifyToken, changeEmailController);
-router.post("/verify-change-email", verifyToken, verifyChangeEmailController);
 
 export default router;
