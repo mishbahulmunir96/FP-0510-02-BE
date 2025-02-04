@@ -32,7 +32,7 @@ export const createReviewService = async (body: CreateReviewBody) => {
     });
 
     if (!payment) {
-      throw new Error("Payment not found or not eligible for review");
+      throw new Error("Transaction not found or not eligible for review");
     }
 
     const existingReview = await prisma.review.findFirst({
