@@ -9,6 +9,6 @@ export const isTenant = (req: Request, res: Response, next: NextFunction) => {
 
   res.status(403).json({
     status: "error",
-    message: "Access denied. Only organizers can do this action.",
+    message: "Access denied. Only Tenant can do this action.",
   });
 };

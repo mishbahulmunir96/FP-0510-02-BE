@@ -247,8 +247,7 @@ exports.Prisma.PaymentScalarFieldEnum = {
   duration: 'duration',
   paymentMethode: 'paymentMethode',
   paymentProof: 'paymentProof',
-  snapToken: 'snapToken',
-  snapRedirectUrl: 'snapRedirectUrl',
+  invoiceUrl: 'invoiceUrl',
   expiredAt: 'expiredAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -273,6 +272,8 @@ exports.Prisma.ReviewScalarFieldEnum = {
   userId: 'userId',
   paymentId: 'paymentId',
   propertyId: 'propertyId',
+  replyMessage: 'replyMessage',
+  replyDate: 'replyDate',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
