@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { createReviewService } from "../services/review/create-review.service";
 import { getReviewsService } from "../services/review/get-reviews.service";
+import { getReviewByTransactionService } from "../services/review/get-review-by-transaction.service";
 
 export const createReviewController = async (
   req: Request,
@@ -47,6 +48,34 @@ export const getReviewsController = async (
       sortBy,
       sortOrder,
     });
+
+    res.status(200).send(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getReviewByTransactionController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const userId = res.locals.user.id;
+    const paymentId = parseInt(req.params.paymentId);
+
+    if (isNaN(paymentId)) {
+      throw new Error("Invalid payment ID");
+    }
+
+    const result = await getReviewByTransactionService(paymentId, userId);
+
+    if (!result) {
+      res.status(404).send({
+        message: "Review not found",
+      });
+      return;
+    }
 
     res.status(200).send(result);
   } catch (error) {

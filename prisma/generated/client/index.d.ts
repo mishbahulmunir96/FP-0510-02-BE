@@ -15810,6 +15810,8 @@ export namespace Prisma {
     userId: number | null
     paymentId: number | null
     propertyId: number | null
+    replyMessage: string | null
+    replyDate: Date | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -15821,6 +15823,8 @@ export namespace Prisma {
     userId: number | null
     paymentId: number | null
     propertyId: number | null
+    replyMessage: string | null
+    replyDate: Date | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -15832,6 +15836,8 @@ export namespace Prisma {
     userId: number
     paymentId: number
     propertyId: number
+    replyMessage: number
+    replyDate: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -15861,6 +15867,8 @@ export namespace Prisma {
     userId?: true
     paymentId?: true
     propertyId?: true
+    replyMessage?: true
+    replyDate?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -15872,6 +15880,8 @@ export namespace Prisma {
     userId?: true
     paymentId?: true
     propertyId?: true
+    replyMessage?: true
+    replyDate?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -15883,6 +15893,8 @@ export namespace Prisma {
     userId?: true
     paymentId?: true
     propertyId?: true
+    replyMessage?: true
+    replyDate?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -15981,6 +15993,8 @@ export namespace Prisma {
     userId: number
     paymentId: number
     propertyId: number
+    replyMessage: string | null
+    replyDate: Date | null
     createdAt: Date
     updatedAt: Date
     _count: ReviewCountAggregateOutputType | null
@@ -16011,6 +16025,8 @@ export namespace Prisma {
     userId?: boolean
     paymentId?: boolean
     propertyId?: boolean
+    replyMessage?: boolean
+    replyDate?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -16025,6 +16041,8 @@ export namespace Prisma {
     userId?: boolean
     paymentId?: boolean
     propertyId?: boolean
+    replyMessage?: boolean
+    replyDate?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -16039,6 +16057,8 @@ export namespace Prisma {
     userId?: boolean
     paymentId?: boolean
     propertyId?: boolean
+    replyMessage?: boolean
+    replyDate?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
@@ -16068,6 +16088,8 @@ export namespace Prisma {
       userId: number
       paymentId: number
       propertyId: number
+      replyMessage: string | null
+      replyDate: Date | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["review"]>
@@ -16472,6 +16494,8 @@ export namespace Prisma {
     readonly userId: FieldRef<"Review", 'Int'>
     readonly paymentId: FieldRef<"Review", 'Int'>
     readonly propertyId: FieldRef<"Review", 'Int'>
+    readonly replyMessage: FieldRef<"Review", 'String'>
+    readonly replyDate: FieldRef<"Review", 'DateTime'>
     readonly createdAt: FieldRef<"Review", 'DateTime'>
     readonly updatedAt: FieldRef<"Review", 'DateTime'>
   }
@@ -17014,6 +17038,8 @@ export namespace Prisma {
     userId: 'userId',
     paymentId: 'paymentId',
     propertyId: 'propertyId',
+    replyMessage: 'replyMessage',
+    replyDate: 'replyDate',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -18213,6 +18239,8 @@ export namespace Prisma {
     userId?: IntFilter<"Review"> | number
     paymentId?: IntFilter<"Review"> | number
     propertyId?: IntFilter<"Review"> | number
+    replyMessage?: StringNullableFilter<"Review"> | string | null
+    replyDate?: DateTimeNullableFilter<"Review"> | Date | string | null
     createdAt?: DateTimeFilter<"Review"> | Date | string
     updatedAt?: DateTimeFilter<"Review"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -18227,6 +18255,8 @@ export namespace Prisma {
     userId?: SortOrder
     paymentId?: SortOrder
     propertyId?: SortOrder
+    replyMessage?: SortOrderInput | SortOrder
+    replyDate?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     user?: UserOrderByWithRelationInput
@@ -18244,6 +18274,8 @@ export namespace Prisma {
     userId?: IntFilter<"Review"> | number
     paymentId?: IntFilter<"Review"> | number
     propertyId?: IntFilter<"Review"> | number
+    replyMessage?: StringNullableFilter<"Review"> | string | null
+    replyDate?: DateTimeNullableFilter<"Review"> | Date | string | null
     createdAt?: DateTimeFilter<"Review"> | Date | string
     updatedAt?: DateTimeFilter<"Review"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -18258,6 +18290,8 @@ export namespace Prisma {
     userId?: SortOrder
     paymentId?: SortOrder
     propertyId?: SortOrder
+    replyMessage?: SortOrderInput | SortOrder
+    replyDate?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: ReviewCountOrderByAggregateInput
@@ -18277,6 +18311,8 @@ export namespace Prisma {
     userId?: IntWithAggregatesFilter<"Review"> | number
     paymentId?: IntWithAggregatesFilter<"Review"> | number
     propertyId?: IntWithAggregatesFilter<"Review"> | number
+    replyMessage?: StringNullableWithAggregatesFilter<"Review"> | string | null
+    replyDate?: DateTimeNullableWithAggregatesFilter<"Review"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Review"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Review"> | Date | string
   }
@@ -19329,6 +19365,8 @@ export namespace Prisma {
   export type ReviewCreateInput = {
     rating?: number
     review: string
+    replyMessage?: string | null
+    replyDate?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutReviewInput
@@ -19343,6 +19381,8 @@ export namespace Prisma {
     userId: number
     paymentId: number
     propertyId: number
+    replyMessage?: string | null
+    replyDate?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -19350,6 +19390,8 @@ export namespace Prisma {
   export type ReviewUpdateInput = {
     rating?: IntFieldUpdateOperationsInput | number
     review?: StringFieldUpdateOperationsInput | string
+    replyMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    replyDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutReviewNestedInput
@@ -19364,6 +19406,8 @@ export namespace Prisma {
     userId?: IntFieldUpdateOperationsInput | number
     paymentId?: IntFieldUpdateOperationsInput | number
     propertyId?: IntFieldUpdateOperationsInput | number
+    replyMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    replyDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -19375,6 +19419,8 @@ export namespace Prisma {
     userId: number
     paymentId: number
     propertyId: number
+    replyMessage?: string | null
+    replyDate?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -19382,6 +19428,8 @@ export namespace Prisma {
   export type ReviewUpdateManyMutationInput = {
     rating?: IntFieldUpdateOperationsInput | number
     review?: StringFieldUpdateOperationsInput | string
+    replyMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    replyDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -19393,6 +19441,8 @@ export namespace Prisma {
     userId?: IntFieldUpdateOperationsInput | number
     paymentId?: IntFieldUpdateOperationsInput | number
     propertyId?: IntFieldUpdateOperationsInput | number
+    replyMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    replyDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -20400,6 +20450,8 @@ export namespace Prisma {
     userId?: SortOrder
     paymentId?: SortOrder
     propertyId?: SortOrder
+    replyMessage?: SortOrder
+    replyDate?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -20419,6 +20471,8 @@ export namespace Prisma {
     userId?: SortOrder
     paymentId?: SortOrder
     propertyId?: SortOrder
+    replyMessage?: SortOrder
+    replyDate?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -20430,6 +20484,8 @@ export namespace Prisma {
     userId?: SortOrder
     paymentId?: SortOrder
     propertyId?: SortOrder
+    replyMessage?: SortOrder
+    replyDate?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -21613,6 +21669,8 @@ export namespace Prisma {
   export type ReviewCreateWithoutUserInput = {
     rating?: number
     review: string
+    replyMessage?: string | null
+    replyDate?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     property: PropertyCreateNestedOneWithoutReviewInput
@@ -21625,6 +21683,8 @@ export namespace Prisma {
     review: string
     paymentId: number
     propertyId: number
+    replyMessage?: string | null
+    replyDate?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -21743,6 +21803,8 @@ export namespace Prisma {
     userId?: IntFilter<"Review"> | number
     paymentId?: IntFilter<"Review"> | number
     propertyId?: IntFilter<"Review"> | number
+    replyMessage?: StringNullableFilter<"Review"> | string | null
+    replyDate?: DateTimeNullableFilter<"Review"> | Date | string | null
     createdAt?: DateTimeFilter<"Review"> | Date | string
     updatedAt?: DateTimeFilter<"Review"> | Date | string
   }
@@ -22104,6 +22166,8 @@ export namespace Prisma {
   export type ReviewCreateWithoutPropertyInput = {
     rating?: number
     review: string
+    replyMessage?: string | null
+    replyDate?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutReviewInput
@@ -22116,6 +22180,8 @@ export namespace Prisma {
     review: string
     userId: number
     paymentId: number
+    replyMessage?: string | null
+    replyDate?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -23139,6 +23205,8 @@ export namespace Prisma {
   export type ReviewCreateWithoutPaymentInput = {
     rating?: number
     review: string
+    replyMessage?: string | null
+    replyDate?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutReviewInput
@@ -23151,6 +23219,8 @@ export namespace Prisma {
     review: string
     userId: number
     propertyId: number
+    replyMessage?: string | null
+    replyDate?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -23722,6 +23792,8 @@ export namespace Prisma {
     review: string
     paymentId: number
     propertyId: number
+    replyMessage?: string | null
+    replyDate?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -23756,6 +23828,8 @@ export namespace Prisma {
   export type ReviewUpdateWithoutUserInput = {
     rating?: IntFieldUpdateOperationsInput | number
     review?: StringFieldUpdateOperationsInput | string
+    replyMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    replyDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     property?: PropertyUpdateOneRequiredWithoutReviewNestedInput
@@ -23768,6 +23842,8 @@ export namespace Prisma {
     review?: StringFieldUpdateOperationsInput | string
     paymentId?: IntFieldUpdateOperationsInput | number
     propertyId?: IntFieldUpdateOperationsInput | number
+    replyMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    replyDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -23778,6 +23854,8 @@ export namespace Prisma {
     review?: StringFieldUpdateOperationsInput | string
     paymentId?: IntFieldUpdateOperationsInput | number
     propertyId?: IntFieldUpdateOperationsInput | number
+    replyMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    replyDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -23967,6 +24045,8 @@ export namespace Prisma {
     review: string
     userId: number
     paymentId: number
+    replyMessage?: string | null
+    replyDate?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -24062,6 +24142,8 @@ export namespace Prisma {
   export type ReviewUpdateWithoutPropertyInput = {
     rating?: IntFieldUpdateOperationsInput | number
     review?: StringFieldUpdateOperationsInput | string
+    replyMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    replyDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutReviewNestedInput
@@ -24074,6 +24156,8 @@ export namespace Prisma {
     review?: StringFieldUpdateOperationsInput | string
     userId?: IntFieldUpdateOperationsInput | number
     paymentId?: IntFieldUpdateOperationsInput | number
+    replyMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    replyDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -24084,6 +24168,8 @@ export namespace Prisma {
     review?: StringFieldUpdateOperationsInput | string
     userId?: IntFieldUpdateOperationsInput | number
     paymentId?: IntFieldUpdateOperationsInput | number
+    replyMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    replyDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -24273,6 +24359,8 @@ export namespace Prisma {
     review: string
     userId: number
     propertyId: number
+    replyMessage?: string | null
+    replyDate?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -24291,6 +24379,8 @@ export namespace Prisma {
   export type ReviewUpdateWithoutPaymentInput = {
     rating?: IntFieldUpdateOperationsInput | number
     review?: StringFieldUpdateOperationsInput | string
+    replyMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    replyDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutReviewNestedInput
@@ -24303,6 +24393,8 @@ export namespace Prisma {
     review?: StringFieldUpdateOperationsInput | string
     userId?: IntFieldUpdateOperationsInput | number
     propertyId?: IntFieldUpdateOperationsInput | number
+    replyMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    replyDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -24313,6 +24405,8 @@ export namespace Prisma {
     review?: StringFieldUpdateOperationsInput | string
     userId?: IntFieldUpdateOperationsInput | number
     propertyId?: IntFieldUpdateOperationsInput | number
+    replyMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    replyDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
