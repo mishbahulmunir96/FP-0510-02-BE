@@ -1,28 +1,22 @@
-import { BASE_URL_FE, JWT_SECRET } from "../../config";
-import { transporter } from "../../lib/nodemailer";
 import prisma from "../../lib/prisma";
-import fs from "fs";
-import { sign } from "jsonwebtoken";
+import { transporter } from "../../lib/nodemailer";
+import jwt from "jsonwebtoken";
 import path from "path";
-import Handlebars from "handlebars";
+import handlebars from "handlebars";
+import fs from "fs";
 
 export const changeEmailService = async (userId: number, newEmail: string) => {
-  // Validasi format email menggunakan regex
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(newEmail)) {
-    throw new Error("Format email tidak valid");
+    throw new Error("Invalid email format");
   }
 
   const user = await prisma.user.findUnique({
-    where: {
-      id: userId,
-      isDeleted: false, // Tambahkan pengecekan user yang aktif
-    },
+    where: { id: userId, isDeleted: false },
   });
 
   if (!user) throw new Error("User not found");
 
-  // Cek email baru dengan case insensitive
   const existingUser = await prisma.user.findFirst({
     where: {
       email: { equals: newEmail, mode: "insensitive" },
@@ -32,54 +26,62 @@ export const changeEmailService = async (userId: number, newEmail: string) => {
 
   if (existingUser) throw new Error("Email already in use");
 
-  // Set expiry time sebagai environment variable
-  const VERIFY_TOKEN_EXPIRY = process.env.VERIFY_TOKEN_EXPIRY || "60m";
-
-  const token = sign(
+  const verificationToken = jwt.sign(
     {
-      id: userId,
       email: newEmail,
-      type: "email-change", // Tambahkan type untuk keamanan
+      createdAt: new Date().toISOString(),
     },
-    JWT_SECRET as string,
-    { expiresIn: VERIFY_TOKEN_EXPIRY }
+    process.env.JWT_SECRET!,
+    { expiresIn: "1h" }
   );
 
-  // Update token di database
-  await prisma.user.update({
-    where: { id: userId },
-    data: { token },
-  });
-
-  const link = `${BASE_URL_FE}/verify-email/${token}`;
-
-  // Try-catch untuk handling email sending error
   try {
-    const templatePath = path.resolve(
+    // Load templates & partials
+    const partialsDir = path.join(__dirname, "../../templates/partials");
+    const partialFiles = fs.readdirSync(partialsDir);
+    partialFiles.forEach((file) => {
+      const matches = /^([^.]+).hbs$/.exec(file);
+      if (!matches) return;
+      const name = matches[1];
+      const source = fs.readFileSync(path.join(partialsDir, file), "utf8");
+      handlebars.registerPartial(name, source);
+    });
+
+    const templatePath = path.join(
       __dirname,
-      "../../../templates/change-email.hbs"
+      "../../templates/verifyEmail.hbs"
     );
     const templateSource = fs.readFileSync(templatePath, "utf8");
-    const template = Handlebars.compile(templateSource);
-    const htmlToSend = template({ name: user.name, link });
+    const template = handlebars.compile(templateSource);
+
+    const emailHtml = template({
+      name: user.name,
+      verificationLink: `${process.env.BASE_URL_FE}/verify-email?token=${verificationToken}`,
+      logoUrl: "your-logo-url",
+      appName: "RateHaven",
+      year: new Date().getFullYear(),
+      appAddress: "Your App Address",
+      expiryTime: "1 hour",
+    });
 
     await transporter.sendMail({
-      from: process.env.SMTP_FROM || "Admin <admin@domain.com>",
+      from: process.env.GMAIL_EMAIL,
       to: newEmail,
-      subject: "Please verify your email",
-      html: htmlToSend,
+      subject: "Verify Your Email",
+      html: emailHtml,
+    });
+
+    await prisma.user.update({
+      where: { id: userId },
+      data: { token: verificationToken },
     });
 
     return {
-      message: `Email verifikasi telah dikirim ke ${newEmail}`,
-      expiresIn: VERIFY_TOKEN_EXPIRY,
+      message: "Verification email sent successfully",
+      expiresIn: "1h",
     };
   } catch (error) {
-    // Rollback token jika email gagal terkirim
-    await prisma.user.update({
-      where: { id: userId },
-      data: { token: null },
-    });
+    console.error("Email error:", error);
     throw new Error("Failed to send verification email");
   }
 };
