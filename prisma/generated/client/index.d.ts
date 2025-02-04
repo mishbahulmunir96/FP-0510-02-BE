@@ -13664,8 +13664,7 @@ export namespace Prisma {
     duration: number | null
     paymentMethode: $Enums.PaymentMethode | null
     paymentProof: string | null
-    snapToken: string | null
-    snapRedirectUrl: string | null
+    invoiceUrl: string | null
     expiredAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -13680,8 +13679,7 @@ export namespace Prisma {
     duration: number | null
     paymentMethode: $Enums.PaymentMethode | null
     paymentProof: string | null
-    snapToken: string | null
-    snapRedirectUrl: string | null
+    invoiceUrl: string | null
     expiredAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -13696,8 +13694,7 @@ export namespace Prisma {
     duration: number
     paymentMethode: number
     paymentProof: number
-    snapToken: number
-    snapRedirectUrl: number
+    invoiceUrl: number
     expiredAt: number
     createdAt: number
     updatedAt: number
@@ -13728,8 +13725,7 @@ export namespace Prisma {
     duration?: true
     paymentMethode?: true
     paymentProof?: true
-    snapToken?: true
-    snapRedirectUrl?: true
+    invoiceUrl?: true
     expiredAt?: true
     createdAt?: true
     updatedAt?: true
@@ -13744,8 +13740,7 @@ export namespace Prisma {
     duration?: true
     paymentMethode?: true
     paymentProof?: true
-    snapToken?: true
-    snapRedirectUrl?: true
+    invoiceUrl?: true
     expiredAt?: true
     createdAt?: true
     updatedAt?: true
@@ -13760,8 +13755,7 @@ export namespace Prisma {
     duration?: true
     paymentMethode?: true
     paymentProof?: true
-    snapToken?: true
-    snapRedirectUrl?: true
+    invoiceUrl?: true
     expiredAt?: true
     createdAt?: true
     updatedAt?: true
@@ -13863,8 +13857,7 @@ export namespace Prisma {
     duration: number
     paymentMethode: $Enums.PaymentMethode
     paymentProof: string | null
-    snapToken: string | null
-    snapRedirectUrl: string | null
+    invoiceUrl: string | null
     expiredAt: Date | null
     createdAt: Date
     updatedAt: Date
@@ -13898,8 +13891,7 @@ export namespace Prisma {
     duration?: boolean
     paymentMethode?: boolean
     paymentProof?: boolean
-    snapToken?: boolean
-    snapRedirectUrl?: boolean
+    invoiceUrl?: boolean
     expiredAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -13918,8 +13910,7 @@ export namespace Prisma {
     duration?: boolean
     paymentMethode?: boolean
     paymentProof?: boolean
-    snapToken?: boolean
-    snapRedirectUrl?: boolean
+    invoiceUrl?: boolean
     expiredAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -13935,8 +13926,7 @@ export namespace Prisma {
     duration?: boolean
     paymentMethode?: boolean
     paymentProof?: boolean
-    snapToken?: boolean
-    snapRedirectUrl?: boolean
+    invoiceUrl?: boolean
     expiredAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -13968,8 +13958,7 @@ export namespace Prisma {
       duration: number
       paymentMethode: $Enums.PaymentMethode
       paymentProof: string | null
-      snapToken: string | null
-      snapRedirectUrl: string | null
+      invoiceUrl: string | null
       expiredAt: Date | null
       createdAt: Date
       updatedAt: Date
@@ -14377,8 +14366,7 @@ export namespace Prisma {
     readonly duration: FieldRef<"Payment", 'Int'>
     readonly paymentMethode: FieldRef<"Payment", 'PaymentMethode'>
     readonly paymentProof: FieldRef<"Payment", 'String'>
-    readonly snapToken: FieldRef<"Payment", 'String'>
-    readonly snapRedirectUrl: FieldRef<"Payment", 'String'>
+    readonly invoiceUrl: FieldRef<"Payment", 'String'>
     readonly expiredAt: FieldRef<"Payment", 'DateTime'>
     readonly createdAt: FieldRef<"Payment", 'DateTime'>
     readonly updatedAt: FieldRef<"Payment", 'DateTime'>
@@ -16995,8 +16983,7 @@ export namespace Prisma {
     duration: 'duration',
     paymentMethode: 'paymentMethode',
     paymentProof: 'paymentProof',
-    snapToken: 'snapToken',
-    snapRedirectUrl: 'snapRedirectUrl',
+    invoiceUrl: 'invoiceUrl',
     expiredAt: 'expiredAt',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -18050,8 +18037,7 @@ export namespace Prisma {
     duration?: IntFilter<"Payment"> | number
     paymentMethode?: EnumPaymentMethodeFilter<"Payment"> | $Enums.PaymentMethode
     paymentProof?: StringNullableFilter<"Payment"> | string | null
-    snapToken?: StringNullableFilter<"Payment"> | string | null
-    snapRedirectUrl?: StringNullableFilter<"Payment"> | string | null
+    invoiceUrl?: StringNullableFilter<"Payment"> | string | null
     expiredAt?: DateTimeNullableFilter<"Payment"> | Date | string | null
     createdAt?: DateTimeFilter<"Payment"> | Date | string
     updatedAt?: DateTimeFilter<"Payment"> | Date | string
@@ -18069,8 +18055,7 @@ export namespace Prisma {
     duration?: SortOrder
     paymentMethode?: SortOrder
     paymentProof?: SortOrderInput | SortOrder
-    snapToken?: SortOrderInput | SortOrder
-    snapRedirectUrl?: SortOrderInput | SortOrder
+    invoiceUrl?: SortOrderInput | SortOrder
     expiredAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -18091,8 +18076,7 @@ export namespace Prisma {
     duration?: IntFilter<"Payment"> | number
     paymentMethode?: EnumPaymentMethodeFilter<"Payment"> | $Enums.PaymentMethode
     paymentProof?: StringNullableFilter<"Payment"> | string | null
-    snapToken?: StringNullableFilter<"Payment"> | string | null
-    snapRedirectUrl?: StringNullableFilter<"Payment"> | string | null
+    invoiceUrl?: StringNullableFilter<"Payment"> | string | null
     expiredAt?: DateTimeNullableFilter<"Payment"> | Date | string | null
     createdAt?: DateTimeFilter<"Payment"> | Date | string
     updatedAt?: DateTimeFilter<"Payment"> | Date | string
@@ -18110,8 +18094,7 @@ export namespace Prisma {
     duration?: SortOrder
     paymentMethode?: SortOrder
     paymentProof?: SortOrderInput | SortOrder
-    snapToken?: SortOrderInput | SortOrder
-    snapRedirectUrl?: SortOrderInput | SortOrder
+    invoiceUrl?: SortOrderInput | SortOrder
     expiredAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -18134,8 +18117,7 @@ export namespace Prisma {
     duration?: IntWithAggregatesFilter<"Payment"> | number
     paymentMethode?: EnumPaymentMethodeWithAggregatesFilter<"Payment"> | $Enums.PaymentMethode
     paymentProof?: StringNullableWithAggregatesFilter<"Payment"> | string | null
-    snapToken?: StringNullableWithAggregatesFilter<"Payment"> | string | null
-    snapRedirectUrl?: StringNullableWithAggregatesFilter<"Payment"> | string | null
+    invoiceUrl?: StringNullableWithAggregatesFilter<"Payment"> | string | null
     expiredAt?: DateTimeNullableWithAggregatesFilter<"Payment"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Payment"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Payment"> | Date | string
@@ -19163,8 +19145,7 @@ export namespace Prisma {
     duration: number
     paymentMethode?: $Enums.PaymentMethode
     paymentProof?: string | null
-    snapToken?: string | null
-    snapRedirectUrl?: string | null
+    invoiceUrl?: string | null
     expiredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -19182,8 +19163,7 @@ export namespace Prisma {
     duration: number
     paymentMethode?: $Enums.PaymentMethode
     paymentProof?: string | null
-    snapToken?: string | null
-    snapRedirectUrl?: string | null
+    invoiceUrl?: string | null
     expiredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -19198,8 +19178,7 @@ export namespace Prisma {
     duration?: IntFieldUpdateOperationsInput | number
     paymentMethode?: EnumPaymentMethodeFieldUpdateOperationsInput | $Enums.PaymentMethode
     paymentProof?: NullableStringFieldUpdateOperationsInput | string | null
-    snapToken?: NullableStringFieldUpdateOperationsInput | string | null
-    snapRedirectUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceUrl?: NullableStringFieldUpdateOperationsInput | string | null
     expiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19217,8 +19196,7 @@ export namespace Prisma {
     duration?: IntFieldUpdateOperationsInput | number
     paymentMethode?: EnumPaymentMethodeFieldUpdateOperationsInput | $Enums.PaymentMethode
     paymentProof?: NullableStringFieldUpdateOperationsInput | string | null
-    snapToken?: NullableStringFieldUpdateOperationsInput | string | null
-    snapRedirectUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceUrl?: NullableStringFieldUpdateOperationsInput | string | null
     expiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19235,8 +19213,7 @@ export namespace Prisma {
     duration: number
     paymentMethode?: $Enums.PaymentMethode
     paymentProof?: string | null
-    snapToken?: string | null
-    snapRedirectUrl?: string | null
+    invoiceUrl?: string | null
     expiredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -19249,8 +19226,7 @@ export namespace Prisma {
     duration?: IntFieldUpdateOperationsInput | number
     paymentMethode?: EnumPaymentMethodeFieldUpdateOperationsInput | $Enums.PaymentMethode
     paymentProof?: NullableStringFieldUpdateOperationsInput | string | null
-    snapToken?: NullableStringFieldUpdateOperationsInput | string | null
-    snapRedirectUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceUrl?: NullableStringFieldUpdateOperationsInput | string | null
     expiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19265,8 +19241,7 @@ export namespace Prisma {
     duration?: IntFieldUpdateOperationsInput | number
     paymentMethode?: EnumPaymentMethodeFieldUpdateOperationsInput | $Enums.PaymentMethode
     paymentProof?: NullableStringFieldUpdateOperationsInput | string | null
-    snapToken?: NullableStringFieldUpdateOperationsInput | string | null
-    snapRedirectUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceUrl?: NullableStringFieldUpdateOperationsInput | string | null
     expiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20279,8 +20254,7 @@ export namespace Prisma {
     duration?: SortOrder
     paymentMethode?: SortOrder
     paymentProof?: SortOrder
-    snapToken?: SortOrder
-    snapRedirectUrl?: SortOrder
+    invoiceUrl?: SortOrder
     expiredAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -20302,8 +20276,7 @@ export namespace Prisma {
     duration?: SortOrder
     paymentMethode?: SortOrder
     paymentProof?: SortOrder
-    snapToken?: SortOrder
-    snapRedirectUrl?: SortOrder
+    invoiceUrl?: SortOrder
     expiredAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -20318,8 +20291,7 @@ export namespace Prisma {
     duration?: SortOrder
     paymentMethode?: SortOrder
     paymentProof?: SortOrder
-    snapToken?: SortOrder
-    snapRedirectUrl?: SortOrder
+    invoiceUrl?: SortOrder
     expiredAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -21674,8 +21646,7 @@ export namespace Prisma {
     duration: number
     paymentMethode?: $Enums.PaymentMethode
     paymentProof?: string | null
-    snapToken?: string | null
-    snapRedirectUrl?: string | null
+    invoiceUrl?: string | null
     expiredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -21691,8 +21662,7 @@ export namespace Prisma {
     duration: number
     paymentMethode?: $Enums.PaymentMethode
     paymentProof?: string | null
-    snapToken?: string | null
-    snapRedirectUrl?: string | null
+    invoiceUrl?: string | null
     expiredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -21805,8 +21775,7 @@ export namespace Prisma {
     duration?: IntFilter<"Payment"> | number
     paymentMethode?: EnumPaymentMethodeFilter<"Payment"> | $Enums.PaymentMethode
     paymentProof?: StringNullableFilter<"Payment"> | string | null
-    snapToken?: StringNullableFilter<"Payment"> | string | null
-    snapRedirectUrl?: StringNullableFilter<"Payment"> | string | null
+    invoiceUrl?: StringNullableFilter<"Payment"> | string | null
     expiredAt?: DateTimeNullableFilter<"Payment"> | Date | string | null
     createdAt?: DateTimeFilter<"Payment"> | Date | string
     updatedAt?: DateTimeFilter<"Payment"> | Date | string
@@ -23384,8 +23353,7 @@ export namespace Prisma {
     duration: number
     paymentMethode?: $Enums.PaymentMethode
     paymentProof?: string | null
-    snapToken?: string | null
-    snapRedirectUrl?: string | null
+    invoiceUrl?: string | null
     expiredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -23402,8 +23370,7 @@ export namespace Prisma {
     duration: number
     paymentMethode?: $Enums.PaymentMethode
     paymentProof?: string | null
-    snapToken?: string | null
-    snapRedirectUrl?: string | null
+    invoiceUrl?: string | null
     expiredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -23475,8 +23442,7 @@ export namespace Prisma {
     duration?: IntFieldUpdateOperationsInput | number
     paymentMethode?: EnumPaymentMethodeFieldUpdateOperationsInput | $Enums.PaymentMethode
     paymentProof?: NullableStringFieldUpdateOperationsInput | string | null
-    snapToken?: NullableStringFieldUpdateOperationsInput | string | null
-    snapRedirectUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceUrl?: NullableStringFieldUpdateOperationsInput | string | null
     expiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23493,8 +23459,7 @@ export namespace Prisma {
     duration?: IntFieldUpdateOperationsInput | number
     paymentMethode?: EnumPaymentMethodeFieldUpdateOperationsInput | $Enums.PaymentMethode
     paymentProof?: NullableStringFieldUpdateOperationsInput | string | null
-    snapToken?: NullableStringFieldUpdateOperationsInput | string | null
-    snapRedirectUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceUrl?: NullableStringFieldUpdateOperationsInput | string | null
     expiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23588,8 +23553,7 @@ export namespace Prisma {
     duration: number
     paymentMethode?: $Enums.PaymentMethode
     paymentProof?: string | null
-    snapToken?: string | null
-    snapRedirectUrl?: string | null
+    invoiceUrl?: string | null
     expiredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -23606,8 +23570,7 @@ export namespace Prisma {
     duration: number
     paymentMethode?: $Enums.PaymentMethode
     paymentProof?: string | null
-    snapToken?: string | null
-    snapRedirectUrl?: string | null
+    invoiceUrl?: string | null
     expiredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -23729,8 +23692,7 @@ export namespace Prisma {
     duration?: IntFieldUpdateOperationsInput | number
     paymentMethode?: EnumPaymentMethodeFieldUpdateOperationsInput | $Enums.PaymentMethode
     paymentProof?: NullableStringFieldUpdateOperationsInput | string | null
-    snapToken?: NullableStringFieldUpdateOperationsInput | string | null
-    snapRedirectUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceUrl?: NullableStringFieldUpdateOperationsInput | string | null
     expiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23747,8 +23709,7 @@ export namespace Prisma {
     duration?: IntFieldUpdateOperationsInput | number
     paymentMethode?: EnumPaymentMethodeFieldUpdateOperationsInput | $Enums.PaymentMethode
     paymentProof?: NullableStringFieldUpdateOperationsInput | string | null
-    snapToken?: NullableStringFieldUpdateOperationsInput | string | null
-    snapRedirectUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceUrl?: NullableStringFieldUpdateOperationsInput | string | null
     expiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23773,8 +23734,7 @@ export namespace Prisma {
     duration: number
     paymentMethode?: $Enums.PaymentMethode
     paymentProof?: string | null
-    snapToken?: string | null
-    snapRedirectUrl?: string | null
+    invoiceUrl?: string | null
     expiredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -23829,8 +23789,7 @@ export namespace Prisma {
     duration?: IntFieldUpdateOperationsInput | number
     paymentMethode?: EnumPaymentMethodeFieldUpdateOperationsInput | $Enums.PaymentMethode
     paymentProof?: NullableStringFieldUpdateOperationsInput | string | null
-    snapToken?: NullableStringFieldUpdateOperationsInput | string | null
-    snapRedirectUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceUrl?: NullableStringFieldUpdateOperationsInput | string | null
     expiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23846,8 +23805,7 @@ export namespace Prisma {
     duration?: IntFieldUpdateOperationsInput | number
     paymentMethode?: EnumPaymentMethodeFieldUpdateOperationsInput | $Enums.PaymentMethode
     paymentProof?: NullableStringFieldUpdateOperationsInput | string | null
-    snapToken?: NullableStringFieldUpdateOperationsInput | string | null
-    snapRedirectUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceUrl?: NullableStringFieldUpdateOperationsInput | string | null
     expiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23863,8 +23821,7 @@ export namespace Prisma {
     duration?: IntFieldUpdateOperationsInput | number
     paymentMethode?: EnumPaymentMethodeFieldUpdateOperationsInput | $Enums.PaymentMethode
     paymentProof?: NullableStringFieldUpdateOperationsInput | string | null
-    snapToken?: NullableStringFieldUpdateOperationsInput | string | null
-    snapRedirectUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceUrl?: NullableStringFieldUpdateOperationsInput | string | null
     expiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
