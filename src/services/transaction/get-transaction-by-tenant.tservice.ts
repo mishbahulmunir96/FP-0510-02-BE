@@ -38,6 +38,9 @@ export const getTransactionByTenantService = async (
                   },
                 },
                 roomImage: {
+                  where: {
+                    isDeleted: false,
+                  },
                   select: {
                     imageUrl: true,
                   },

@@ -9,22 +9,30 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getPropertiesController = void 0;
+exports.createPropertyController = exports.getPropertyController = exports.getPropertiesController = void 0;
+exports.updatePropertyController = updatePropertyController;
+exports.deletePropertyController = deletePropertyController;
 const get_properties_service_1 = require("../services/property/get-properties.service");
+const get_property_service_1 = require("../services/property/get-property.service");
+const create_property_service_1 = require("../services/property/create-property.service");
+const update_property_service_1 = require("../services/property/update-property.service");
+const delete_property_service_1 = require("../services/property/delete-property.service");
 const getPropertiesController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        // Parsing query parameter dan menetapkan nilai default
         const query = {
             take: parseInt(req.query.take) || 8,
             page: parseInt(req.query.page) || 1,
             sortBy: req.query.sortBy || "createdAt",
             sortOrder: req.query.sortOrder || "desc",
             search: req.query.search || "",
-            guest: Number(req.query.guest) || 2,
-            title: req.query.title || "",
-            startDate: req.query.startDate || "",
-            endDate: req.query.endDate || "",
-            location: req.query.location || "",
-            category: req.query.category || "",
+            guest: req.query.guest ? Number(req.query.guest) : undefined,
+            startDate: req.query.startDate
+                ? req.query.startDate
+                : undefined,
+            endDate: req.query.endDate ? req.query.endDate : undefined,
+            location: req.query.location || undefined,
+            category: req.query.category || undefined,
         };
         const properties = yield (0, get_properties_service_1.getPropertiesService)(query);
         res.status(200).json({
@@ -37,3 +45,48 @@ const getPropertiesController = (req, res, next) => __awaiter(void 0, void 0, vo
     }
 });
 exports.getPropertiesController = getPropertiesController;
+const getPropertyController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { id } = req.params;
+        const result = yield (0, get_property_service_1.getPropertyService)(id);
+        res.status(200).send(result);
+    }
+    catch (error) {
+        next(error);
+    }
+});
+exports.getPropertyController = getPropertyController;
+const createPropertyController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const result = yield (0, create_property_service_1.createPropertyService)(req.body, req.file, Number(res.locals.user.id));
+        res.status(200).send(result);
+    }
+    catch (error) {
+        next(error);
+    }
+});
+exports.createPropertyController = createPropertyController;
+function updatePropertyController(req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const result = yield (0, update_property_service_1.updatePropertyService)(Number(res.locals.user.id), Number(req.params.id), req.body, req.file);
+            res.status(200).send(result);
+        }
+        catch (error) {
+            next(error);
+        }
+    });
+}
+function deletePropertyController(req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const propertyId = Number(req.params.id);
+            const userId = Number(res.locals.user.id);
+            yield (0, delete_property_service_1.deletePropertyService)(propertyId, userId);
+            res.status(200).json({ message: "Property deleted successfully" });
+        }
+        catch (error) {
+            next(error);
+        }
+    });
+}

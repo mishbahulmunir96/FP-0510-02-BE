@@ -38,11 +38,15 @@ export const getTransactionsByTenantService = async (
                   },
                 },
                 roomImage: {
+                  where: { isDeleted: false },
+
                   select: {
                     imageUrl: true,
                   },
                 },
                 roomFacility: {
+                  where: { isDeleted: false },
+
                   select: {
                     title: true,
                     description: true,

@@ -61,6 +61,8 @@ export const getReviewByTransactionService = async (
       id: review.id,
       rating: review.rating,
       review: review.review,
+      replyMessage: review.replyMessage,
+      replyDate: review.replyDate,
       createdAt: review.createdAt,
       updatedAt: review.updatedAt,
       user: {

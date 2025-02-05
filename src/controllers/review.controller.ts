@@ -3,12 +3,13 @@ import { createReviewService } from "../services/review/create-review.service";
 import { getReviewByTransactionService } from "../services/review/get-review-by-transaction.service";
 import { getReviewsByPropertyService } from "../services/review/get-reviews-by-property.service";
 import { replyReviewService } from "../services/review/create-review-reply.service";
+import { getReviewByTenantService } from "../services/review/get-review-by-tenant.service";
 
 export const createReviewController = async (
   req: Request,
   res: Response,
   next: NextFunction
-): Promise<void> => {
+) => {
   try {
     const userId = res.locals.user.id;
 
@@ -100,6 +101,26 @@ export const replyReviewController = async (
     };
 
     const result = await replyReviewService(replyData);
+
+    res.status(200).send(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getReviewByTenantController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const paymentId = parseInt(req.params.paymentId);
+    const result = await getReviewByTenantService(paymentId);
+
+    if (!result) {
+      res.status(404).send({ message: "Review not found" });
+      return;
+    }
 
     res.status(200).send(result);
   } catch (error) {
