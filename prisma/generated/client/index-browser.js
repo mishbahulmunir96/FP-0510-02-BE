@@ -162,16 +162,25 @@ exports.Prisma.PropertyScalarFieldEnum = {
   longitude: 'longitude',
   status: 'status',
   isDeleted: 'isDeleted',
-  category: 'category',
+  propertyCategoryId: 'propertyCategoryId',
   tenantId: 'tenantId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   location: 'location'
 };
 
+exports.Prisma.PropertyCategoryScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  tenantId: 'tenantId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.PropertyImageScalarFieldEnum = {
   id: 'id',
   imageUrl: 'imageUrl',
+  isDeleted: 'isDeleted',
   propertyId: 'propertyId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -223,6 +232,7 @@ exports.Prisma.RoomFacilityScalarFieldEnum = {
 exports.Prisma.RoomImageScalarFieldEnum = {
   id: 'id',
   imageUrl: 'imageUrl',
+  isDeleted: 'isDeleted',
   roomId: 'roomId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -247,8 +257,7 @@ exports.Prisma.PaymentScalarFieldEnum = {
   duration: 'duration',
   paymentMethode: 'paymentMethode',
   paymentProof: 'paymentProof',
-  snapToken: 'snapToken',
-  snapRedirectUrl: 'snapRedirectUrl',
+  invoiceUrl: 'invoiceUrl',
   expiredAt: 'expiredAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -316,7 +325,9 @@ exports.StatusPayment = exports.$Enums.StatusPayment = {
   WAITING_FOR_PAYMENT: 'WAITING_FOR_PAYMENT',
   WAITING_FOR_PAYMENT_CONFIRMATION: 'WAITING_FOR_PAYMENT_CONFIRMATION',
   CANCELLED: 'CANCELLED',
-  PROCESSED: 'PROCESSED'
+  PROCESSED: 'PROCESSED',
+  CHECKED_IN: 'CHECKED_IN',
+  CHECKED_OUT: 'CHECKED_OUT'
 };
 
 exports.PaymentMethode = exports.$Enums.PaymentMethode = {
@@ -329,6 +340,7 @@ exports.Prisma.ModelName = {
   User: 'User',
   Tenant: 'Tenant',
   Property: 'Property',
+  PropertyCategory: 'PropertyCategory',
   PropertyImage: 'PropertyImage',
   PropertyFacility: 'PropertyFacility',
   Room: 'Room',
