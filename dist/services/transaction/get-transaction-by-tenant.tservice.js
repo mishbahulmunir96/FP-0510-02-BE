@@ -13,78 +13,109 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getTransactionByTenantService = void 0;
+const date_fns_1 = require("date-fns");
 const prisma_1 = __importDefault(require("../../lib/prisma"));
 const getTransactionByTenantService = (id, tenantId) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b;
-    const transaction = yield prisma_1.default.payment.findFirst({
-        where: {
-            id,
-            reservation: {
-                some: {
-                    room: {
-                        property: {
-                            tenantId,
-                        },
-                    },
-                },
-            },
-        },
-        include: {
-            user: {
-                select: {
-                    name: true,
-                    email: true,
-                    imageUrl: true,
-                },
-            },
-            reservation: {
-                include: {
-                    room: {
-                        include: {
+    try {
+        const transaction = yield prisma_1.default.payment.findFirst({
+            where: {
+                id,
+                reservation: {
+                    some: {
+                        room: {
                             property: {
-                                select: {
-                                    title: true,
-                                    location: true,
-                                },
-                            },
-                            roomImage: {
-                                select: {
-                                    imageUrl: true,
-                                },
-                            },
-                            roomFacility: {
-                                where: { isDeleted: false },
-                                select: { title: true },
+                                tenantId,
                             },
                         },
                     },
                 },
             },
-        },
-    });
-    if (!transaction) {
-        throw new Error("Transaction not found");
+            include: {
+                user: {
+                    select: {
+                        name: true,
+                        email: true,
+                        imageUrl: true,
+                    },
+                },
+                reservation: {
+                    include: {
+                        room: {
+                            include: {
+                                property: {
+                                    select: {
+                                        title: true,
+                                        location: true,
+                                    },
+                                },
+                                roomImage: {
+                                    where: {
+                                        isDeleted: false,
+                                    },
+                                    select: {
+                                        imageUrl: true,
+                                    },
+                                },
+                                roomFacility: {
+                                    where: { isDeleted: false },
+                                    select: { title: true },
+                                },
+                                peakSeasonRate: {
+                                    where: { isDeleted: false },
+                                    select: {
+                                        price: true,
+                                        startDate: true,
+                                        endDate: true,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        });
+        if (!transaction) {
+            throw new Error("Transaction not found");
+        }
+        const checkInDate = transaction.reservation.length > 0
+            ? transaction.reservation[0].startDate
+            : null;
+        const checkOutDate = transaction.reservation.length > 0
+            ? transaction.reservation[transaction.reservation.length - 1].endDate
+            : null;
+        return {
+            id: transaction.id,
+            uuid: transaction.uuid,
+            customer: transaction.user,
+            totalPrice: transaction.totalPrice,
+            paymentMethode: transaction.paymentMethode,
+            status: transaction.status,
+            paymentProof: transaction.paymentProof,
+            checkInDate,
+            checkOutDate,
+            duration: transaction.duration,
+            updatedAt: transaction.updatedAt,
+            reservations: transaction.reservation.map((reserv) => {
+                const peakSeason = reserv.room.peakSeasonRate.find((peak) => reserv.startDate <= peak.endDate && reserv.endDate >= peak.startDate);
+                let peakSeasonDays = 0;
+                if (peakSeason) {
+                    const overlapStart = new Date(Math.max(reserv.startDate.getTime(), peakSeason.startDate.getTime()));
+                    const overlapEnd = new Date(Math.min(reserv.endDate.getTime(), peakSeason.endDate.getTime()));
+                    peakSeasonDays = (0, date_fns_1.differenceInDays)(overlapEnd, overlapStart);
+                }
+                return {
+                    roomType: reserv.room.type,
+                    propertyTitle: reserv.room.property.title,
+                    roomPrice: reserv.price,
+                    propertyLocation: reserv.room.property.location,
+                    roomImages: reserv.room.roomImage.map((image) => image.imageUrl),
+                    roomFacilities: reserv.room.roomFacility.map((facility) => facility.title),
+                    peakSeasonDays,
+                    peakSeasonPrice: (peakSeason === null || peakSeason === void 0 ? void 0 : peakSeason.price) || null,
+                };
+            }),
+        };
     }
-    return {
-        id: transaction.id,
-        uuid: transaction.uuid,
-        customer: transaction.user,
-        totalPrice: transaction.totalPrice,
-        paymentMethode: transaction.paymentMethode,
-        status: transaction.status,
-        paymentProof: transaction.paymentProof,
-        checkInDate: (_a = transaction.reservation[0]) === null || _a === void 0 ? void 0 : _a.startDate,
-        checkOutDate: (_b = transaction.reservation[0]) === null || _b === void 0 ? void 0 : _b.endDate,
-        duration: transaction.duration,
-        updatedAt: transaction.updatedAt,
-        reservations: transaction.reservation.map((reserv) => ({
-            roomType: reserv.room.type,
-            propertyTitle: reserv.room.property.title,
-            roomPrice: reserv.price,
-            propertyLocation: reserv.room.property.location,
-            roomImages: reserv.room.roomImage.map((image) => image.imageUrl),
-            roomFacilities: reserv.room.roomFacility.map((facility) => facility.title),
-        })),
-    };
+    catch (error) { }
 });
 exports.getTransactionByTenantService = getTransactionByTenantService;

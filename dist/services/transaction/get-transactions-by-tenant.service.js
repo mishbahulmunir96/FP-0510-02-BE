@@ -15,79 +15,107 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getTransactionsByTenantService = void 0;
 const prisma_1 = __importDefault(require("../../lib/prisma"));
 const getTransactionsByTenantService = (tenantId, query) => __awaiter(void 0, void 0, void 0, function* () {
-    const { page, take, sortBy, sortOrder } = query;
-    const transactions = yield prisma_1.default.payment.findMany({
-        where: {
-            reservation: {
-                some: {
-                    room: {
-                        property: {
-                            tenantId,
+    try {
+        const { page, take, sortBy, sortOrder } = query;
+        const transactions = yield prisma_1.default.payment.findMany({
+            where: {
+                reservation: {
+                    some: {
+                        room: {
+                            property: {
+                                tenantId,
+                            },
                         },
                     },
                 },
             },
-        },
-        include: {
-            user: {
-                select: {
-                    name: true,
-                    email: true,
+            include: {
+                user: {
+                    select: {
+                        name: true,
+                        email: true,
+                    },
                 },
-            },
-            reservation: {
-                include: {
-                    room: {
-                        include: {
-                            property: {
-                                select: {
-                                    title: true,
-                                    location: true,
+                reservation: {
+                    include: {
+                        room: {
+                            include: {
+                                property: {
+                                    select: {
+                                        title: true,
+                                        location: true,
+                                    },
+                                },
+                                roomImage: {
+                                    where: { isDeleted: false },
+                                    select: {
+                                        imageUrl: true,
+                                    },
+                                },
+                                roomFacility: {
+                                    where: { isDeleted: false },
+                                    select: {
+                                        title: true,
+                                        description: true,
+                                    },
                                 },
                             },
                         },
                     },
                 },
             },
-        },
-        skip: (page - 1) * take,
-        take,
-        orderBy: { [sortBy]: sortOrder },
-    });
-    const count = yield prisma_1.default.payment.count({
-        where: {
-            reservation: {
-                some: {
-                    room: {
-                        property: {
-                            tenantId,
+            skip: (page - 1) * take,
+            take,
+            orderBy: { [sortBy]: sortOrder },
+        });
+        const count = yield prisma_1.default.payment.count({
+            where: {
+                reservation: {
+                    some: {
+                        room: {
+                            property: {
+                                tenantId,
+                            },
                         },
                     },
                 },
             },
-        },
-    });
-    return {
-        data: transactions.map((transaction) => {
-            var _a, _b;
-            return ({
-                id: transaction.id,
-                uuid: transaction.uuid,
-                customer: transaction.user,
-                totalPrice: transaction.totalPrice,
-                status: transaction.status,
-                duration: transaction.duration,
-                checkIn: (_a = transaction.reservation[0]) === null || _a === void 0 ? void 0 : _a.startDate,
-                checkOut: (_b = transaction.reservation[0]) === null || _b === void 0 ? void 0 : _b.endDate,
-                createdAt: transaction.createdAt,
-                reservations: transaction.reservation.map((reserv) => ({
-                    roomType: reserv.room.type,
-                    propertyTitle: reserv.room.property.title,
-                    propertyLocation: reserv.room.property.location,
-                })),
-            });
-        }),
-        meta: { page, take, total: count },
-    };
+        });
+        return {
+            data: transactions.map((transaction) => {
+                const checkInDate = transaction.reservation.length > 0
+                    ? transaction.reservation[0].startDate
+                    : null;
+                const checkOutDate = transaction.reservation.length > 0
+                    ? transaction.reservation[transaction.reservation.length - 1]
+                        .endDate
+                    : null;
+                return {
+                    id: transaction.id,
+                    uuid: transaction.uuid,
+                    customer: transaction.user,
+                    totalPrice: transaction.totalPrice,
+                    paymentMethode: transaction.paymentMethode,
+                    status: transaction.status,
+                    paymentProof: transaction.paymentProof,
+                    checkInDate,
+                    checkOutDate,
+                    duration: transaction.duration,
+                    createdAt: transaction.createdAt,
+                    updatedAt: transaction.updatedAt,
+                    reservations: transaction.reservation.map((reserv) => ({
+                        roomType: reserv.room.type,
+                        propertyTitle: reserv.room.property.title,
+                        roomPrice: reserv.price,
+                        propertyLocation: reserv.room.property.location,
+                        roomImages: reserv.room.roomImage,
+                        roomFacilities: reserv.room.roomFacility,
+                    })),
+                };
+            }),
+            meta: { page, take, total: count },
+        };
+    }
+    catch (error) { }
 });
 exports.getTransactionsByTenantService = getTransactionsByTenantService;

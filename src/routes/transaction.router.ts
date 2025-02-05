@@ -15,6 +15,7 @@ import { fileFilter } from "../lib/fileFilter";
 import { uploader } from "../lib/multer";
 import { verifyToken } from "../lib/jwt";
 import { isTenant } from "../lib/isTenant";
+import { validateCreateReservation } from "../validators/transaction.validators";
 
 const router = Router();
 
@@ -27,7 +28,12 @@ router.get(
   isTenant,
   getTransactionByTenantController
 );
-router.post("/", verifyToken, createRoomReservationController);
+router.post(
+  "/",
+  verifyToken,
+  validateCreateReservation,
+  createRoomReservationController
+);
 router.patch(
   "/:id",
   verifyToken,

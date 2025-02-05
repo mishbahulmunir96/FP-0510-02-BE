@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.cancelTransactionByTenantController = exports.approveTransactionByTenantController = exports.getTransactionByTenantController = exports.getTransactionsByTenantController = exports.cancelTransactionByUserController = exports.getTransactionsByUserController = exports.getTransactionByUserController = exports.uploadPaymentProofController = exports.createRoomReservationController = void 0;
+exports.testCreateXenditController = exports.cancelTransactionByTenantController = exports.approveTransactionByTenantController = exports.getTransactionByTenantController = exports.getTransactionsByTenantController = exports.cancelTransactionByUserController = exports.getTransactionsByUserController = exports.getTransactionByUserController = exports.uploadPaymentProofController = exports.createRoomReservationController = void 0;
 const create_room_reservation_service_1 = require("../services/transaction/create-room-reservation.service");
 const get_transaction_by_user_service_1 = require("../services/transaction/get-transaction-by-user.service");
 const upload_payment_proof_service_1 = require("../services/transaction/upload-payment-proof.service");
@@ -19,6 +19,7 @@ const get_transactions_by_tenant_service_1 = require("../services/transaction/ge
 const get_transaction_by_tenant_tservice_1 = require("../services/transaction/get-transaction-by-tenant.tservice");
 const approve_transaction_by_tenant_service_1 = require("../services/transaction/approve-transaction-by-tenant.service");
 const cancel_transaction_by_tenant_service_1 = require("../services/transaction/cancel-transaction-by-tenant.service");
+const test_create_xendit_service_1 = require("../services/transaction/test-create-xendit.service");
 const createRoomReservationController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const userId = res.locals.user.id;
@@ -152,3 +153,13 @@ const cancelTransactionByTenantController = (req, res, next) => __awaiter(void 0
     }
 });
 exports.cancelTransactionByTenantController = cancelTransactionByTenantController;
+const testCreateXenditController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const result = yield (0, test_create_xendit_service_1.testCreateXenditService)();
+        res.status(200).json(result);
+    }
+    catch (error) {
+        next(error);
+    }
+});
+exports.testCreateXenditController = testCreateXenditController;

@@ -54,7 +54,6 @@ const getTransactionsByUserService = (userId, query) => __awaiter(void 0, void 0
                     ? transaction.reservation[transaction.reservation.length - 1]
                         .endDate
                     : null;
-                const firstReservation = transaction.reservation[0];
                 return {
                     id: transaction.id,
                     uuid: transaction.uuid,

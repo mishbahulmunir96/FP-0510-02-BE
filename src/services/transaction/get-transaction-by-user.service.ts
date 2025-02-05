@@ -29,6 +29,7 @@ export const getTransactionByUserService = async (
                   },
                 },
                 roomImage: {
+                  where: { isDeleted: false },
                   select: {
                     imageUrl: true,
                   },
