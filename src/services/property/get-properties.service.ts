@@ -6,14 +6,14 @@ interface GetPropertyQuery extends PaginationQueryParams {
   location?: string;
   startDate?: string;
   endDate?: string;
-  category?: string;
+  category?: string; // Filter berdasarkan nama kategori (melalui relasi PropertyCategory)
   search?: string;
   guest?: number;
 }
 
 export const getPropertiesService = async (query: GetPropertyQuery) => {
   const {
-    take = 1, // Default value
+    take = 1, // Nilai default untuk jumlah item per halaman
     page = 1,
     sortBy = "createdAt",
     sortOrder = "asc",
@@ -25,7 +25,7 @@ export const getPropertiesService = async (query: GetPropertyQuery) => {
     guest,
   } = query;
 
-  // Date validation
+  // Validasi tanggal: jika salah satu tanggal diberikan, kedua tanggal harus ada dan valid
   if ((startDate && !endDate) || (!startDate && endDate)) {
     throw new Error("Both startDate and endDate are required for filtering");
   }
@@ -41,11 +41,19 @@ export const getPropertiesService = async (query: GetPropertyQuery) => {
     }
   }
 
+  // Membangun whereClause untuk filter properti
   const whereClause: Prisma.PropertyWhereInput = {
     isDeleted: false,
     status: "PUBLISHED",
     ...(location && { location: { contains: location, mode: "insensitive" } }),
-    ...(category && { category: { contains: category, mode: "insensitive" } }),
+    ...(category && {
+      // Filter berdasarkan relasi PropertyCategory
+      PropertyCategory: {
+        some: {
+          name: { contains: category, mode: "insensitive" },
+        },
+      },
+    }),
     ...(search && {
       OR: [
         { title: { contains: search, mode: "insensitive" } },
@@ -55,27 +63,22 @@ export const getPropertiesService = async (query: GetPropertyQuery) => {
     ...(guest && {
       room: {
         some: {
-          guest: {
-            gte: guest,
-          },
+          guest: { gte: guest },
           isDeleted: false,
         },
       },
     }),
     ...(startDate &&
       endDate && {
+        // Filter properti berdasarkan tanggal pembuatan dan ketersediaan room
         createdAt: {
           lte: new Date(endDate),
         },
         room: {
           some: {
             isDeleted: false,
-            guest: guest
-              ? {
-                  gte: guest,
-                }
-              : undefined,
-            // Check for existing reservations
+            ...(guest && { guest: { gte: guest } }),
+            // Pastikan tidak ada reservasi yang tumpang tindih dengan periode yang dipilih
             reservation: {
               none: {
                 AND: [
@@ -93,7 +96,7 @@ export const getPropertiesService = async (query: GetPropertyQuery) => {
                 ],
               },
             },
-            // Check room non-availability dates
+            // Pastikan tidak ada jadwal non-availability room di periode yang dipilih
             roomNonAvailability: {
               none: {
                 isDeleted: false,
@@ -108,9 +111,16 @@ export const getPropertiesService = async (query: GetPropertyQuery) => {
       }),
   };
 
+  // Membatasi field yang diizinkan untuk sorting
   const allowedSortByFields: Array<
     keyof Prisma.PropertyOrderByWithRelationInput
-  > = ["createdAt", "updatedAt", "title", "location", "category"];
+  > = [
+    "createdAt",
+    "updatedAt",
+    "title",
+    "location",
+    // Perhatikan: karena kategori merupakan relasi, kita tidak mengizinkannya sebagai field sort langsung
+  ];
   const sortField = allowedSortByFields.includes(
     sortBy as keyof Prisma.PropertyOrderByWithRelationInput
   )
@@ -119,6 +129,7 @@ export const getPropertiesService = async (query: GetPropertyQuery) => {
   const orderByClause: Prisma.PropertyOrderByWithRelationInput = {
     [sortField]: sortOrder,
   };
+
   const skip = (page - 1) * take;
 
   const [properties, totalCount] = await Promise.all([
@@ -142,9 +153,7 @@ export const getPropertiesService = async (query: GetPropertyQuery) => {
               },
             },
             roomNonAvailability: {
-              where: {
-                isDeleted: false,
-              },
+              where: { isDeleted: false },
             },
           },
         },

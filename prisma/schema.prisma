@@ -4,9 +4,9 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  // directUrl = env("DIRECT_URL")
 }
 
 model Sample {
@@ -62,32 +62,34 @@ model Tenant {
   updatedAt   DateTime @updatedAt
   user        User     @relation(fields: [userId], references: [id])
 
-  property Property[]
+  property         Property[]
+  PropertyCategory PropertyCategory[]
 
   @@map("tenants")
 }
 
 model Property {
-  id          Int            @id @default(autoincrement())
-  slug        String         @unique
-  title       String
-  description String         @db.Text()
-  latitude    String
-  longitude   String
-  status      StatusProperty
-  isDeleted   Boolean        @default(false)
-  category    String
-  tenantId    Int
-  createdAt   DateTime       @default(now())
-  updatedAt   DateTime       @updatedAt
-  location    String
+  id                 Int            @id @default(autoincrement())
+  slug               String         @unique
+  title              String
+  description        String         @db.Text()
+  latitude           String
+  longitude          String
+  status             StatusProperty
+  isDeleted          Boolean        @default(false)
+  propertyCategoryId Int
+  tenantId           Int
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+  location           String
 
   propertyImage    PropertyImage[]
   propertyFacility PropertyFacility[]
   room             Room[]
 
-  tenant Tenant   @relation(fields: [tenantId], references: [id])
-  review Review[]
+  tenant           Tenant             @relation(fields: [tenantId], references: [id])
+  review           Review[]
+  PropertyCategory PropertyCategory[]
 
   @@map("properties")
 }
@@ -97,9 +99,22 @@ enum StatusProperty {
   DRAFT
 }
 
+model PropertyCategory {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  tenantId  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  properties Property[]
+
+  tenant Tenant @relation(fields: [tenantId], references: [id])
+}
+
 model PropertyImage {
   id         Int      @id @default(autoincrement())
   imageUrl   String?
+  isDeleted  Boolean  @default(false)
   propertyId Int
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
@@ -183,6 +198,7 @@ model RoomFacility {
 model RoomImage {
   id        Int      @id @default(autoincrement())
   imageUrl  String?
+  isDeleted Boolean  @default(false)
   roomId    Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

@@ -162,16 +162,25 @@ exports.Prisma.PropertyScalarFieldEnum = {
   longitude: 'longitude',
   status: 'status',
   isDeleted: 'isDeleted',
-  category: 'category',
+  propertyCategoryId: 'propertyCategoryId',
   tenantId: 'tenantId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   location: 'location'
 };
 
+exports.Prisma.PropertyCategoryScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  tenantId: 'tenantId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.PropertyImageScalarFieldEnum = {
   id: 'id',
   imageUrl: 'imageUrl',
+  isDeleted: 'isDeleted',
   propertyId: 'propertyId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -223,6 +232,7 @@ exports.Prisma.RoomFacilityScalarFieldEnum = {
 exports.Prisma.RoomImageScalarFieldEnum = {
   id: 'id',
   imageUrl: 'imageUrl',
+  isDeleted: 'isDeleted',
   roomId: 'roomId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -332,6 +342,7 @@ exports.Prisma.ModelName = {
   User: 'User',
   Tenant: 'Tenant',
   Property: 'Property',
+  PropertyCategory: 'PropertyCategory',
   PropertyImage: 'PropertyImage',
   PropertyFacility: 'PropertyFacility',
   Room: 'Room',
