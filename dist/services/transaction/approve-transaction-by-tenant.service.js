@@ -88,7 +88,6 @@ const approveTransactionByTenantService = (paymentId, tenantId, isApproved) => _
             status: isApproved ? "PROCESSED" : "WAITING_FOR_PAYMENT",
         },
     });
-    // Send email notification
     const templatePath = path.join(__dirname, `../../templates/${isApproved ? "payment-approved" : "payment-rejected"}.hbs`);
     const template = fs.readFileSync(templatePath, "utf8");
     const compiledTemplate = hbs.compile(template);

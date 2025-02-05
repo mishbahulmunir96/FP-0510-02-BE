@@ -15,9 +15,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getPropertiesService = void 0;
 const prisma_1 = __importDefault(require("../../lib/prisma"));
 const getPropertiesService = (query) => __awaiter(void 0, void 0, void 0, function* () {
-    const { take = 1, // Default value
+    const { take = 1, // Nilai default untuk jumlah item per halaman
     page = 1, sortBy = "createdAt", sortOrder = "asc", location, category, search, startDate, endDate, guest, } = query;
-    // Date validation
+    // Validasi tanggal: jika salah satu tanggal diberikan, kedua tanggal harus ada dan valid
     if ((startDate && !endDate) || (!startDate && endDate)) {
         throw new Error("Both startDate and endDate are required for filtering");
     }
@@ -31,7 +31,15 @@ const getPropertiesService = (query) => __awaiter(void 0, void 0, void 0, functi
             throw new Error("startDate cannot be after endDate");
         }
     }
-    const whereClause = Object.assign(Object.assign(Object.assign(Object.assign(Object.assign({ isDeleted: false, status: "PUBLISHED" }, (location && { location: { contains: location, mode: "insensitive" } })), (category && { category: { contains: category, mode: "insensitive" } })), (search && {
+    // Membangun whereClause untuk filter properti
+    const whereClause = Object.assign(Object.assign(Object.assign(Object.assign(Object.assign({ isDeleted: false, status: "PUBLISHED" }, (location && { location: { contains: location, mode: "insensitive" } })), (category && {
+        // Filter berdasarkan relasi PropertyCategory
+        PropertyCategory: {
+            some: {
+                name: { contains: category, mode: "insensitive" },
+            },
+        },
+    })), (search && {
         OR: [
             { title: { contains: search, mode: "insensitive" } },
             { description: { contains: search, mode: "insensitive" } },
@@ -39,26 +47,19 @@ const getPropertiesService = (query) => __awaiter(void 0, void 0, void 0, functi
     })), (guest && {
         room: {
             some: {
-                guest: {
-                    gte: guest,
-                },
+                guest: { gte: guest },
                 isDeleted: false,
             },
         },
     })), (startDate &&
         endDate && {
+        // Filter properti berdasarkan tanggal pembuatan dan ketersediaan room
         createdAt: {
             lte: new Date(endDate),
         },
         room: {
-            some: {
-                isDeleted: false,
-                guest: guest
-                    ? {
-                        gte: guest,
-                    }
-                    : undefined,
-                // Check for existing reservations
+            some: Object.assign(Object.assign({ isDeleted: false }, (guest && { guest: { gte: guest } })), { 
+                // Pastikan tidak ada reservasi yang tumpang tindih dengan periode yang dipilih
                 reservation: {
                     none: {
                         AND: [
@@ -75,8 +76,8 @@ const getPropertiesService = (query) => __awaiter(void 0, void 0, void 0, functi
                             },
                         ],
                     },
-                },
-                // Check room non-availability dates
+                }, 
+                // Pastikan tidak ada jadwal non-availability room di periode yang dipilih
                 roomNonAvailability: {
                     none: {
                         isDeleted: false,
@@ -85,11 +86,17 @@ const getPropertiesService = (query) => __awaiter(void 0, void 0, void 0, functi
                             lte: new Date(endDate),
                         },
                     },
-                },
-            },
+                } }),
         },
     }));
-    const allowedSortByFields = ["createdAt", "updatedAt", "title", "location", "category"];
+    // Membatasi field yang diizinkan untuk sorting
+    const allowedSortByFields = [
+        "createdAt",
+        "updatedAt",
+        "title",
+        "location",
+        // Perhatikan: karena kategori merupakan relasi, kita tidak mengizinkannya sebagai field sort langsung
+    ];
     const sortField = allowedSortByFields.includes(sortBy)
         ? sortBy
         : "createdAt";
@@ -118,9 +125,7 @@ const getPropertiesService = (query) => __awaiter(void 0, void 0, void 0, functi
                             },
                         },
                         roomNonAvailability: {
-                            where: {
-                                isDeleted: false,
-                            },
+                            where: { isDeleted: false },
                         },
                     },
                 },

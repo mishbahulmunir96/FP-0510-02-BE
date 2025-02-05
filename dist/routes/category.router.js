@@ -1,0 +1,13 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const isTenant_1 = require("../lib/isTenant");
+const jwt_1 = require("../lib/jwt");
+const category_controller_1 = require("../controllers/category.controller");
+const router = (0, express_1.Router)();
+router.get("/", jwt_1.verifyToken, category_controller_1.getCategoryListController);
+router.get("/list", category_controller_1.getAllCategoryListController);
+router.post(" /:id", jwt_1.verifyToken, isTenant_1.isTenant, category_controller_1.createCategoryController);
+router.delete("/delete-category/:id", category_controller_1.deleteCategoryController);
+router.patch("/update-category/:id", category_controller_1.updateCategoryController);
+exports.default = router;
