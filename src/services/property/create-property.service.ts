@@ -72,7 +72,7 @@ export const createPropertyService = async (
           slug,
           title,
           // Menggunakan propertyCategoryId sesuai schema
-          propertyCategoryId,
+          propertyCategoryId: Number(propertyCategoryId),
           location,
           status: "PUBLISHED",
           tenant: {
