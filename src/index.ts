@@ -6,6 +6,9 @@ import transactionRouter from "./routes/transaction.router";
 import propertyRouter from "./routes/property.router";
 import authRouter from "./routes/auth.router";
 import accountRouter from "./routes/account.router";
+import xenditRouter from "./routes/xendit.router";
+import reviewRouter from "./routes/review.router";
+// import { initializeAutoCheckInOut } from "./services/transaction/autoCheckInOut.Service";
 
 const app = express();
 
@@ -17,10 +20,14 @@ app.use("/transactions", transactionRouter);
 app.use("/properties", propertyRouter);
 app.use("/auth", authRouter);
 app.use("/account", accountRouter);
+app.use("/xendit", xenditRouter);
+app.use("/reviews", reviewRouter);
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   res.status(400).send(err.message);
 });
+
+// initializeAutoCheckInOut();
 
 app.listen(PORT, () => {
   console.log(`server running on PORT: ${PORT}`);

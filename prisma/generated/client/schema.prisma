@@ -274,14 +274,16 @@ enum StatusPayment {
 }
 
 model Review {
-  id         Int      @id @default(autoincrement())
-  rating     Int      @default(0)
-  review     String   @db.Text()
-  userId     Int
-  paymentId  Int
-  propertyId Int
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id           Int       @id @default(autoincrement())
+  rating       Int       @default(0)
+  review       String    @db.Text()
+  userId       Int
+  paymentId    Int
+  propertyId   Int
+  replyMessage String?   @db.Text()
+  replyDate    DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
 
   user     User     @relation(fields: [userId], references: [id])
   property Property @relation(fields: [propertyId], references: [id])

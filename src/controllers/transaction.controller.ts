@@ -8,6 +8,7 @@ import { getTransactionsByTenantService } from "../services/transaction/get-tran
 import { getTransactionByTenantService } from "../services/transaction/get-transaction-by-tenant.tservice";
 import { approveTransactionByTenantService } from "../services/transaction/approve-transaction-by-tenant.service";
 import { cancelTransactionByTenantService } from "../services/transaction/cancel-transaction-by-tenant.service";
+import { testCreateXenditService } from "../services/transaction/test-create-xendit.service";
 
 export const createRoomReservationController = async (
   req: Request,
@@ -183,6 +184,20 @@ export const cancelTransactionByTenantController = async (
     const paymentId = parseInt(req.params.id);
 
     const result = await cancelTransactionByTenantService(paymentId, tenantId);
+
+    res.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const testCreateXenditController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const result = await testCreateXenditService();
 
     res.status(200).json(result);
   } catch (error) {

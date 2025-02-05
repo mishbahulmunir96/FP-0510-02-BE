@@ -282,6 +282,8 @@ exports.Prisma.ReviewScalarFieldEnum = {
   userId: 'userId',
   paymentId: 'paymentId',
   propertyId: 'propertyId',
+  replyMessage: 'replyMessage',
+  replyDate: 'replyDate',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
