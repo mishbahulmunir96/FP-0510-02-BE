@@ -240,7 +240,8 @@ exports.Prisma.RoomImageScalarFieldEnum = {
 
 exports.Prisma.RoomNonAvailabilityScalarFieldEnum = {
   id: 'id',
-  date: 'date',
+  startDate: 'startDate',
+  endDate: 'endDate',
   isDeleted: 'isDeleted',
   reason: 'reason',
   roomId: 'roomId',

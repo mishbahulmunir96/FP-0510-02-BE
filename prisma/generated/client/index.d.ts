@@ -13866,7 +13866,8 @@ export namespace Prisma {
 
   export type RoomNonAvailabilityMinAggregateOutputType = {
     id: number | null
-    date: Date | null
+    startDate: Date | null
+    endDate: Date | null
     isDeleted: boolean | null
     reason: string | null
     roomId: number | null
@@ -13876,7 +13877,8 @@ export namespace Prisma {
 
   export type RoomNonAvailabilityMaxAggregateOutputType = {
     id: number | null
-    date: Date | null
+    startDate: Date | null
+    endDate: Date | null
     isDeleted: boolean | null
     reason: string | null
     roomId: number | null
@@ -13886,7 +13888,8 @@ export namespace Prisma {
 
   export type RoomNonAvailabilityCountAggregateOutputType = {
     id: number
-    date: number
+    startDate: number
+    endDate: number
     isDeleted: number
     reason: number
     roomId: number
@@ -13908,7 +13911,8 @@ export namespace Prisma {
 
   export type RoomNonAvailabilityMinAggregateInputType = {
     id?: true
-    date?: true
+    startDate?: true
+    endDate?: true
     isDeleted?: true
     reason?: true
     roomId?: true
@@ -13918,7 +13922,8 @@ export namespace Prisma {
 
   export type RoomNonAvailabilityMaxAggregateInputType = {
     id?: true
-    date?: true
+    startDate?: true
+    endDate?: true
     isDeleted?: true
     reason?: true
     roomId?: true
@@ -13928,7 +13933,8 @@ export namespace Prisma {
 
   export type RoomNonAvailabilityCountAggregateInputType = {
     id?: true
-    date?: true
+    startDate?: true
+    endDate?: true
     isDeleted?: true
     reason?: true
     roomId?: true
@@ -14025,9 +14031,10 @@ export namespace Prisma {
 
   export type RoomNonAvailabilityGroupByOutputType = {
     id: number
-    date: Date
+    startDate: Date
+    endDate: Date
     isDeleted: boolean
-    reason: string
+    reason: string | null
     roomId: number
     createdAt: Date
     updatedAt: Date
@@ -14054,7 +14061,8 @@ export namespace Prisma {
 
   export type RoomNonAvailabilitySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    date?: boolean
+    startDate?: boolean
+    endDate?: boolean
     isDeleted?: boolean
     reason?: boolean
     roomId?: boolean
@@ -14065,7 +14073,8 @@ export namespace Prisma {
 
   export type RoomNonAvailabilitySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    date?: boolean
+    startDate?: boolean
+    endDate?: boolean
     isDeleted?: boolean
     reason?: boolean
     roomId?: boolean
@@ -14076,7 +14085,8 @@ export namespace Prisma {
 
   export type RoomNonAvailabilitySelectScalar = {
     id?: boolean
-    date?: boolean
+    startDate?: boolean
+    endDate?: boolean
     isDeleted?: boolean
     reason?: boolean
     roomId?: boolean
@@ -14098,9 +14108,10 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
-      date: Date
+      startDate: Date
+      endDate: Date
       isDeleted: boolean
-      reason: string
+      reason: string | null
       roomId: number
       createdAt: Date
       updatedAt: Date
@@ -14499,7 +14510,8 @@ export namespace Prisma {
    */ 
   interface RoomNonAvailabilityFieldRefs {
     readonly id: FieldRef<"RoomNonAvailability", 'Int'>
-    readonly date: FieldRef<"RoomNonAvailability", 'DateTime'>
+    readonly startDate: FieldRef<"RoomNonAvailability", 'DateTime'>
+    readonly endDate: FieldRef<"RoomNonAvailability", 'DateTime'>
     readonly isDeleted: FieldRef<"RoomNonAvailability", 'Boolean'>
     readonly reason: FieldRef<"RoomNonAvailability", 'String'>
     readonly roomId: FieldRef<"RoomNonAvailability", 'Int'>
@@ -18208,7 +18220,8 @@ export namespace Prisma {
 
   export const RoomNonAvailabilityScalarFieldEnum: {
     id: 'id',
-    date: 'date',
+    startDate: 'startDate',
+    endDate: 'endDate',
     isDeleted: 'isDeleted',
     reason: 'reason',
     roomId: 'roomId',
@@ -19286,9 +19299,10 @@ export namespace Prisma {
     OR?: RoomNonAvailabilityWhereInput[]
     NOT?: RoomNonAvailabilityWhereInput | RoomNonAvailabilityWhereInput[]
     id?: IntFilter<"RoomNonAvailability"> | number
-    date?: DateTimeFilter<"RoomNonAvailability"> | Date | string
+    startDate?: DateTimeFilter<"RoomNonAvailability"> | Date | string
+    endDate?: DateTimeFilter<"RoomNonAvailability"> | Date | string
     isDeleted?: BoolFilter<"RoomNonAvailability"> | boolean
-    reason?: StringFilter<"RoomNonAvailability"> | string
+    reason?: StringNullableFilter<"RoomNonAvailability"> | string | null
     roomId?: IntFilter<"RoomNonAvailability"> | number
     createdAt?: DateTimeFilter<"RoomNonAvailability"> | Date | string
     updatedAt?: DateTimeFilter<"RoomNonAvailability"> | Date | string
@@ -19297,9 +19311,10 @@ export namespace Prisma {
 
   export type RoomNonAvailabilityOrderByWithRelationInput = {
     id?: SortOrder
-    date?: SortOrder
+    startDate?: SortOrder
+    endDate?: SortOrder
     isDeleted?: SortOrder
-    reason?: SortOrder
+    reason?: SortOrderInput | SortOrder
     roomId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -19311,9 +19326,10 @@ export namespace Prisma {
     AND?: RoomNonAvailabilityWhereInput | RoomNonAvailabilityWhereInput[]
     OR?: RoomNonAvailabilityWhereInput[]
     NOT?: RoomNonAvailabilityWhereInput | RoomNonAvailabilityWhereInput[]
-    date?: DateTimeFilter<"RoomNonAvailability"> | Date | string
+    startDate?: DateTimeFilter<"RoomNonAvailability"> | Date | string
+    endDate?: DateTimeFilter<"RoomNonAvailability"> | Date | string
     isDeleted?: BoolFilter<"RoomNonAvailability"> | boolean
-    reason?: StringFilter<"RoomNonAvailability"> | string
+    reason?: StringNullableFilter<"RoomNonAvailability"> | string | null
     roomId?: IntFilter<"RoomNonAvailability"> | number
     createdAt?: DateTimeFilter<"RoomNonAvailability"> | Date | string
     updatedAt?: DateTimeFilter<"RoomNonAvailability"> | Date | string
@@ -19322,9 +19338,10 @@ export namespace Prisma {
 
   export type RoomNonAvailabilityOrderByWithAggregationInput = {
     id?: SortOrder
-    date?: SortOrder
+    startDate?: SortOrder
+    endDate?: SortOrder
     isDeleted?: SortOrder
-    reason?: SortOrder
+    reason?: SortOrderInput | SortOrder
     roomId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -19340,9 +19357,10 @@ export namespace Prisma {
     OR?: RoomNonAvailabilityScalarWhereWithAggregatesInput[]
     NOT?: RoomNonAvailabilityScalarWhereWithAggregatesInput | RoomNonAvailabilityScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"RoomNonAvailability"> | number
-    date?: DateTimeWithAggregatesFilter<"RoomNonAvailability"> | Date | string
+    startDate?: DateTimeWithAggregatesFilter<"RoomNonAvailability"> | Date | string
+    endDate?: DateTimeWithAggregatesFilter<"RoomNonAvailability"> | Date | string
     isDeleted?: BoolWithAggregatesFilter<"RoomNonAvailability"> | boolean
-    reason?: StringWithAggregatesFilter<"RoomNonAvailability"> | string
+    reason?: StringNullableWithAggregatesFilter<"RoomNonAvailability"> | string | null
     roomId?: IntWithAggregatesFilter<"RoomNonAvailability"> | number
     createdAt?: DateTimeWithAggregatesFilter<"RoomNonAvailability"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"RoomNonAvailability"> | Date | string
@@ -20484,9 +20502,10 @@ export namespace Prisma {
   }
 
   export type RoomNonAvailabilityCreateInput = {
-    date: Date | string
+    startDate: Date | string
+    endDate: Date | string
     isDeleted?: boolean
-    reason: string
+    reason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     room: RoomCreateNestedOneWithoutRoomNonAvailabilityInput
@@ -20494,18 +20513,20 @@ export namespace Prisma {
 
   export type RoomNonAvailabilityUncheckedCreateInput = {
     id?: number
-    date: Date | string
+    startDate: Date | string
+    endDate: Date | string
     isDeleted?: boolean
-    reason: string
+    reason?: string | null
     roomId: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type RoomNonAvailabilityUpdateInput = {
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    reason?: StringFieldUpdateOperationsInput | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     room?: RoomUpdateOneRequiredWithoutRoomNonAvailabilityNestedInput
@@ -20513,9 +20534,10 @@ export namespace Prisma {
 
   export type RoomNonAvailabilityUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    reason?: StringFieldUpdateOperationsInput | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
     roomId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20523,27 +20545,30 @@ export namespace Prisma {
 
   export type RoomNonAvailabilityCreateManyInput = {
     id?: number
-    date: Date | string
+    startDate: Date | string
+    endDate: Date | string
     isDeleted?: boolean
-    reason: string
+    reason?: string | null
     roomId: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type RoomNonAvailabilityUpdateManyMutationInput = {
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    reason?: StringFieldUpdateOperationsInput | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type RoomNonAvailabilityUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    reason?: StringFieldUpdateOperationsInput | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
     roomId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -21659,7 +21684,8 @@ export namespace Prisma {
 
   export type RoomNonAvailabilityCountOrderByAggregateInput = {
     id?: SortOrder
-    date?: SortOrder
+    startDate?: SortOrder
+    endDate?: SortOrder
     isDeleted?: SortOrder
     reason?: SortOrder
     roomId?: SortOrder
@@ -21674,7 +21700,8 @@ export namespace Prisma {
 
   export type RoomNonAvailabilityMaxOrderByAggregateInput = {
     id?: SortOrder
-    date?: SortOrder
+    startDate?: SortOrder
+    endDate?: SortOrder
     isDeleted?: SortOrder
     reason?: SortOrder
     roomId?: SortOrder
@@ -21684,7 +21711,8 @@ export namespace Prisma {
 
   export type RoomNonAvailabilityMinOrderByAggregateInput = {
     id?: SortOrder
-    date?: SortOrder
+    startDate?: SortOrder
+    endDate?: SortOrder
     isDeleted?: SortOrder
     reason?: SortOrder
     roomId?: SortOrder
@@ -24399,18 +24427,20 @@ export namespace Prisma {
   }
 
   export type RoomNonAvailabilityCreateWithoutRoomInput = {
-    date: Date | string
+    startDate: Date | string
+    endDate: Date | string
     isDeleted?: boolean
-    reason: string
+    reason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type RoomNonAvailabilityUncheckedCreateWithoutRoomInput = {
     id?: number
-    date: Date | string
+    startDate: Date | string
+    endDate: Date | string
     isDeleted?: boolean
-    reason: string
+    reason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -24608,9 +24638,10 @@ export namespace Prisma {
     OR?: RoomNonAvailabilityScalarWhereInput[]
     NOT?: RoomNonAvailabilityScalarWhereInput | RoomNonAvailabilityScalarWhereInput[]
     id?: IntFilter<"RoomNonAvailability"> | number
-    date?: DateTimeFilter<"RoomNonAvailability"> | Date | string
+    startDate?: DateTimeFilter<"RoomNonAvailability"> | Date | string
+    endDate?: DateTimeFilter<"RoomNonAvailability"> | Date | string
     isDeleted?: BoolFilter<"RoomNonAvailability"> | boolean
-    reason?: StringFilter<"RoomNonAvailability"> | string
+    reason?: StringNullableFilter<"RoomNonAvailability"> | string | null
     roomId?: IntFilter<"RoomNonAvailability"> | number
     createdAt?: DateTimeFilter<"RoomNonAvailability"> | Date | string
     updatedAt?: DateTimeFilter<"RoomNonAvailability"> | Date | string
@@ -26129,9 +26160,10 @@ export namespace Prisma {
 
   export type RoomNonAvailabilityCreateManyRoomInput = {
     id?: number
-    date: Date | string
+    startDate: Date | string
+    endDate: Date | string
     isDeleted?: boolean
-    reason: string
+    reason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -26226,27 +26258,30 @@ export namespace Prisma {
   }
 
   export type RoomNonAvailabilityUpdateWithoutRoomInput = {
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    reason?: StringFieldUpdateOperationsInput | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type RoomNonAvailabilityUncheckedUpdateWithoutRoomInput = {
     id?: IntFieldUpdateOperationsInput | number
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    reason?: StringFieldUpdateOperationsInput | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type RoomNonAvailabilityUncheckedUpdateManyWithoutRoomInput = {
     id?: IntFieldUpdateOperationsInput | number
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    reason?: StringFieldUpdateOperationsInput | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
