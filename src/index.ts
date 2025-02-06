@@ -10,6 +10,7 @@ import xenditRouter from "./routes/xendit.router";
 import reviewRouter from "./routes/review.router";
 import categoryRouter from "./routes/category.router";
 import roomRouter from "./routes/room.router";
+import roomNonAvailabilityRouter from "./routes/roomNonAvailability.router";
 // import { initializeAutoCheckInOut } from "./services/transaction/autoCheckInOut.Service";
 
 const app = express();
@@ -26,6 +27,7 @@ app.use("/xendit", xenditRouter);
 app.use("/reviews", reviewRouter);
 app.use("/categories", categoryRouter);
 app.use("/rooms", roomRouter);
+app.use("/room-non-availabilities", roomNonAvailabilityRouter);
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   res.status(400).send(err.message);
