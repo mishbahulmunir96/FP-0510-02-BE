@@ -2,8 +2,11 @@ import { Router } from "express";
 import {
   createPropertyController,
   deletePropertyController,
+  getPropertiesByQueryController,
   getPropertiesController,
   getPropertyController,
+  getPropertyTenantController,
+  getTenantPropertiesController,
   updatePropertyController,
 } from "../controllers/property.controller";
 import { isTenant } from "../lib/isTenant";
@@ -14,6 +17,9 @@ const router = Router();
 
 router.get("/", getPropertiesController);
 router.get("/:slug", getPropertyController);
+router.get("/search", getPropertiesByQueryController);
+router.get("/tenant", verifyToken, isTenant, getTenantPropertiesController);
+router.get("/tenant/:id", getPropertyTenantController);
 router.post(
   "/create-property",
   verifyToken,
