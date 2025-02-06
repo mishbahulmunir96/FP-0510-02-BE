@@ -13,12 +13,6 @@ const validateResult = (req: Request, res: Response, next: NextFunction) => {
 };
 
 export const validateCreateReservation = [
-  body("userId")
-    .notEmpty()
-    .withMessage("User ID is required")
-    .isInt({ min: 1 })
-    .withMessage("User ID must be a positive integer"),
-
   body("roomId")
     .notEmpty()
     .withMessage("Room ID is required")

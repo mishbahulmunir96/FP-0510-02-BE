@@ -1,21 +1,23 @@
-import { StatusPayment } from "../../../prisma/generated/client";
+import { Payment, StatusPayment } from "../../../prisma/generated/client";
 import { checkRoomAvailability } from "../../lib/checkRoomAvailability";
 import prisma from "../../lib/prisma";
 import schedule from "node-schedule";
 import { addMinutes } from "date-fns";
+import xendit from "../../lib/xendit";
 
 interface CreateRoomReservationBody {
   userId: number;
   roomId: number;
   startDate: Date;
   endDate: Date;
+  paymentMethode: "MANUAL" | "OTOMATIS";
 }
 
 export const createRoomReservationService = async (
   body: CreateRoomReservationBody
 ) => {
   try {
-    const { userId, roomId, startDate, endDate } = body;
+    const { userId, roomId, startDate, endDate, paymentMethode } = body;
 
     const isAvailable = await checkRoomAvailability(roomId, startDate, endDate);
     if (!isAvailable) {
@@ -62,16 +64,70 @@ export const createRoomReservationService = async (
       }
     }
 
-    const payment = await prisma.payment.create({
-      data: {
-        userId,
-        totalPrice,
-        duration: diffDays,
-        paymentMethode: "MANUAL",
-        paymentProof: null,
-        status: StatusPayment.WAITING_FOR_PAYMENT,
-      },
-    });
+    let payment: Payment;
+
+    if (paymentMethode === "OTOMATIS") {
+      const user = await prisma.user.findUnique({
+        where: { id: userId },
+        select: { email: true },
+      });
+
+      payment = await prisma.payment.create({
+        data: {
+          userId,
+          totalPrice,
+          duration: diffDays,
+          paymentMethode: "OTOMATIS",
+          paymentProof: null,
+          status: StatusPayment.WAITING_FOR_PAYMENT,
+        },
+      });
+
+      const invoice = await xendit.Invoice.createInvoice({
+        data: {
+          externalId: payment.uuid,
+          amount: totalPrice,
+          payerEmail: user?.email,
+          description: `Room Reservation for ${diffDays} night(s)`,
+          invoiceDuration: "60",
+          currency: "IDR",
+          // reminderTime: 1,
+        },
+      });
+
+      payment = await prisma.payment.update({
+        where: { id: payment.id },
+        data: {
+          invoiceUrl: invoice.invoiceUrl,
+          expiredAt: new Date(invoice.expiryDate),
+        },
+      });
+    } else {
+      payment = await prisma.payment.create({
+        data: {
+          userId,
+          totalPrice,
+          duration: diffDays,
+          paymentMethode: "MANUAL",
+          paymentProof: null,
+          status: StatusPayment.WAITING_FOR_PAYMENT,
+        },
+      });
+
+      const expirationTime = addMinutes(new Date(), 1);
+      schedule.scheduleJob(Date.now() + 60 * 60 * 1000, async () => {
+        await prisma.payment.update({
+          where: {
+            id: payment.id,
+            status: StatusPayment.WAITING_FOR_PAYMENT,
+          },
+          data: {
+            status: StatusPayment.CANCELLED,
+            expiredAt: expirationTime,
+          },
+        });
+      });
+    }
 
     const reservations = [];
     for (let i = 0; i < diffDays; i++) {
@@ -105,20 +161,6 @@ export const createRoomReservationService = async (
       data: reservations,
     });
 
-    const expirationTime = addMinutes(new Date(), 1);
-
-    schedule.scheduleJob(Date.now() + 60 * 60 * 1000, async () => {
-      await prisma.payment.update({
-        where: {
-          id: payment.id,
-          status: StatusPayment.WAITING_FOR_PAYMENT,
-        },
-        data: {
-          status: StatusPayment.CANCELLED,
-          expiredAt: expirationTime,
-        },
-      });
-    });
     return { payment, reservations };
   } catch (error) {
     throw error;
