@@ -8,13 +8,12 @@ import {
   getTransactionByUserController,
   getTransactionsByTenantController,
   getTransactionsByUserController,
-  testCreateXenditController,
   uploadPaymentProofController,
 } from "../controllers/transaction.controller";
 import { fileFilter } from "../lib/fileFilter";
-import { uploader } from "../lib/multer";
-import { verifyToken } from "../lib/jwt";
 import { isTenant } from "../lib/isTenant";
+import { verifyToken } from "../lib/jwt";
+import { uploader } from "../lib/multer";
 import { validateCreateReservation } from "../validators/transaction.validators";
 
 const router = Router();
@@ -54,6 +53,5 @@ router.patch(
   isTenant,
   cancelTransactionByTenantController
 );
-router.post("/test-create-xendit", testCreateXenditController);
 
 export default router;
