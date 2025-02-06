@@ -4,9 +4,9 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  // directUrl = env("DIRECT_URL")
 }
 
 model Sample {
@@ -87,9 +87,9 @@ model Property {
   propertyFacility PropertyFacility[]
   room             Room[]
 
-  tenant           Tenant             @relation(fields: [tenantId], references: [id])
+  tenant           Tenant           @relation(fields: [tenantId], references: [id])
   review           Review[]
-  PropertyCategory PropertyCategory[]
+  propertycategory PropertyCategory @relation(fields: [propertyCategoryId], references: [id])
 
   @@map("properties")
 }
