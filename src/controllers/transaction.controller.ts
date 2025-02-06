@@ -1,20 +1,19 @@
 import { NextFunction, Request, Response } from "express";
-import { createRoomReservationService } from "../services/transaction/create-room-reservation.service";
-import { getTransactionByUserService } from "../services/transaction/get-transaction-by-user.service";
-import { uploadPaymentProofService } from "../services/transaction/upload-payment-proof.service";
-import { getTransactionsByUserService } from "../services/transaction/get-transactions-by-user.service";
-import { cancelTransactionByUserService } from "../services/transaction/cancel-transaction-by-user.service";
-import { getTransactionsByTenantService } from "../services/transaction/get-transactions-by-tenant.service";
-import { getTransactionByTenantService } from "../services/transaction/get-transaction-by-tenant.tservice";
 import { approveTransactionByTenantService } from "../services/transaction/approve-transaction-by-tenant.service";
 import { cancelTransactionByTenantService } from "../services/transaction/cancel-transaction-by-tenant.service";
-import { testCreateXenditService } from "../services/transaction/test-create-xendit.service";
+import { cancelTransactionByUserService } from "../services/transaction/cancel-transaction-by-user.service";
+import { createRoomReservationService } from "../services/transaction/create-room-reservation.service";
+import { getTransactionByTenantService } from "../services/transaction/get-transaction-by-tenant.tservice";
+import { getTransactionByUserService } from "../services/transaction/get-transaction-by-user.service";
+import { getTransactionsByTenantService } from "../services/transaction/get-transactions-by-tenant.service";
+import { getTransactionsByUserService } from "../services/transaction/get-transactions-by-user.service";
+import { uploadPaymentProofService } from "../services/transaction/upload-payment-proof.service";
 
 export const createRoomReservationController = async (
   req: Request,
   res: Response,
   next: NextFunction
-): Promise<void> => {
+) => {
   try {
     const userId = res.locals.user.id;
 
@@ -23,6 +22,7 @@ export const createRoomReservationController = async (
       roomId: req.body.roomId,
       startDate: new Date(req.body.startDate),
       endDate: new Date(req.body.endDate),
+      paymentMethode: req.body.paymentMethode,
     };
 
     const result = await createRoomReservationService(reservationData);
@@ -184,20 +184,6 @@ export const cancelTransactionByTenantController = async (
     const paymentId = parseInt(req.params.id);
 
     const result = await cancelTransactionByTenantService(paymentId, tenantId);
-
-    res.status(200).json(result);
-  } catch (error) {
-    next(error);
-  }
-};
-
-export const testCreateXenditController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const result = await testCreateXenditService();
 
     res.status(200).json(result);
   } catch (error) {
