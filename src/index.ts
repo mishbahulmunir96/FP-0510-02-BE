@@ -11,7 +11,7 @@ import reviewRouter from "./routes/review.router";
 import categoryRouter from "./routes/category.router";
 import roomRouter from "./routes/room.router";
 import roomNonAvailabilityRouter from "./routes/roomNonAvailability.router";
-// import { initializeAutoCheckInOut } from "./services/transaction/autoCheckInOut.Service";
+import { initializeAutoCheckInOut } from "./script/autoCheckInOut.Service";
 
 const app = express();
 
@@ -33,7 +33,7 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   res.status(400).send(err.message);
 });
 
-// initializeAutoCheckInOut();
+initializeAutoCheckInOut();
 
 app.listen(PORT, () => {
   console.log(`server running on PORT: ${PORT}`);
