@@ -12,6 +12,7 @@ import categoryRouter from "./routes/category.router";
 import roomRouter from "./routes/room.router";
 import roomNonAvailabilityRouter from "./routes/roomNonAvailability.router";
 import { initializeAutoCheckInOut } from "./script/autoCheckInOut.Service";
+import peakSeasonRateRouter from "./routes/peakSeasonRate.router";
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.use("/xendit", xenditRouter);
 app.use("/reviews", reviewRouter);
 app.use("/categories", categoryRouter);
 app.use("/rooms", roomRouter);
+app.use("/peak-season-rates", peakSeasonRateRouter);
 app.use("/room-non-availabilities", roomNonAvailabilityRouter);
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
