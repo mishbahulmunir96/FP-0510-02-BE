@@ -3,7 +3,10 @@ import prisma from "../../lib/prisma";
 export const getPropertyTenantService = async (id: number) => {
   try {
     const property = await prisma.property.findFirst({
-      where: { id, isDeleted: false },
+      where: {
+        id,
+        isDeleted: false,
+      },
       include: {
         tenant: true,
         room: {
@@ -15,13 +18,14 @@ export const getPropertyTenantService = async (id: number) => {
         propertyImage: true,
         propertyFacility: true,
         review: true,
-        PropertyCategory: true,
+        propertyCategory: true, // Changed from PropertyCategory to match the schema
       },
     });
 
     if (!property) {
       throw new Error("Invalid Property id");
     }
+
     return property;
   } catch (error) {
     throw error;

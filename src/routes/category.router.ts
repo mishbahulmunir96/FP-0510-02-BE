@@ -14,7 +14,7 @@ const router = Router();
 router.get("/", verifyToken, getCategoryListController);
 router.get("/list", getAllCategoryListController);
 
-router.post(" /:id", verifyToken, isTenant, createCategoryController);
+router.post("/:id", verifyToken, isTenant, createCategoryController);
 
 router.delete("/delete-category/:id", deleteCategoryController);
 router.patch("/update-category/:id", updateCategoryController);
