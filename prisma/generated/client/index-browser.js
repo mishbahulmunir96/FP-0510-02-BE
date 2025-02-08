@@ -162,11 +162,11 @@ exports.Prisma.PropertyScalarFieldEnum = {
   longitude: 'longitude',
   status: 'status',
   isDeleted: 'isDeleted',
-  propertyCategoryId: 'propertyCategoryId',
   tenantId: 'tenantId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  location: 'location'
+  location: 'location',
+  propertyCategoryId: 'propertyCategoryId'
 };
 
 exports.Prisma.PropertyCategoryScalarFieldEnum = {

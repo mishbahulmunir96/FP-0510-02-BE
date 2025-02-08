@@ -21,7 +21,7 @@ app.use(express.json());
 
 app.use("/samples", sampleRouter);
 app.use("/transactions", transactionRouter);
-app.use("/properties", propertyRouter);
+app.use("/property", propertyRouter);
 app.use("/auth", authRouter);
 app.use("/account", accountRouter);
 app.use("/xendit", xenditRouter);

@@ -8,7 +8,7 @@ interface GetPropertiesQuery extends PaginationQueryParams {
   endDate?: Date;
   guest?: number;
   title?: string;
-  name?: string; // untuk filter kategori properti berdasarkan nama
+  name?: string;
   price?: number;
 }
 
@@ -30,14 +30,12 @@ export const getPropertiesServiceByQuery = async (
       price,
     } = query;
 
-    // Membangun whereClause untuk properti
     const whereClause: Prisma.PropertyWhereInput = {
       isDeleted: false,
-      // Filter properti berdasarkan kategori (PropertyCategory) jika 'name' disediakan
-      PropertyCategory: name
-        ? { some: { name: { equals: name, mode: "insensitive" } } }
+      // Fixed property category filter
+      propertyCategory: name
+        ? { name: { equals: name, mode: "insensitive" } }
         : undefined,
-      // Filter ketersediaan ruangan (room) untuk properti ini
       room: {
         some: {
           stock: { gt: 0 },
@@ -46,10 +44,10 @@ export const getPropertiesServiceByQuery = async (
             startDate && endDate
               ? {
                   none: {
-                    OR: [
+                    AND: [
                       {
-                        startDate: startDate,
-                        endDate: endDate,
+                        startDate: { lte: endDate },
+                        endDate: { gte: startDate },
                       },
                     ],
                   },
@@ -59,12 +57,10 @@ export const getPropertiesServiceByQuery = async (
       },
     };
 
-    // Tambahkan filter pencarian pada title jika disediakan
     if (title) {
       whereClause.title = { contains: title, mode: "insensitive" };
     }
 
-    // Jika parameter 'search' disediakan, tambahkan pencarian pada title dan description
     if (search) {
       whereClause.OR = [
         { title: { contains: search, mode: "insensitive" } },
@@ -72,7 +68,6 @@ export const getPropertiesServiceByQuery = async (
       ];
     }
 
-    // Jika filter harga disediakan, misalnya, properti harus memiliki setidaknya satu room dengan harga <= price
     if (price) {
       whereClause.room = {
         some: {
@@ -83,10 +78,10 @@ export const getPropertiesServiceByQuery = async (
             startDate && endDate
               ? {
                   none: {
-                    OR: [
+                    AND: [
                       {
-                        startDate: startDate,
-                        endDate: endDate,
+                        startDate: { lte: endDate },
+                        endDate: { gte: startDate },
                       },
                     ],
                   },
@@ -98,15 +93,23 @@ export const getPropertiesServiceByQuery = async (
 
     const propertiesByQuery = await prisma.property.findMany({
       where: whereClause,
-      skip: (page - 1) * take,
+      skip: Math.max(0, (page - 1) * take),
       take: take,
-      orderBy: sortBy ? { [sortBy]: sortOrder || "asc" } : {},
+      orderBy: sortBy
+        ? { [sortBy]: sortOrder || "asc" }
+        : { createdAt: "desc" },
       include: {
-        propertyImage: { select: { imageUrl: true } },
-        review: { select: { rating: true } },
-        tenant: { select: { name: true } },
+        propertyImage: {
+          select: { imageUrl: true },
+        },
+        review: {
+          select: { rating: true },
+        },
+        tenant: {
+          select: { name: true },
+        },
         room: true,
-        PropertyCategory: true,
+        propertyCategory: true,
         propertyFacility: true,
       },
     });
@@ -115,8 +118,13 @@ export const getPropertiesServiceByQuery = async (
 
     return {
       data: propertiesByQuery,
-      meta: { page, take, total: count },
-      whereClause, // Opsi: untuk debugging; bisa dihapus di produksi.
+      meta: {
+        page,
+        take,
+        total: count,
+      },
+      whereClause:
+        process.env.NODE_ENV !== "production" ? whereClause : undefined,
     };
   } catch (error) {
     throw error;
