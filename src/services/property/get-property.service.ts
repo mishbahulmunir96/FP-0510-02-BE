@@ -23,7 +23,7 @@ export const getPropertyService = async (slug: string) => {
         propertyImage: true,
         propertyFacility: true,
         review: true,
-        PropertyCategory: true,
+        // PropertyCategory: true,
       },
     });
 

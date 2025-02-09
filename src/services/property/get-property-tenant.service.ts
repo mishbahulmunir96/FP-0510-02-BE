@@ -15,7 +15,7 @@ export const getPropertyTenantService = async (id: number) => {
         propertyImage: true,
         propertyFacility: true,
         review: true,
-        PropertyCategory: true,
+        // PropertyCategory: true,
       },
     });
 

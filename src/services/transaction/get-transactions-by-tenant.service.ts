@@ -1,25 +1,40 @@
 import prisma from "../../lib/prisma";
 import { PaginationQueryParams } from "../../types/pagination";
 
+interface getTransactionsQuery extends PaginationQueryParams {
+  startDate?: string;
+  endDate?: string;
+}
+
 export const getTransactionsByTenantService = async (
   tenantId: number,
-  query: PaginationQueryParams
+  query: getTransactionsQuery
 ) => {
   try {
-    const { page, take, sortBy, sortOrder } = query;
+    const { page, take, sortBy, sortOrder, startDate, endDate } = query;
 
-    const transactions = await prisma.payment.findMany({
-      where: {
-        reservation: {
-          some: {
-            room: {
-              property: {
-                tenantId,
-              },
+    const where = {
+      reservation: {
+        some: {
+          room: {
+            property: {
+              tenantId,
             },
           },
         },
       },
+      ...(startDate && endDate
+        ? {
+            createdAt: {
+              gte: new Date(startDate),
+              lte: new Date(endDate),
+            },
+          }
+        : {}),
+    };
+
+    const transactions = await prisma.payment.findMany({
+      where,
       include: {
         user: {
           select: {

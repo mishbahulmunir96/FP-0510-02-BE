@@ -1,14 +1,31 @@
 import prisma from "../../lib/prisma";
 import { PaginationQueryParams } from "../../types/pagination";
 
+interface getTransactionsQuery extends PaginationQueryParams {
+  startDate?: string;
+  endDate?: string;
+}
 export const getTransactionsByUserService = async (
   userId: number,
-  query: PaginationQueryParams
+  query: getTransactionsQuery
 ) => {
   try {
-    const { page, take, sortBy, sortOrder } = query;
+    const { page, take, sortBy, sortOrder, startDate, endDate } = query;
+
+    const where = {
+      userId,
+      ...(startDate && endDate
+        ? {
+            createdAt: {
+              gte: new Date(startDate),
+              lte: new Date(endDate),
+            },
+          }
+        : {}),
+    };
+
     const transactions = await prisma.payment.findMany({
-      where: { userId },
+      where,
       include: {
         reservation: {
           include: {
@@ -33,10 +50,6 @@ export const getTransactionsByUserService = async (
     const count = await prisma.payment.count({
       where: { userId },
     });
-
-    if (transactions.length === 0) {
-      throw new Error("No transactions found for this user.");
-    }
 
     return {
       data: transactions.map((transaction) => {

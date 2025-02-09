@@ -3,7 +3,7 @@ import { PORT } from "./config";
 import cors from "cors";
 import sampleRouter from "./routes/sample.router";
 import transactionRouter from "./routes/transaction.router";
-import propertyRouter from "./routes/property.router";
+// import propertyRouter from "./routes/property.router";
 import authRouter from "./routes/auth.router";
 import accountRouter from "./routes/account.router";
 import xenditRouter from "./routes/xendit.router";
@@ -13,6 +13,7 @@ import roomRouter from "./routes/room.router";
 import roomNonAvailabilityRouter from "./routes/roomNonAvailability.router";
 import { initializeAutoCheckInOut } from "./script/autoCheckInOut.Service";
 import peakSeasonRateRouter from "./routes/peakSeasonRate.router";
+import statisticRouter from "./routes/statistic.router";
 
 const app = express();
 
@@ -21,7 +22,7 @@ app.use(express.json());
 
 app.use("/samples", sampleRouter);
 app.use("/transactions", transactionRouter);
-app.use("/properties", propertyRouter);
+// app.use("/properties", propertyRouter);
 app.use("/auth", authRouter);
 app.use("/account", accountRouter);
 app.use("/xendit", xenditRouter);
@@ -30,6 +31,7 @@ app.use("/categories", categoryRouter);
 app.use("/rooms", roomRouter);
 app.use("/peak-season-rates", peakSeasonRateRouter);
 app.use("/room-non-availabilities", roomNonAvailabilityRouter);
+app.use("/statistics", statisticRouter);
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   res.status(400).send(err.message);

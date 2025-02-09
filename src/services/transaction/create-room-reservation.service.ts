@@ -89,7 +89,7 @@ export const createRoomReservationService = async (
           amount: totalPrice,
           payerEmail: user?.email,
           description: `Room Reservation for ${diffDays} night(s)`,
-          invoiceDuration: "60",
+          invoiceDuration: "3600",
           currency: "IDR",
           // reminderTime: 1,
         },

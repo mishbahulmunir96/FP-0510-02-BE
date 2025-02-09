@@ -87,6 +87,8 @@ export const getTransactionsByUserController = async (
       page: parseInt(req.query.page as string) || 1,
       sortBy: (req.query.sortBy as string) || "createdAt",
       sortOrder: (req.query.sortOrder as string) || "desc",
+      startDate: req.query.startDate as string,
+      endDate: req.query.endDate as string,
     };
 
     const result = await getTransactionsByUserService(userId, query);
@@ -124,6 +126,8 @@ export const getTransactionsByTenantController = async (
       page: parseInt(req.query.page as string) || 1,
       sortBy: (req.query.sortBy as string) || "createdAt",
       sortOrder: (req.query.sortOrder as string) || "desc",
+      startDate: req.query.startDate as string,
+      endDate: req.query.endDate as string,
     };
 
     const result = await getTransactionsByTenantService(tenantId, query);
