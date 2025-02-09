@@ -19994,7 +19994,7 @@ export namespace Prisma {
     name: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    properties?: PropertyCreateNestedManyWithoutPropertycategoryInput
+    properties?: PropertyCreateNestedManyWithoutPropertyCategoryInput
     tenant: TenantCreateNestedOneWithoutPropertyCategoryInput
   }
 
@@ -20004,14 +20004,14 @@ export namespace Prisma {
     tenantId: number
     createdAt?: Date | string
     updatedAt?: Date | string
-    properties?: PropertyUncheckedCreateNestedManyWithoutPropertycategoryInput
+    properties?: PropertyUncheckedCreateNestedManyWithoutPropertyCategoryInput
   }
 
   export type PropertyCategoryUpdateInput = {
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    properties?: PropertyUpdateManyWithoutPropertycategoryNestedInput
+    properties?: PropertyUpdateManyWithoutPropertyCategoryNestedInput
     tenant?: TenantUpdateOneRequiredWithoutPropertyCategoryNestedInput
   }
 
@@ -20021,7 +20021,7 @@ export namespace Prisma {
     tenantId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    properties?: PropertyUncheckedUpdateManyWithoutPropertycategoryNestedInput
+    properties?: PropertyUncheckedUpdateManyWithoutPropertyCategoryNestedInput
   }
 
   export type PropertyCategoryCreateManyInput = {
@@ -22411,8 +22411,8 @@ export namespace Prisma {
     disconnect?: PropertyWhereUniqueInput | PropertyWhereUniqueInput[]
     delete?: PropertyWhereUniqueInput | PropertyWhereUniqueInput[]
     connect?: PropertyWhereUniqueInput | PropertyWhereUniqueInput[]
-    update?: PropertyUpdateWithWhereUniqueWithoutPropertycategoryInput | PropertyUpdateWithWhereUniqueWithoutPropertycategoryInput[]
-    updateMany?: PropertyUpdateManyWithWhereWithoutPropertycategoryInput | PropertyUpdateManyWithWhereWithoutPropertycategoryInput[]
+    update?: PropertyUpdateWithWhereUniqueWithoutPropertyCategoryInput | PropertyUpdateWithWhereUniqueWithoutPropertyCategoryInput[]
+    updateMany?: PropertyUpdateManyWithWhereWithoutPropertyCategoryInput | PropertyUpdateManyWithWhereWithoutPropertyCategoryInput[]
     deleteMany?: PropertyScalarWhereInput | PropertyScalarWhereInput[]
   }
 
@@ -22433,8 +22433,8 @@ export namespace Prisma {
     disconnect?: PropertyWhereUniqueInput | PropertyWhereUniqueInput[]
     delete?: PropertyWhereUniqueInput | PropertyWhereUniqueInput[]
     connect?: PropertyWhereUniqueInput | PropertyWhereUniqueInput[]
-    update?: PropertyUpdateWithWhereUniqueWithoutPropertycategoryInput | PropertyUpdateWithWhereUniqueWithoutPropertycategoryInput[]
-    updateMany?: PropertyUpdateManyWithWhereWithoutPropertycategoryInput | PropertyUpdateManyWithWhereWithoutPropertycategoryInput[]
+    update?: PropertyUpdateWithWhereUniqueWithoutPropertyCategoryInput | PropertyUpdateWithWhereUniqueWithoutPropertyCategoryInput[]
+    updateMany?: PropertyUpdateManyWithWhereWithoutPropertyCategoryInput | PropertyUpdateManyWithWhereWithoutPropertyCategoryInput[]
     deleteMany?: PropertyScalarWhereInput | PropertyScalarWhereInput[]
   }
 
@@ -23507,7 +23507,7 @@ export namespace Prisma {
     name: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    properties?: PropertyCreateNestedManyWithoutPropertycategoryInput
+    properties?: PropertyCreateNestedManyWithoutPropertyCategoryInput
   }
 
   export type PropertyCategoryUncheckedCreateWithoutTenantInput = {
@@ -23515,7 +23515,7 @@ export namespace Prisma {
     name: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    properties?: PropertyUncheckedCreateNestedManyWithoutPropertycategoryInput
+    properties?: PropertyUncheckedCreateNestedManyWithoutPropertyCategoryInput
   }
 
   export type PropertyCategoryCreateOrConnectWithoutTenantInput = {
@@ -23984,15 +23984,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type PropertyCategoryUncheckedUpdateWithoutPropertiesInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    name?: StringFieldUpdateOperationsInput | string
-    tenantId?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type PropertyCreateWithoutPropertycategoryInput = {
+  export type PropertyCreateWithoutPropertyCategoryInput = {
     slug: string
     title: string
     description: string
@@ -24010,7 +24002,7 @@ export namespace Prisma {
     review?: ReviewCreateNestedManyWithoutPropertyInput
   }
 
-  export type PropertyUncheckedCreateWithoutPropertycategoryInput = {
+  export type PropertyUncheckedCreateWithoutPropertyCategoryInput = {
     id?: number
     slug: string
     title: string
@@ -24029,14 +24021,9 @@ export namespace Prisma {
     review?: ReviewUncheckedCreateNestedManyWithoutPropertyInput
   }
 
-  export type PropertyCreateOrConnectWithoutPropertycategoryInput = {
+  export type PropertyCreateOrConnectWithoutPropertyCategoryInput = {
     where: PropertyWhereUniqueInput
-    create: XOR<PropertyCreateWithoutPropertycategoryInput, PropertyUncheckedCreateWithoutPropertycategoryInput>
-  }
-
-  export type PropertyCreateManyPropertycategoryInputEnvelope = {
-    data: PropertyCreateManyPropertycategoryInput | PropertyCreateManyPropertycategoryInput[]
-    skipDuplicates?: boolean
+    create: XOR<PropertyCreateWithoutPropertyCategoryInput, PropertyUncheckedCreateWithoutPropertyCategoryInput>
   }
 
   export type PropertyCreateManyPropertyCategoryInputEnvelope = {
@@ -24078,20 +24065,20 @@ export namespace Prisma {
     create: XOR<TenantCreateWithoutPropertyCategoryInput, TenantUncheckedCreateWithoutPropertyCategoryInput>
   }
 
-  export type PropertyUpsertWithWhereUniqueWithoutPropertycategoryInput = {
+  export type PropertyUpsertWithWhereUniqueWithoutPropertyCategoryInput = {
     where: PropertyWhereUniqueInput
-    update: XOR<PropertyUpdateWithoutPropertycategoryInput, PropertyUncheckedUpdateWithoutPropertycategoryInput>
-    create: XOR<PropertyCreateWithoutPropertycategoryInput, PropertyUncheckedCreateWithoutPropertycategoryInput>
+    update: XOR<PropertyUpdateWithoutPropertyCategoryInput, PropertyUncheckedUpdateWithoutPropertyCategoryInput>
+    create: XOR<PropertyCreateWithoutPropertyCategoryInput, PropertyUncheckedCreateWithoutPropertyCategoryInput>
   }
 
-  export type PropertyUpdateWithWhereUniqueWithoutPropertycategoryInput = {
+  export type PropertyUpdateWithWhereUniqueWithoutPropertyCategoryInput = {
     where: PropertyWhereUniqueInput
-    data: XOR<PropertyUpdateWithoutPropertycategoryInput, PropertyUncheckedUpdateWithoutPropertycategoryInput>
+    data: XOR<PropertyUpdateWithoutPropertyCategoryInput, PropertyUncheckedUpdateWithoutPropertyCategoryInput>
   }
 
-  export type PropertyUpdateManyWithWhereWithoutPropertycategoryInput = {
+  export type PropertyUpdateManyWithWhereWithoutPropertyCategoryInput = {
     where: PropertyScalarWhereInput
-    data: XOR<PropertyUpdateManyMutationInput, PropertyUncheckedUpdateManyWithoutPropertycategoryInput>
+    data: XOR<PropertyUpdateManyMutationInput, PropertyUncheckedUpdateManyWithoutPropertyCategoryInput>
   }
 
   export type TenantUpsertWithoutPropertyCategoryInput = {
@@ -25828,7 +25815,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    properties?: PropertyUpdateManyWithoutPropertycategoryNestedInput
+    properties?: PropertyUpdateManyWithoutPropertyCategoryNestedInput
   }
 
   export type PropertyCategoryUncheckedUpdateWithoutTenantInput = {
@@ -25836,7 +25823,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    properties?: PropertyUncheckedUpdateManyWithoutPropertycategoryNestedInput
+    properties?: PropertyUncheckedUpdateManyWithoutPropertyCategoryNestedInput
   }
 
   export type PropertyCategoryUncheckedUpdateManyWithoutTenantInput = {
@@ -26027,7 +26014,7 @@ export namespace Prisma {
     location: string
   }
 
-  export type PropertyUpdateWithoutPropertycategoryInput = {
+  export type PropertyUpdateWithoutPropertyCategoryInput = {
     slug?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
@@ -26045,7 +26032,7 @@ export namespace Prisma {
     review?: ReviewUpdateManyWithoutPropertyNestedInput
   }
 
-  export type PropertyUncheckedUpdateWithoutPropertycategoryInput = {
+  export type PropertyUncheckedUpdateWithoutPropertyCategoryInput = {
     id?: IntFieldUpdateOperationsInput | number
     slug?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
@@ -26064,7 +26051,7 @@ export namespace Prisma {
     review?: ReviewUncheckedUpdateManyWithoutPropertyNestedInput
   }
 
-  export type PropertyUncheckedUpdateManyWithoutPropertycategoryInput = {
+  export type PropertyUncheckedUpdateManyWithoutPropertyCategoryInput = {
     id?: IntFieldUpdateOperationsInput | number
     slug?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
