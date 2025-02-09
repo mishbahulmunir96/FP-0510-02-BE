@@ -2,14 +2,6 @@ import prisma from "../../lib/prisma";
 
 export const deletePropertyService = async (id: number, userId: number) => {
   try {
-    // Cari properti berdasarkan id
-    const property = await prisma.property.findUnique({
-      where: { id },
-    });
-    if (!property) {
-      throw new Error("Property not found");
-    }
-
     // Validasi user
     const user = await prisma.user.findUnique({
       where: { id: userId, isDeleted: false },
@@ -21,7 +13,7 @@ export const deletePropertyService = async (id: number, userId: number) => {
       throw new Error("User doesn't have permission to delete property");
     }
 
-    // Cari tenant yang terkait dengan user
+    // Validasi tenant
     const tenant = await prisma.tenant.findFirst({
       where: { userId: user.id, isDeleted: false },
     });
@@ -29,62 +21,94 @@ export const deletePropertyService = async (id: number, userId: number) => {
       throw new Error("Tenant not found");
     }
 
-    // Pastikan properti yang akan dihapus dimiliki oleh tenant tersebut
+    // Validasi property
+    const property = await prisma.property.findUnique({
+      where: { id },
+    });
+    if (!property) {
+      throw new Error("Property not found");
+    }
     if (property.tenantId !== tenant.id) {
       throw new Error("Property doesn't belong to the tenant");
     }
 
-    // Cari semua room terkait properti
-    const rooms = await prisma.room.findMany({
-      where: { propertyId: id },
-      select: { id: true },
-    });
-    const roomIds = rooms.map((room) => room.id);
+    // Lakukan hard delete menggunakan transaction
+    return await prisma.$transaction(async (tx) => {
+      // 1. Delete semua room facilities
+      await tx.roomFacility.deleteMany({
+        where: {
+          room: {
+            propertyId: id,
+          },
+        },
+      });
 
-    // Update soft delete untuk data yang berkaitan dengan room
-    await prisma.roomFacility.updateMany({
-      where: { roomId: { in: roomIds } },
-      data: { isDeleted: true },
-    });
+      // 2. Delete semua room images
+      await tx.roomImage.deleteMany({
+        where: {
+          room: {
+            propertyId: id,
+          },
+        },
+      });
 
-    await prisma.roomImage.updateMany({
-      where: { roomId: { in: roomIds } },
-      data: { isDeleted: true },
-    });
+      // 3. Delete semua room non-availabilities
+      await tx.roomNonAvailability.deleteMany({
+        where: {
+          room: {
+            propertyId: id,
+          },
+        },
+      });
 
-    await prisma.roomNonAvailability.updateMany({
-      where: { roomId: { in: roomIds } },
-      data: { isDeleted: true },
-    });
+      // 4. Delete semua peak season rates
+      await tx.peakSeasonRate.deleteMany({
+        where: {
+          room: {
+            propertyId: id,
+          },
+        },
+      });
 
-    await prisma.peakSeasonRate.updateMany({
-      where: { roomId: { in: roomIds } },
-      data: { isDeleted: true },
-    });
+      // 5. Delete semua rooms
+      await tx.room.deleteMany({
+        where: { propertyId: id },
+      });
 
-    // Update soft delete untuk room yang terkait dengan properti
-    await prisma.room.updateMany({
-      where: { propertyId: id },
-      data: { isDeleted: true },
-    });
+      // 6. Delete property facilities
+      await tx.propertyFacility.deleteMany({
+        where: { propertyId: id },
+      });
 
-    // Update soft delete untuk data yang berkaitan langsung dengan properti
-    await prisma.propertyFacility.updateMany({
-      where: { propertyId: id },
-      data: { isDeleted: true },
-    });
+      // 7. Delete property images
+      await tx.propertyImage.deleteMany({
+        where: { propertyId: id },
+      });
 
-    await prisma.propertyImage.updateMany({
-      where: { propertyId: id },
-      data: { isDeleted: true },
-    });
+      // 8. Delete property reviews
+      await tx.review.deleteMany({
+        where: { propertyId: id },
+      });
 
-    // Update soft delete untuk properti itu sendiri
-    await prisma.property.update({
-      where: { id },
-      data: { isDeleted: true },
+      // 9. Finally delete the property
+      const deletedProperty = await tx.property.delete({
+        where: { id },
+        include: {
+          propertyImage: true,
+          propertyCategory: true,
+          room: true,
+        },
+      });
+
+      return {
+        message: "Property successfully deleted",
+        data: deletedProperty,
+      };
     });
   } catch (error) {
-    throw error;
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+    throw new Error("Failed to delete property");
   }
 };

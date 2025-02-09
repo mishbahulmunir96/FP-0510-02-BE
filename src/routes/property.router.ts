@@ -16,10 +16,10 @@ import { verifyToken } from "../lib/jwt";
 const router = Router();
 
 router.get("/", getPropertiesController);
-router.get("/:slug", getPropertyController);
 router.get("/search", getPropertiesByQueryController);
 router.get("/tenant", verifyToken, isTenant, getTenantPropertiesController);
 router.get("/tenant/:id", getPropertyTenantController);
+router.get("/:slug", getPropertyController);
 router.post(
   "/create-property",
   verifyToken,
