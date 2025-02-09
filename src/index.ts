@@ -3,7 +3,7 @@ import { PORT } from "./config";
 import cors from "cors";
 import sampleRouter from "./routes/sample.router";
 import transactionRouter from "./routes/transaction.router";
-// import propertyRouter from "./routes/property.router";
+import propertyRouter from "./routes/property.router";
 import authRouter from "./routes/auth.router";
 import accountRouter from "./routes/account.router";
 import xenditRouter from "./routes/xendit.router";
@@ -22,7 +22,7 @@ app.use(express.json());
 
 app.use("/samples", sampleRouter);
 app.use("/transactions", transactionRouter);
-// app.use("/properties", propertyRouter);
+app.use("/property", propertyRouter);
 app.use("/auth", authRouter);
 app.use("/account", accountRouter);
 app.use("/xendit", xenditRouter);

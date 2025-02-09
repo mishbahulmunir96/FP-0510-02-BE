@@ -1,101 +1,136 @@
-// import { cloudinaryUpload } from "../../lib/cloudinary";
-// import prisma from "../../lib/prisma";
+import {
+  Property,
+  Role,
+  StatusProperty,
+} from "../../../prisma/generated/client";
+import { cloudinaryUpload } from "../../lib/cloudinary";
+import prisma from "../../lib/prisma";
 
-// interface CreatePropertyBody {
-//   title: string;
-//   slug: string;
-//   description: string;
-//   latitude: string;
-//   longitude: string;
-//   propertyCategoryId: number; // Sesuai dengan schema, gunakan ID kategori properti
-//   location: string; // Required di schema
-// }
+interface CreatePropertyBody {
+  title: string;
+  slug: string;
+  description: string;
+  latitude: string;
+  longitude: string;
+  propertyCategoryId: string | number; // Allow both string and number
+  location: string;
+}
 
-// export const createPropertyService = async (
-//   body: CreatePropertyBody,
-//   file: Express.Multer.File,
-//   userId: number
-// ) => {
-//   try {
-//     const {
-//       description,
-//       latitude,
-//       longitude,
-//       slug,
-//       title,
-//       propertyCategoryId,
-//       location,
-//     } = body;
+interface CreatePropertyResponse {
+  message: string;
+  data: Property;
+}
 
-//     // Check if slug exists
-//     const existingProperty = await prisma.property.findUnique({
-//       where: { slug },
-//     });
-//     if (existingProperty) {
-//       throw new Error("Slug already exists");
-//     }
+export const createPropertyService = async (
+  body: CreatePropertyBody,
+  file: Express.Multer.File,
+  userId: number
+): Promise<CreatePropertyResponse> => {
+  try {
+    const {
+      description,
+      latitude,
+      longitude,
+      slug,
+      title,
+      propertyCategoryId,
+      location,
+    } = body;
 
-//     // Validate user and tenant
-//     const user = await prisma.user.findUnique({
-//       where: {
-//         id: userId,
-//         isDeleted: false,
-//       },
-//     });
-//     if (!user) {
-//       throw new Error("User not found");
-//     }
-//     if (user.role !== "TENANT") {
-//       throw new Error("User doesn't have permission to create properties");
-//     }
+    // Convert propertyCategoryId to number
+    const categoryId = Number(propertyCategoryId);
 
-//     const tenant = await prisma.tenant.findFirst({
-//       where: {
-//         userId: user.id,
-//         isDeleted: false,
-//       },
-//     });
-//     if (!tenant) {
-//       throw new Error("Tenant profile not found");
-//     }
+    // Validate if conversion was successful
+    if (isNaN(categoryId)) {
+      throw new Error("Invalid property category ID");
+    }
 
-//     // Upload image if provided
-//     const imageResult = file ? await cloudinaryUpload(file) : null;
+    // Check if slug exists
+    const existingProperty = await prisma.property.findUnique({
+      where: { slug },
+    });
+    if (existingProperty) {
+      throw new Error("Slug already exists");
+    }
 
-//     // Create property and image in a transaction
-//     return await prisma.$transaction(async (tx) => {
-//       const newProperty = await tx.property.create({
-//         data: {
-//           description,
-//           latitude,
-//           longitude,
-//           slug,
-//           title,
-//           // Menggunakan propertyCategoryId sesuai schema
-//           propertyCategoryId: Number(propertyCategoryId),
-//           location,
-//           status: "PUBLISHED",
-//           tenant: {
-//             connect: { id: tenant.id },
-//           },
-//         },
-//       });
+    // Validate user and tenant
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userId,
+        isDeleted: false,
+      },
+    });
+    if (!user) {
+      throw new Error("User not found");
+    }
+    if (user.role !== Role.TENANT) {
+      throw new Error("User doesn't have permission to create properties");
+    }
 
-//       if (imageResult?.secure_url) {
-//         await tx.propertyImage.create({
-//           data: {
-//             imageUrl: imageResult.secure_url,
-//             propertyId: newProperty.id,
-//           },
-//         });
-//       }
+    const tenant = await prisma.tenant.findFirst({
+      where: {
+        userId: user.id,
+        isDeleted: false,
+      },
+    });
+    if (!tenant) {
+      throw new Error("Tenant profile not found");
+    }
 
-//       return {
-//         message: "Property created successfully",
-//         data: newProperty,
-//       };
-//     });
-//   } catch (error) {
-//     throw error;
-//   }
-// };
+    // Validate property category exists (using the converted number)
+    const categoryExists = await prisma.propertyCategory.findUnique({
+      where: { id: categoryId },
+    });
+    if (!categoryExists) {
+      throw new Error("Property category not found");
+    }
+
+    // Upload image if provided
+    const imageResult = file ? await cloudinaryUpload(file) : null;
+
+    // Create property and image in a transaction
+    const result = await prisma.$transaction(async (tx) => {
+      const newProperty = await tx.property.create({
+        data: {
+          description,
+          latitude,
+          longitude,
+          slug,
+          title,
+          propertyCategoryId: categoryId, // Use the converted number
+          location,
+          status: StatusProperty.PUBLISHED,
+          tenantId: tenant.id,
+          isDeleted: false,
+        },
+        include: {
+          propertyImage: true,
+          propertyCategory: true,
+          tenant: true,
+        },
+      });
+
+      if (imageResult?.secure_url) {
+        await tx.propertyImage.create({
+          data: {
+            imageUrl: imageResult.secure_url,
+            propertyId: newProperty.id,
+            isDeleted: false,
+          },
+        });
+      }
+
+      return newProperty;
+    });
+
+    return {
+      message: "Property created successfully",
+      data: result,
+    };
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+    throw new Error("Failed to create property");
+  }
+};

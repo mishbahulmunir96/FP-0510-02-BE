@@ -69,27 +69,27 @@ model Tenant {
 }
 
 model Property {
-  id                 Int            @id @default(autoincrement())
-  slug               String         @unique
-  title              String
-  description        String         @db.Text()
-  latitude           String
-  longitude          String
-  status             StatusProperty
-  isDeleted          Boolean        @default(false)
-  propertyCategoryId Int
-  tenantId           Int
-  createdAt          DateTime       @default(now())
-  updatedAt          DateTime       @updatedAt
-  location           String
+  id          Int            @id @default(autoincrement())
+  slug        String         @unique
+  title       String
+  description String         @db.Text()
+  latitude    String
+  longitude   String
+  status      StatusProperty
+  isDeleted   Boolean        @default(false)
+  tenantId    Int
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  location    String
 
   propertyImage    PropertyImage[]
   propertyFacility PropertyFacility[]
   room             Room[]
 
-  tenant           Tenant           @relation(fields: [tenantId], references: [id])
-  review           Review[]
-  propertycategory PropertyCategory @relation(fields: [propertyCategoryId], references: [id])
+  tenant             Tenant           @relation(fields: [tenantId], references: [id])
+  review             Review[]
+  propertyCategoryId Int
+  propertyCategory   PropertyCategory @relation(fields: [propertyCategoryId], references: [id])
 
   @@map("properties")
 }
@@ -100,15 +100,13 @@ enum StatusProperty {
 }
 
 model PropertyCategory {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique
-  tenantId  Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
+  id         Int        @id @default(autoincrement())
+  name       String     @unique
+  tenantId   Int
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
   properties Property[]
-
-  tenant Tenant @relation(fields: [tenantId], references: [id])
+  tenant     Tenant     @relation(fields: [tenantId], references: [id])
 
   @@map("propertyCategories")
 }
