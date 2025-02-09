@@ -337,7 +337,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "C:\\Users\\acer\\Desktop\\FINAL_PROJECT\\FP-0510-02-BE\\prisma\\generated\\client",
+      "value": "D:\\Bootcamp JCWD-0510\\jogja-0510\\FINAL PROJECT\\clone2\\FP-0510-02-BE\\prisma\\generated\\client",
       "fromEnvVar": null
     },
     "config": {
@@ -351,7 +351,7 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "C:\\Users\\acer\\Desktop\\FINAL_PROJECT\\FP-0510-02-BE\\prisma\\schema.prisma",
+    "sourceFilePath": "D:\\Bootcamp JCWD-0510\\jogja-0510\\FINAL PROJECT\\clone2\\FP-0510-02-BE\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
