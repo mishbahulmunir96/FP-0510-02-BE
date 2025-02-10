@@ -3,9 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const transaction_controller_1 = require("../controllers/transaction.controller");
 const fileFilter_1 = require("../lib/fileFilter");
-const multer_1 = require("../lib/multer");
-const jwt_1 = require("../lib/jwt");
 const isTenant_1 = require("../lib/isTenant");
+const jwt_1 = require("../lib/jwt");
+const multer_1 = require("../lib/multer");
 const transaction_validators_1 = require("../validators/transaction.validators");
 const router = (0, express_1.Router)();
 router.get("/", jwt_1.verifyToken, transaction_controller_1.getTransactionsByUserController);
@@ -17,5 +17,4 @@ router.patch("/:id", jwt_1.verifyToken, fileFilter_1.fileFilter, (0, multer_1.up
 router.patch("/cancel/:id", jwt_1.verifyToken, transaction_controller_1.cancelTransactionByUserController);
 router.patch("/tenant/:id", jwt_1.verifyToken, isTenant_1.isTenant, transaction_controller_1.approveTransactionByTenantController);
 router.patch("/tenant/cancel/:id", jwt_1.verifyToken, isTenant_1.isTenant, transaction_controller_1.cancelTransactionByTenantController);
-router.post("/test-create-xendit", transaction_controller_1.testCreateXenditController);
 exports.default = router;

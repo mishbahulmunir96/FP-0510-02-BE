@@ -9,17 +9,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.testCreateXenditController = exports.cancelTransactionByTenantController = exports.approveTransactionByTenantController = exports.getTransactionByTenantController = exports.getTransactionsByTenantController = exports.cancelTransactionByUserController = exports.getTransactionsByUserController = exports.getTransactionByUserController = exports.uploadPaymentProofController = exports.createRoomReservationController = void 0;
-const create_room_reservation_service_1 = require("../services/transaction/create-room-reservation.service");
-const get_transaction_by_user_service_1 = require("../services/transaction/get-transaction-by-user.service");
-const upload_payment_proof_service_1 = require("../services/transaction/upload-payment-proof.service");
-const get_transactions_by_user_service_1 = require("../services/transaction/get-transactions-by-user.service");
-const cancel_transaction_by_user_service_1 = require("../services/transaction/cancel-transaction-by-user.service");
-const get_transactions_by_tenant_service_1 = require("../services/transaction/get-transactions-by-tenant.service");
-const get_transaction_by_tenant_tservice_1 = require("../services/transaction/get-transaction-by-tenant.tservice");
+exports.cancelTransactionByTenantController = exports.approveTransactionByTenantController = exports.getTransactionByTenantController = exports.getTransactionsByTenantController = exports.cancelTransactionByUserController = exports.getTransactionsByUserController = exports.getTransactionByUserController = exports.uploadPaymentProofController = exports.createRoomReservationController = void 0;
 const approve_transaction_by_tenant_service_1 = require("../services/transaction/approve-transaction-by-tenant.service");
 const cancel_transaction_by_tenant_service_1 = require("../services/transaction/cancel-transaction-by-tenant.service");
-const test_create_xendit_service_1 = require("../services/transaction/test-create-xendit.service");
+const cancel_transaction_by_user_service_1 = require("../services/transaction/cancel-transaction-by-user.service");
+const create_room_reservation_service_1 = require("../services/transaction/create-room-reservation.service");
+const get_transaction_by_tenant_tservice_1 = require("../services/transaction/get-transaction-by-tenant.tservice");
+const get_transaction_by_user_service_1 = require("../services/transaction/get-transaction-by-user.service");
+const get_transactions_by_tenant_service_1 = require("../services/transaction/get-transactions-by-tenant.service");
+const get_transactions_by_user_service_1 = require("../services/transaction/get-transactions-by-user.service");
+const upload_payment_proof_service_1 = require("../services/transaction/upload-payment-proof.service");
 const createRoomReservationController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const userId = res.locals.user.id;
@@ -28,6 +27,7 @@ const createRoomReservationController = (req, res, next) => __awaiter(void 0, vo
             roomId: req.body.roomId,
             startDate: new Date(req.body.startDate),
             endDate: new Date(req.body.endDate),
+            paymentMethode: req.body.paymentMethode,
         };
         const result = yield (0, create_room_reservation_service_1.createRoomReservationService)(reservationData);
         res.status(201).send(result);
@@ -78,6 +78,8 @@ const getTransactionsByUserController = (req, res, next) => __awaiter(void 0, vo
             page: parseInt(req.query.page) || 1,
             sortBy: req.query.sortBy || "createdAt",
             sortOrder: req.query.sortOrder || "desc",
+            startDate: req.query.startDate,
+            endDate: req.query.endDate,
         };
         const result = yield (0, get_transactions_by_user_service_1.getTransactionsByUserService)(userId, query);
         res.status(200).json(result);
@@ -107,6 +109,8 @@ const getTransactionsByTenantController = (req, res, next) => __awaiter(void 0, 
             page: parseInt(req.query.page) || 1,
             sortBy: req.query.sortBy || "createdAt",
             sortOrder: req.query.sortOrder || "desc",
+            startDate: req.query.startDate,
+            endDate: req.query.endDate,
         };
         const result = yield (0, get_transactions_by_tenant_service_1.getTransactionsByTenantService)(tenantId, query);
         res.status(200).json(result);
@@ -153,13 +157,3 @@ const cancelTransactionByTenantController = (req, res, next) => __awaiter(void 0
     }
 });
 exports.cancelTransactionByTenantController = cancelTransactionByTenantController;
-const testCreateXenditController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const result = yield (0, test_create_xendit_service_1.testCreateXenditService)();
-        res.status(200).json(result);
-    }
-    catch (error) {
-        next(error);
-    }
-});
-exports.testCreateXenditController = testCreateXenditController;

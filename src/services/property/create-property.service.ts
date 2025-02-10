@@ -1,3 +1,8 @@
+import {
+  Property,
+  Role,
+  StatusProperty,
+} from "../../../prisma/generated/client";
 import { cloudinaryUpload } from "../../lib/cloudinary";
 import prisma from "../../lib/prisma";
 
@@ -7,15 +12,20 @@ interface CreatePropertyBody {
   description: string;
   latitude: string;
   longitude: string;
-  propertyCategoryId: number; // Sesuai dengan schema, gunakan ID kategori properti
-  location: string; // Required di schema
+  propertyCategoryId: string | number; // Allow both string and number
+  location: string;
+}
+
+interface CreatePropertyResponse {
+  message: string;
+  data: Property;
 }
 
 export const createPropertyService = async (
   body: CreatePropertyBody,
   file: Express.Multer.File,
   userId: number
-) => {
+): Promise<CreatePropertyResponse> => {
   try {
     const {
       description,
@@ -26,6 +36,14 @@ export const createPropertyService = async (
       propertyCategoryId,
       location,
     } = body;
+
+    // Convert propertyCategoryId to number
+    const categoryId = Number(propertyCategoryId);
+
+    // Validate if conversion was successful
+    if (isNaN(categoryId)) {
+      throw new Error("Invalid property category ID");
+    }
 
     // Check if slug exists
     const existingProperty = await prisma.property.findUnique({
@@ -45,7 +63,7 @@ export const createPropertyService = async (
     if (!user) {
       throw new Error("User not found");
     }
-    if (user.role !== "TENANT") {
+    if (user.role !== Role.TENANT) {
       throw new Error("User doesn't have permission to create properties");
     }
 
@@ -59,11 +77,19 @@ export const createPropertyService = async (
       throw new Error("Tenant profile not found");
     }
 
+    // Validate property category exists (using the converted number)
+    const categoryExists = await prisma.propertyCategory.findUnique({
+      where: { id: categoryId },
+    });
+    if (!categoryExists) {
+      throw new Error("Property category not found");
+    }
+
     // Upload image if provided
     const imageResult = file ? await cloudinaryUpload(file) : null;
 
     // Create property and image in a transaction
-    return await prisma.$transaction(async (tx) => {
+    const result = await prisma.$transaction(async (tx) => {
       const newProperty = await tx.property.create({
         data: {
           description,
@@ -71,13 +97,16 @@ export const createPropertyService = async (
           longitude,
           slug,
           title,
-          // Menggunakan propertyCategoryId sesuai schema
-          propertyCategoryId: Number(propertyCategoryId),
+          propertyCategoryId: categoryId, // Use the converted number
           location,
-          status: "PUBLISHED",
-          tenant: {
-            connect: { id: tenant.id },
-          },
+          status: StatusProperty.PUBLISHED,
+          tenantId: tenant.id,
+          isDeleted: false,
+        },
+        include: {
+          propertyImage: true,
+          propertyCategory: true,
+          tenant: true,
         },
       });
 
@@ -86,16 +115,22 @@ export const createPropertyService = async (
           data: {
             imageUrl: imageResult.secure_url,
             propertyId: newProperty.id,
+            isDeleted: false,
           },
         });
       }
 
-      return {
-        message: "Property created successfully",
-        data: newProperty,
-      };
+      return newProperty;
     });
+
+    return {
+      message: "Property created successfully",
+      data: result,
+    };
   } catch (error) {
-    throw error;
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+    throw new Error("Failed to create property");
   }
 };

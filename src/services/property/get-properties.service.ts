@@ -131,6 +131,7 @@ export const getPropertiesService = async (query: GetPropertyQuery) => {
       take,
       orderBy: orderByClause,
       include: {
+        propertyCategory: true, // Tambahkan ini
         propertyImage: true,
         propertyFacility: true,
         tenant: true,

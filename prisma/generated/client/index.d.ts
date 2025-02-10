@@ -2221,7 +2221,6 @@ export namespace Prisma {
     propertyFacility: number
     room: number
     review: number
-    PropertyCategory: number
   }
 
   export type PropertyCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2229,7 +2228,6 @@ export namespace Prisma {
     propertyFacility?: boolean | PropertyCountOutputTypeCountPropertyFacilityArgs
     room?: boolean | PropertyCountOutputTypeCountRoomArgs
     review?: boolean | PropertyCountOutputTypeCountReviewArgs
-    PropertyCategory?: boolean | PropertyCountOutputTypeCountPropertyCategoryArgs
   }
 
   // Custom InputTypes
@@ -2269,13 +2267,6 @@ export namespace Prisma {
    */
   export type PropertyCountOutputTypeCountReviewArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ReviewWhereInput
-  }
-
-  /**
-   * PropertyCountOutputType without action
-   */
-  export type PropertyCountOutputTypeCountPropertyCategoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: PropertyCategoryWhereInput
   }
 
 
@@ -5546,14 +5537,14 @@ export namespace Prisma {
 
   export type PropertyAvgAggregateOutputType = {
     id: number | null
-    propertyCategoryId: number | null
     tenantId: number | null
+    propertyCategoryId: number | null
   }
 
   export type PropertySumAggregateOutputType = {
     id: number | null
-    propertyCategoryId: number | null
     tenantId: number | null
+    propertyCategoryId: number | null
   }
 
   export type PropertyMinAggregateOutputType = {
@@ -5565,11 +5556,11 @@ export namespace Prisma {
     longitude: string | null
     status: $Enums.StatusProperty | null
     isDeleted: boolean | null
-    propertyCategoryId: number | null
     tenantId: number | null
     createdAt: Date | null
     updatedAt: Date | null
     location: string | null
+    propertyCategoryId: number | null
   }
 
   export type PropertyMaxAggregateOutputType = {
@@ -5581,11 +5572,11 @@ export namespace Prisma {
     longitude: string | null
     status: $Enums.StatusProperty | null
     isDeleted: boolean | null
-    propertyCategoryId: number | null
     tenantId: number | null
     createdAt: Date | null
     updatedAt: Date | null
     location: string | null
+    propertyCategoryId: number | null
   }
 
   export type PropertyCountAggregateOutputType = {
@@ -5597,25 +5588,25 @@ export namespace Prisma {
     longitude: number
     status: number
     isDeleted: number
-    propertyCategoryId: number
     tenantId: number
     createdAt: number
     updatedAt: number
     location: number
+    propertyCategoryId: number
     _all: number
   }
 
 
   export type PropertyAvgAggregateInputType = {
     id?: true
-    propertyCategoryId?: true
     tenantId?: true
+    propertyCategoryId?: true
   }
 
   export type PropertySumAggregateInputType = {
     id?: true
-    propertyCategoryId?: true
     tenantId?: true
+    propertyCategoryId?: true
   }
 
   export type PropertyMinAggregateInputType = {
@@ -5627,11 +5618,11 @@ export namespace Prisma {
     longitude?: true
     status?: true
     isDeleted?: true
-    propertyCategoryId?: true
     tenantId?: true
     createdAt?: true
     updatedAt?: true
     location?: true
+    propertyCategoryId?: true
   }
 
   export type PropertyMaxAggregateInputType = {
@@ -5643,11 +5634,11 @@ export namespace Prisma {
     longitude?: true
     status?: true
     isDeleted?: true
-    propertyCategoryId?: true
     tenantId?: true
     createdAt?: true
     updatedAt?: true
     location?: true
+    propertyCategoryId?: true
   }
 
   export type PropertyCountAggregateInputType = {
@@ -5659,11 +5650,11 @@ export namespace Prisma {
     longitude?: true
     status?: true
     isDeleted?: true
-    propertyCategoryId?: true
     tenantId?: true
     createdAt?: true
     updatedAt?: true
     location?: true
+    propertyCategoryId?: true
     _all?: true
   }
 
@@ -5762,11 +5753,11 @@ export namespace Prisma {
     longitude: string
     status: $Enums.StatusProperty
     isDeleted: boolean
-    propertyCategoryId: number
     tenantId: number
     createdAt: Date
     updatedAt: Date
     location: string
+    propertyCategoryId: number
     _count: PropertyCountAggregateOutputType | null
     _avg: PropertyAvgAggregateOutputType | null
     _sum: PropertySumAggregateOutputType | null
@@ -5797,17 +5788,17 @@ export namespace Prisma {
     longitude?: boolean
     status?: boolean
     isDeleted?: boolean
-    propertyCategoryId?: boolean
     tenantId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     location?: boolean
+    propertyCategoryId?: boolean
     propertyImage?: boolean | Property$propertyImageArgs<ExtArgs>
     propertyFacility?: boolean | Property$propertyFacilityArgs<ExtArgs>
     room?: boolean | Property$roomArgs<ExtArgs>
     tenant?: boolean | TenantDefaultArgs<ExtArgs>
     review?: boolean | Property$reviewArgs<ExtArgs>
-    PropertyCategory?: boolean | Property$PropertyCategoryArgs<ExtArgs>
+    propertyCategory?: boolean | PropertyCategoryDefaultArgs<ExtArgs>
     _count?: boolean | PropertyCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["property"]>
 
@@ -5820,12 +5811,13 @@ export namespace Prisma {
     longitude?: boolean
     status?: boolean
     isDeleted?: boolean
-    propertyCategoryId?: boolean
     tenantId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     location?: boolean
+    propertyCategoryId?: boolean
     tenant?: boolean | TenantDefaultArgs<ExtArgs>
+    propertyCategory?: boolean | PropertyCategoryDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["property"]>
 
   export type PropertySelectScalar = {
@@ -5837,11 +5829,11 @@ export namespace Prisma {
     longitude?: boolean
     status?: boolean
     isDeleted?: boolean
-    propertyCategoryId?: boolean
     tenantId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     location?: boolean
+    propertyCategoryId?: boolean
   }
 
   export type PropertyInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5850,11 +5842,12 @@ export namespace Prisma {
     room?: boolean | Property$roomArgs<ExtArgs>
     tenant?: boolean | TenantDefaultArgs<ExtArgs>
     review?: boolean | Property$reviewArgs<ExtArgs>
-    PropertyCategory?: boolean | Property$PropertyCategoryArgs<ExtArgs>
+    propertyCategory?: boolean | PropertyCategoryDefaultArgs<ExtArgs>
     _count?: boolean | PropertyCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type PropertyIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     tenant?: boolean | TenantDefaultArgs<ExtArgs>
+    propertyCategory?: boolean | PropertyCategoryDefaultArgs<ExtArgs>
   }
 
   export type $PropertyPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5865,7 +5858,7 @@ export namespace Prisma {
       room: Prisma.$RoomPayload<ExtArgs>[]
       tenant: Prisma.$TenantPayload<ExtArgs>
       review: Prisma.$ReviewPayload<ExtArgs>[]
-      PropertyCategory: Prisma.$PropertyCategoryPayload<ExtArgs>[]
+      propertyCategory: Prisma.$PropertyCategoryPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -5876,11 +5869,11 @@ export namespace Prisma {
       longitude: string
       status: $Enums.StatusProperty
       isDeleted: boolean
-      propertyCategoryId: number
       tenantId: number
       createdAt: Date
       updatedAt: Date
       location: string
+      propertyCategoryId: number
     }, ExtArgs["result"]["property"]>
     composites: {}
   }
@@ -6250,7 +6243,7 @@ export namespace Prisma {
     room<T extends Property$roomArgs<ExtArgs> = {}>(args?: Subset<T, Property$roomArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RoomPayload<ExtArgs>, T, "findMany"> | Null>
     tenant<T extends TenantDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TenantDefaultArgs<ExtArgs>>): Prisma__TenantClient<$Result.GetResult<Prisma.$TenantPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     review<T extends Property$reviewArgs<ExtArgs> = {}>(args?: Subset<T, Property$reviewArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findMany"> | Null>
-    PropertyCategory<T extends Property$PropertyCategoryArgs<ExtArgs> = {}>(args?: Subset<T, Property$PropertyCategoryArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PropertyCategoryPayload<ExtArgs>, T, "findMany"> | Null>
+    propertyCategory<T extends PropertyCategoryDefaultArgs<ExtArgs> = {}>(args?: Subset<T, PropertyCategoryDefaultArgs<ExtArgs>>): Prisma__PropertyCategoryClient<$Result.GetResult<Prisma.$PropertyCategoryPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6288,11 +6281,11 @@ export namespace Prisma {
     readonly longitude: FieldRef<"Property", 'String'>
     readonly status: FieldRef<"Property", 'StatusProperty'>
     readonly isDeleted: FieldRef<"Property", 'Boolean'>
-    readonly propertyCategoryId: FieldRef<"Property", 'Int'>
     readonly tenantId: FieldRef<"Property", 'Int'>
     readonly createdAt: FieldRef<"Property", 'DateTime'>
     readonly updatedAt: FieldRef<"Property", 'DateTime'>
     readonly location: FieldRef<"Property", 'String'>
+    readonly propertyCategoryId: FieldRef<"Property", 'Int'>
   }
     
 
@@ -6688,26 +6681,6 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ReviewScalarFieldEnum | ReviewScalarFieldEnum[]
-  }
-
-  /**
-   * Property.PropertyCategory
-   */
-  export type Property$PropertyCategoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the PropertyCategory
-     */
-    select?: PropertyCategorySelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PropertyCategoryInclude<ExtArgs> | null
-    where?: PropertyCategoryWhereInput
-    orderBy?: PropertyCategoryOrderByWithRelationInput | PropertyCategoryOrderByWithRelationInput[]
-    cursor?: PropertyCategoryWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: PropertyCategoryScalarFieldEnum | PropertyCategoryScalarFieldEnum[]
   }
 
   /**
@@ -18118,11 +18091,11 @@ export namespace Prisma {
     longitude: 'longitude',
     status: 'status',
     isDeleted: 'isDeleted',
-    propertyCategoryId: 'propertyCategoryId',
     tenantId: 'tenantId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
-    location: 'location'
+    location: 'location',
+    propertyCategoryId: 'propertyCategoryId'
   };
 
   export type PropertyScalarFieldEnum = (typeof PropertyScalarFieldEnum)[keyof typeof PropertyScalarFieldEnum]
@@ -18712,17 +18685,17 @@ export namespace Prisma {
     longitude?: StringFilter<"Property"> | string
     status?: EnumStatusPropertyFilter<"Property"> | $Enums.StatusProperty
     isDeleted?: BoolFilter<"Property"> | boolean
-    propertyCategoryId?: IntFilter<"Property"> | number
     tenantId?: IntFilter<"Property"> | number
     createdAt?: DateTimeFilter<"Property"> | Date | string
     updatedAt?: DateTimeFilter<"Property"> | Date | string
     location?: StringFilter<"Property"> | string
+    propertyCategoryId?: IntFilter<"Property"> | number
     propertyImage?: PropertyImageListRelationFilter
     propertyFacility?: PropertyFacilityListRelationFilter
     room?: RoomListRelationFilter
     tenant?: XOR<TenantScalarRelationFilter, TenantWhereInput>
     review?: ReviewListRelationFilter
-    PropertyCategory?: PropertyCategoryListRelationFilter
+    propertyCategory?: XOR<PropertyCategoryScalarRelationFilter, PropertyCategoryWhereInput>
   }
 
   export type PropertyOrderByWithRelationInput = {
@@ -18734,17 +18707,17 @@ export namespace Prisma {
     longitude?: SortOrder
     status?: SortOrder
     isDeleted?: SortOrder
-    propertyCategoryId?: SortOrder
     tenantId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     location?: SortOrder
+    propertyCategoryId?: SortOrder
     propertyImage?: PropertyImageOrderByRelationAggregateInput
     propertyFacility?: PropertyFacilityOrderByRelationAggregateInput
     room?: RoomOrderByRelationAggregateInput
     tenant?: TenantOrderByWithRelationInput
     review?: ReviewOrderByRelationAggregateInput
-    PropertyCategory?: PropertyCategoryOrderByRelationAggregateInput
+    propertyCategory?: PropertyCategoryOrderByWithRelationInput
   }
 
   export type PropertyWhereUniqueInput = Prisma.AtLeast<{
@@ -18759,17 +18732,17 @@ export namespace Prisma {
     longitude?: StringFilter<"Property"> | string
     status?: EnumStatusPropertyFilter<"Property"> | $Enums.StatusProperty
     isDeleted?: BoolFilter<"Property"> | boolean
-    propertyCategoryId?: IntFilter<"Property"> | number
     tenantId?: IntFilter<"Property"> | number
     createdAt?: DateTimeFilter<"Property"> | Date | string
     updatedAt?: DateTimeFilter<"Property"> | Date | string
     location?: StringFilter<"Property"> | string
+    propertyCategoryId?: IntFilter<"Property"> | number
     propertyImage?: PropertyImageListRelationFilter
     propertyFacility?: PropertyFacilityListRelationFilter
     room?: RoomListRelationFilter
     tenant?: XOR<TenantScalarRelationFilter, TenantWhereInput>
     review?: ReviewListRelationFilter
-    PropertyCategory?: PropertyCategoryListRelationFilter
+    propertyCategory?: XOR<PropertyCategoryScalarRelationFilter, PropertyCategoryWhereInput>
   }, "id" | "slug">
 
   export type PropertyOrderByWithAggregationInput = {
@@ -18781,11 +18754,11 @@ export namespace Prisma {
     longitude?: SortOrder
     status?: SortOrder
     isDeleted?: SortOrder
-    propertyCategoryId?: SortOrder
     tenantId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     location?: SortOrder
+    propertyCategoryId?: SortOrder
     _count?: PropertyCountOrderByAggregateInput
     _avg?: PropertyAvgOrderByAggregateInput
     _max?: PropertyMaxOrderByAggregateInput
@@ -18805,11 +18778,11 @@ export namespace Prisma {
     longitude?: StringWithAggregatesFilter<"Property"> | string
     status?: EnumStatusPropertyWithAggregatesFilter<"Property"> | $Enums.StatusProperty
     isDeleted?: BoolWithAggregatesFilter<"Property"> | boolean
-    propertyCategoryId?: IntWithAggregatesFilter<"Property"> | number
     tenantId?: IntWithAggregatesFilter<"Property"> | number
     createdAt?: DateTimeWithAggregatesFilter<"Property"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Property"> | Date | string
     location?: StringWithAggregatesFilter<"Property"> | string
+    propertyCategoryId?: IntWithAggregatesFilter<"Property"> | number
   }
 
   export type PropertyCategoryWhereInput = {
@@ -19902,7 +19875,6 @@ export namespace Prisma {
     longitude: string
     status: $Enums.StatusProperty
     isDeleted?: boolean
-    propertyCategoryId: number
     createdAt?: Date | string
     updatedAt?: Date | string
     location: string
@@ -19911,7 +19883,7 @@ export namespace Prisma {
     room?: RoomCreateNestedManyWithoutPropertyInput
     tenant: TenantCreateNestedOneWithoutPropertyInput
     review?: ReviewCreateNestedManyWithoutPropertyInput
-    PropertyCategory?: PropertyCategoryCreateNestedManyWithoutPropertiesInput
+    propertyCategory: PropertyCategoryCreateNestedOneWithoutPropertiesInput
   }
 
   export type PropertyUncheckedCreateInput = {
@@ -19923,16 +19895,15 @@ export namespace Prisma {
     longitude: string
     status: $Enums.StatusProperty
     isDeleted?: boolean
-    propertyCategoryId: number
     tenantId: number
     createdAt?: Date | string
     updatedAt?: Date | string
     location: string
+    propertyCategoryId: number
     propertyImage?: PropertyImageUncheckedCreateNestedManyWithoutPropertyInput
     propertyFacility?: PropertyFacilityUncheckedCreateNestedManyWithoutPropertyInput
     room?: RoomUncheckedCreateNestedManyWithoutPropertyInput
     review?: ReviewUncheckedCreateNestedManyWithoutPropertyInput
-    PropertyCategory?: PropertyCategoryUncheckedCreateNestedManyWithoutPropertiesInput
   }
 
   export type PropertyUpdateInput = {
@@ -19943,7 +19914,6 @@ export namespace Prisma {
     longitude?: StringFieldUpdateOperationsInput | string
     status?: EnumStatusPropertyFieldUpdateOperationsInput | $Enums.StatusProperty
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    propertyCategoryId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     location?: StringFieldUpdateOperationsInput | string
@@ -19952,7 +19922,7 @@ export namespace Prisma {
     room?: RoomUpdateManyWithoutPropertyNestedInput
     tenant?: TenantUpdateOneRequiredWithoutPropertyNestedInput
     review?: ReviewUpdateManyWithoutPropertyNestedInput
-    PropertyCategory?: PropertyCategoryUpdateManyWithoutPropertiesNestedInput
+    propertyCategory?: PropertyCategoryUpdateOneRequiredWithoutPropertiesNestedInput
   }
 
   export type PropertyUncheckedUpdateInput = {
@@ -19964,16 +19934,15 @@ export namespace Prisma {
     longitude?: StringFieldUpdateOperationsInput | string
     status?: EnumStatusPropertyFieldUpdateOperationsInput | $Enums.StatusProperty
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    propertyCategoryId?: IntFieldUpdateOperationsInput | number
     tenantId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     location?: StringFieldUpdateOperationsInput | string
+    propertyCategoryId?: IntFieldUpdateOperationsInput | number
     propertyImage?: PropertyImageUncheckedUpdateManyWithoutPropertyNestedInput
     propertyFacility?: PropertyFacilityUncheckedUpdateManyWithoutPropertyNestedInput
     room?: RoomUncheckedUpdateManyWithoutPropertyNestedInput
     review?: ReviewUncheckedUpdateManyWithoutPropertyNestedInput
-    PropertyCategory?: PropertyCategoryUncheckedUpdateManyWithoutPropertiesNestedInput
   }
 
   export type PropertyCreateManyInput = {
@@ -19985,11 +19954,11 @@ export namespace Prisma {
     longitude: string
     status: $Enums.StatusProperty
     isDeleted?: boolean
-    propertyCategoryId: number
     tenantId: number
     createdAt?: Date | string
     updatedAt?: Date | string
     location: string
+    propertyCategoryId: number
   }
 
   export type PropertyUpdateManyMutationInput = {
@@ -20000,7 +19969,6 @@ export namespace Prisma {
     longitude?: StringFieldUpdateOperationsInput | string
     status?: EnumStatusPropertyFieldUpdateOperationsInput | $Enums.StatusProperty
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    propertyCategoryId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     location?: StringFieldUpdateOperationsInput | string
@@ -20015,11 +19983,11 @@ export namespace Prisma {
     longitude?: StringFieldUpdateOperationsInput | string
     status?: EnumStatusPropertyFieldUpdateOperationsInput | $Enums.StatusProperty
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    propertyCategoryId?: IntFieldUpdateOperationsInput | number
     tenantId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     location?: StringFieldUpdateOperationsInput | string
+    propertyCategoryId?: IntFieldUpdateOperationsInput | number
   }
 
   export type PropertyCategoryCreateInput = {
@@ -21238,6 +21206,11 @@ export namespace Prisma {
     isNot?: TenantWhereInput
   }
 
+  export type PropertyCategoryScalarRelationFilter = {
+    is?: PropertyCategoryWhereInput
+    isNot?: PropertyCategoryWhereInput
+  }
+
   export type PropertyImageOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -21259,17 +21232,17 @@ export namespace Prisma {
     longitude?: SortOrder
     status?: SortOrder
     isDeleted?: SortOrder
-    propertyCategoryId?: SortOrder
     tenantId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     location?: SortOrder
+    propertyCategoryId?: SortOrder
   }
 
   export type PropertyAvgOrderByAggregateInput = {
     id?: SortOrder
-    propertyCategoryId?: SortOrder
     tenantId?: SortOrder
+    propertyCategoryId?: SortOrder
   }
 
   export type PropertyMaxOrderByAggregateInput = {
@@ -21281,11 +21254,11 @@ export namespace Prisma {
     longitude?: SortOrder
     status?: SortOrder
     isDeleted?: SortOrder
-    propertyCategoryId?: SortOrder
     tenantId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     location?: SortOrder
+    propertyCategoryId?: SortOrder
   }
 
   export type PropertyMinOrderByAggregateInput = {
@@ -21297,17 +21270,17 @@ export namespace Prisma {
     longitude?: SortOrder
     status?: SortOrder
     isDeleted?: SortOrder
-    propertyCategoryId?: SortOrder
     tenantId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     location?: SortOrder
+    propertyCategoryId?: SortOrder
   }
 
   export type PropertySumOrderByAggregateInput = {
     id?: SortOrder
-    propertyCategoryId?: SortOrder
     tenantId?: SortOrder
+    propertyCategoryId?: SortOrder
   }
 
   export type EnumStatusPropertyWithAggregatesFilter<$PrismaModel = never> = {
@@ -22243,10 +22216,10 @@ export namespace Prisma {
     connect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
   }
 
-  export type PropertyCategoryCreateNestedManyWithoutPropertiesInput = {
-    create?: XOR<PropertyCategoryCreateWithoutPropertiesInput, PropertyCategoryUncheckedCreateWithoutPropertiesInput> | PropertyCategoryCreateWithoutPropertiesInput[] | PropertyCategoryUncheckedCreateWithoutPropertiesInput[]
-    connectOrCreate?: PropertyCategoryCreateOrConnectWithoutPropertiesInput | PropertyCategoryCreateOrConnectWithoutPropertiesInput[]
-    connect?: PropertyCategoryWhereUniqueInput | PropertyCategoryWhereUniqueInput[]
+  export type PropertyCategoryCreateNestedOneWithoutPropertiesInput = {
+    create?: XOR<PropertyCategoryCreateWithoutPropertiesInput, PropertyCategoryUncheckedCreateWithoutPropertiesInput>
+    connectOrCreate?: PropertyCategoryCreateOrConnectWithoutPropertiesInput
+    connect?: PropertyCategoryWhereUniqueInput
   }
 
   export type PropertyImageUncheckedCreateNestedManyWithoutPropertyInput = {
@@ -22275,12 +22248,6 @@ export namespace Prisma {
     connectOrCreate?: ReviewCreateOrConnectWithoutPropertyInput | ReviewCreateOrConnectWithoutPropertyInput[]
     createMany?: ReviewCreateManyPropertyInputEnvelope
     connect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
-  }
-
-  export type PropertyCategoryUncheckedCreateNestedManyWithoutPropertiesInput = {
-    create?: XOR<PropertyCategoryCreateWithoutPropertiesInput, PropertyCategoryUncheckedCreateWithoutPropertiesInput> | PropertyCategoryCreateWithoutPropertiesInput[] | PropertyCategoryUncheckedCreateWithoutPropertiesInput[]
-    connectOrCreate?: PropertyCategoryCreateOrConnectWithoutPropertiesInput | PropertyCategoryCreateOrConnectWithoutPropertiesInput[]
-    connect?: PropertyCategoryWhereUniqueInput | PropertyCategoryWhereUniqueInput[]
   }
 
   export type EnumStatusPropertyFieldUpdateOperationsInput = {
@@ -22351,17 +22318,12 @@ export namespace Prisma {
     deleteMany?: ReviewScalarWhereInput | ReviewScalarWhereInput[]
   }
 
-  export type PropertyCategoryUpdateManyWithoutPropertiesNestedInput = {
-    create?: XOR<PropertyCategoryCreateWithoutPropertiesInput, PropertyCategoryUncheckedCreateWithoutPropertiesInput> | PropertyCategoryCreateWithoutPropertiesInput[] | PropertyCategoryUncheckedCreateWithoutPropertiesInput[]
-    connectOrCreate?: PropertyCategoryCreateOrConnectWithoutPropertiesInput | PropertyCategoryCreateOrConnectWithoutPropertiesInput[]
-    upsert?: PropertyCategoryUpsertWithWhereUniqueWithoutPropertiesInput | PropertyCategoryUpsertWithWhereUniqueWithoutPropertiesInput[]
-    set?: PropertyCategoryWhereUniqueInput | PropertyCategoryWhereUniqueInput[]
-    disconnect?: PropertyCategoryWhereUniqueInput | PropertyCategoryWhereUniqueInput[]
-    delete?: PropertyCategoryWhereUniqueInput | PropertyCategoryWhereUniqueInput[]
-    connect?: PropertyCategoryWhereUniqueInput | PropertyCategoryWhereUniqueInput[]
-    update?: PropertyCategoryUpdateWithWhereUniqueWithoutPropertiesInput | PropertyCategoryUpdateWithWhereUniqueWithoutPropertiesInput[]
-    updateMany?: PropertyCategoryUpdateManyWithWhereWithoutPropertiesInput | PropertyCategoryUpdateManyWithWhereWithoutPropertiesInput[]
-    deleteMany?: PropertyCategoryScalarWhereInput | PropertyCategoryScalarWhereInput[]
+  export type PropertyCategoryUpdateOneRequiredWithoutPropertiesNestedInput = {
+    create?: XOR<PropertyCategoryCreateWithoutPropertiesInput, PropertyCategoryUncheckedCreateWithoutPropertiesInput>
+    connectOrCreate?: PropertyCategoryCreateOrConnectWithoutPropertiesInput
+    upsert?: PropertyCategoryUpsertWithoutPropertiesInput
+    connect?: PropertyCategoryWhereUniqueInput
+    update?: XOR<XOR<PropertyCategoryUpdateToOneWithWhereWithoutPropertiesInput, PropertyCategoryUpdateWithoutPropertiesInput>, PropertyCategoryUncheckedUpdateWithoutPropertiesInput>
   }
 
   export type PropertyImageUncheckedUpdateManyWithoutPropertyNestedInput = {
@@ -22420,22 +22382,10 @@ export namespace Prisma {
     deleteMany?: ReviewScalarWhereInput | ReviewScalarWhereInput[]
   }
 
-  export type PropertyCategoryUncheckedUpdateManyWithoutPropertiesNestedInput = {
-    create?: XOR<PropertyCategoryCreateWithoutPropertiesInput, PropertyCategoryUncheckedCreateWithoutPropertiesInput> | PropertyCategoryCreateWithoutPropertiesInput[] | PropertyCategoryUncheckedCreateWithoutPropertiesInput[]
-    connectOrCreate?: PropertyCategoryCreateOrConnectWithoutPropertiesInput | PropertyCategoryCreateOrConnectWithoutPropertiesInput[]
-    upsert?: PropertyCategoryUpsertWithWhereUniqueWithoutPropertiesInput | PropertyCategoryUpsertWithWhereUniqueWithoutPropertiesInput[]
-    set?: PropertyCategoryWhereUniqueInput | PropertyCategoryWhereUniqueInput[]
-    disconnect?: PropertyCategoryWhereUniqueInput | PropertyCategoryWhereUniqueInput[]
-    delete?: PropertyCategoryWhereUniqueInput | PropertyCategoryWhereUniqueInput[]
-    connect?: PropertyCategoryWhereUniqueInput | PropertyCategoryWhereUniqueInput[]
-    update?: PropertyCategoryUpdateWithWhereUniqueWithoutPropertiesInput | PropertyCategoryUpdateWithWhereUniqueWithoutPropertiesInput[]
-    updateMany?: PropertyCategoryUpdateManyWithWhereWithoutPropertiesInput | PropertyCategoryUpdateManyWithWhereWithoutPropertiesInput[]
-    deleteMany?: PropertyCategoryScalarWhereInput | PropertyCategoryScalarWhereInput[]
-  }
-
   export type PropertyCreateNestedManyWithoutPropertyCategoryInput = {
     create?: XOR<PropertyCreateWithoutPropertyCategoryInput, PropertyUncheckedCreateWithoutPropertyCategoryInput> | PropertyCreateWithoutPropertyCategoryInput[] | PropertyUncheckedCreateWithoutPropertyCategoryInput[]
     connectOrCreate?: PropertyCreateOrConnectWithoutPropertyCategoryInput | PropertyCreateOrConnectWithoutPropertyCategoryInput[]
+    createMany?: PropertyCreateManyPropertyCategoryInputEnvelope
     connect?: PropertyWhereUniqueInput | PropertyWhereUniqueInput[]
   }
 
@@ -22448,6 +22398,7 @@ export namespace Prisma {
   export type PropertyUncheckedCreateNestedManyWithoutPropertyCategoryInput = {
     create?: XOR<PropertyCreateWithoutPropertyCategoryInput, PropertyUncheckedCreateWithoutPropertyCategoryInput> | PropertyCreateWithoutPropertyCategoryInput[] | PropertyUncheckedCreateWithoutPropertyCategoryInput[]
     connectOrCreate?: PropertyCreateOrConnectWithoutPropertyCategoryInput | PropertyCreateOrConnectWithoutPropertyCategoryInput[]
+    createMany?: PropertyCreateManyPropertyCategoryInputEnvelope
     connect?: PropertyWhereUniqueInput | PropertyWhereUniqueInput[]
   }
 
@@ -22455,6 +22406,7 @@ export namespace Prisma {
     create?: XOR<PropertyCreateWithoutPropertyCategoryInput, PropertyUncheckedCreateWithoutPropertyCategoryInput> | PropertyCreateWithoutPropertyCategoryInput[] | PropertyUncheckedCreateWithoutPropertyCategoryInput[]
     connectOrCreate?: PropertyCreateOrConnectWithoutPropertyCategoryInput | PropertyCreateOrConnectWithoutPropertyCategoryInput[]
     upsert?: PropertyUpsertWithWhereUniqueWithoutPropertyCategoryInput | PropertyUpsertWithWhereUniqueWithoutPropertyCategoryInput[]
+    createMany?: PropertyCreateManyPropertyCategoryInputEnvelope
     set?: PropertyWhereUniqueInput | PropertyWhereUniqueInput[]
     disconnect?: PropertyWhereUniqueInput | PropertyWhereUniqueInput[]
     delete?: PropertyWhereUniqueInput | PropertyWhereUniqueInput[]
@@ -22476,6 +22428,7 @@ export namespace Prisma {
     create?: XOR<PropertyCreateWithoutPropertyCategoryInput, PropertyUncheckedCreateWithoutPropertyCategoryInput> | PropertyCreateWithoutPropertyCategoryInput[] | PropertyUncheckedCreateWithoutPropertyCategoryInput[]
     connectOrCreate?: PropertyCreateOrConnectWithoutPropertyCategoryInput | PropertyCreateOrConnectWithoutPropertyCategoryInput[]
     upsert?: PropertyUpsertWithWhereUniqueWithoutPropertyCategoryInput | PropertyUpsertWithWhereUniqueWithoutPropertyCategoryInput[]
+    createMany?: PropertyCreateManyPropertyCategoryInputEnvelope
     set?: PropertyWhereUniqueInput | PropertyWhereUniqueInput[]
     disconnect?: PropertyWhereUniqueInput | PropertyWhereUniqueInput[]
     delete?: PropertyWhereUniqueInput | PropertyWhereUniqueInput[]
@@ -23511,7 +23464,6 @@ export namespace Prisma {
     longitude: string
     status: $Enums.StatusProperty
     isDeleted?: boolean
-    propertyCategoryId: number
     createdAt?: Date | string
     updatedAt?: Date | string
     location: string
@@ -23519,7 +23471,7 @@ export namespace Prisma {
     propertyFacility?: PropertyFacilityCreateNestedManyWithoutPropertyInput
     room?: RoomCreateNestedManyWithoutPropertyInput
     review?: ReviewCreateNestedManyWithoutPropertyInput
-    PropertyCategory?: PropertyCategoryCreateNestedManyWithoutPropertiesInput
+    propertyCategory: PropertyCategoryCreateNestedOneWithoutPropertiesInput
   }
 
   export type PropertyUncheckedCreateWithoutTenantInput = {
@@ -23531,15 +23483,14 @@ export namespace Prisma {
     longitude: string
     status: $Enums.StatusProperty
     isDeleted?: boolean
-    propertyCategoryId: number
     createdAt?: Date | string
     updatedAt?: Date | string
     location: string
+    propertyCategoryId: number
     propertyImage?: PropertyImageUncheckedCreateNestedManyWithoutPropertyInput
     propertyFacility?: PropertyFacilityUncheckedCreateNestedManyWithoutPropertyInput
     room?: RoomUncheckedCreateNestedManyWithoutPropertyInput
     review?: ReviewUncheckedCreateNestedManyWithoutPropertyInput
-    PropertyCategory?: PropertyCategoryUncheckedCreateNestedManyWithoutPropertiesInput
   }
 
   export type PropertyCreateOrConnectWithoutTenantInput = {
@@ -23649,11 +23600,11 @@ export namespace Prisma {
     longitude?: StringFilter<"Property"> | string
     status?: EnumStatusPropertyFilter<"Property"> | $Enums.StatusProperty
     isDeleted?: BoolFilter<"Property"> | boolean
-    propertyCategoryId?: IntFilter<"Property"> | number
     tenantId?: IntFilter<"Property"> | number
     createdAt?: DateTimeFilter<"Property"> | Date | string
     updatedAt?: DateTimeFilter<"Property"> | Date | string
     location?: StringFilter<"Property"> | string
+    propertyCategoryId?: IntFilter<"Property"> | number
   }
 
   export type PropertyCategoryUpsertWithWhereUniqueWithoutTenantInput = {
@@ -24007,20 +23958,30 @@ export namespace Prisma {
     data: XOR<ReviewUpdateManyMutationInput, ReviewUncheckedUpdateManyWithoutPropertyInput>
   }
 
-  export type PropertyCategoryUpsertWithWhereUniqueWithoutPropertiesInput = {
-    where: PropertyCategoryWhereUniqueInput
+  export type PropertyCategoryUpsertWithoutPropertiesInput = {
     update: XOR<PropertyCategoryUpdateWithoutPropertiesInput, PropertyCategoryUncheckedUpdateWithoutPropertiesInput>
     create: XOR<PropertyCategoryCreateWithoutPropertiesInput, PropertyCategoryUncheckedCreateWithoutPropertiesInput>
+    where?: PropertyCategoryWhereInput
   }
 
-  export type PropertyCategoryUpdateWithWhereUniqueWithoutPropertiesInput = {
-    where: PropertyCategoryWhereUniqueInput
+  export type PropertyCategoryUpdateToOneWithWhereWithoutPropertiesInput = {
+    where?: PropertyCategoryWhereInput
     data: XOR<PropertyCategoryUpdateWithoutPropertiesInput, PropertyCategoryUncheckedUpdateWithoutPropertiesInput>
   }
 
-  export type PropertyCategoryUpdateManyWithWhereWithoutPropertiesInput = {
-    where: PropertyCategoryScalarWhereInput
-    data: XOR<PropertyCategoryUpdateManyMutationInput, PropertyCategoryUncheckedUpdateManyWithoutPropertiesInput>
+  export type PropertyCategoryUpdateWithoutPropertiesInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tenant?: TenantUpdateOneRequiredWithoutPropertyCategoryNestedInput
+  }
+
+  export type PropertyCategoryUncheckedUpdateWithoutPropertiesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    tenantId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PropertyCreateWithoutPropertyCategoryInput = {
@@ -24031,7 +23992,6 @@ export namespace Prisma {
     longitude: string
     status: $Enums.StatusProperty
     isDeleted?: boolean
-    propertyCategoryId: number
     createdAt?: Date | string
     updatedAt?: Date | string
     location: string
@@ -24051,7 +24011,6 @@ export namespace Prisma {
     longitude: string
     status: $Enums.StatusProperty
     isDeleted?: boolean
-    propertyCategoryId: number
     tenantId: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -24065,6 +24024,11 @@ export namespace Prisma {
   export type PropertyCreateOrConnectWithoutPropertyCategoryInput = {
     where: PropertyWhereUniqueInput
     create: XOR<PropertyCreateWithoutPropertyCategoryInput, PropertyUncheckedCreateWithoutPropertyCategoryInput>
+  }
+
+  export type PropertyCreateManyPropertyCategoryInputEnvelope = {
+    data: PropertyCreateManyPropertyCategoryInput | PropertyCreateManyPropertyCategoryInput[]
+    skipDuplicates?: boolean
   }
 
   export type TenantCreateWithoutPropertyCategoryInput = {
@@ -24165,7 +24129,6 @@ export namespace Prisma {
     longitude: string
     status: $Enums.StatusProperty
     isDeleted?: boolean
-    propertyCategoryId: number
     createdAt?: Date | string
     updatedAt?: Date | string
     location: string
@@ -24173,7 +24136,7 @@ export namespace Prisma {
     room?: RoomCreateNestedManyWithoutPropertyInput
     tenant: TenantCreateNestedOneWithoutPropertyInput
     review?: ReviewCreateNestedManyWithoutPropertyInput
-    PropertyCategory?: PropertyCategoryCreateNestedManyWithoutPropertiesInput
+    propertyCategory: PropertyCategoryCreateNestedOneWithoutPropertiesInput
   }
 
   export type PropertyUncheckedCreateWithoutPropertyImageInput = {
@@ -24185,15 +24148,14 @@ export namespace Prisma {
     longitude: string
     status: $Enums.StatusProperty
     isDeleted?: boolean
-    propertyCategoryId: number
     tenantId: number
     createdAt?: Date | string
     updatedAt?: Date | string
     location: string
+    propertyCategoryId: number
     propertyFacility?: PropertyFacilityUncheckedCreateNestedManyWithoutPropertyInput
     room?: RoomUncheckedCreateNestedManyWithoutPropertyInput
     review?: ReviewUncheckedCreateNestedManyWithoutPropertyInput
-    PropertyCategory?: PropertyCategoryUncheckedCreateNestedManyWithoutPropertiesInput
   }
 
   export type PropertyCreateOrConnectWithoutPropertyImageInput = {
@@ -24220,7 +24182,6 @@ export namespace Prisma {
     longitude?: StringFieldUpdateOperationsInput | string
     status?: EnumStatusPropertyFieldUpdateOperationsInput | $Enums.StatusProperty
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    propertyCategoryId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     location?: StringFieldUpdateOperationsInput | string
@@ -24228,7 +24189,7 @@ export namespace Prisma {
     room?: RoomUpdateManyWithoutPropertyNestedInput
     tenant?: TenantUpdateOneRequiredWithoutPropertyNestedInput
     review?: ReviewUpdateManyWithoutPropertyNestedInput
-    PropertyCategory?: PropertyCategoryUpdateManyWithoutPropertiesNestedInput
+    propertyCategory?: PropertyCategoryUpdateOneRequiredWithoutPropertiesNestedInput
   }
 
   export type PropertyUncheckedUpdateWithoutPropertyImageInput = {
@@ -24240,15 +24201,14 @@ export namespace Prisma {
     longitude?: StringFieldUpdateOperationsInput | string
     status?: EnumStatusPropertyFieldUpdateOperationsInput | $Enums.StatusProperty
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    propertyCategoryId?: IntFieldUpdateOperationsInput | number
     tenantId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     location?: StringFieldUpdateOperationsInput | string
+    propertyCategoryId?: IntFieldUpdateOperationsInput | number
     propertyFacility?: PropertyFacilityUncheckedUpdateManyWithoutPropertyNestedInput
     room?: RoomUncheckedUpdateManyWithoutPropertyNestedInput
     review?: ReviewUncheckedUpdateManyWithoutPropertyNestedInput
-    PropertyCategory?: PropertyCategoryUncheckedUpdateManyWithoutPropertiesNestedInput
   }
 
   export type PropertyCreateWithoutPropertyFacilityInput = {
@@ -24259,7 +24219,6 @@ export namespace Prisma {
     longitude: string
     status: $Enums.StatusProperty
     isDeleted?: boolean
-    propertyCategoryId: number
     createdAt?: Date | string
     updatedAt?: Date | string
     location: string
@@ -24267,7 +24226,7 @@ export namespace Prisma {
     room?: RoomCreateNestedManyWithoutPropertyInput
     tenant: TenantCreateNestedOneWithoutPropertyInput
     review?: ReviewCreateNestedManyWithoutPropertyInput
-    PropertyCategory?: PropertyCategoryCreateNestedManyWithoutPropertiesInput
+    propertyCategory: PropertyCategoryCreateNestedOneWithoutPropertiesInput
   }
 
   export type PropertyUncheckedCreateWithoutPropertyFacilityInput = {
@@ -24279,15 +24238,14 @@ export namespace Prisma {
     longitude: string
     status: $Enums.StatusProperty
     isDeleted?: boolean
-    propertyCategoryId: number
     tenantId: number
     createdAt?: Date | string
     updatedAt?: Date | string
     location: string
+    propertyCategoryId: number
     propertyImage?: PropertyImageUncheckedCreateNestedManyWithoutPropertyInput
     room?: RoomUncheckedCreateNestedManyWithoutPropertyInput
     review?: ReviewUncheckedCreateNestedManyWithoutPropertyInput
-    PropertyCategory?: PropertyCategoryUncheckedCreateNestedManyWithoutPropertiesInput
   }
 
   export type PropertyCreateOrConnectWithoutPropertyFacilityInput = {
@@ -24314,7 +24272,6 @@ export namespace Prisma {
     longitude?: StringFieldUpdateOperationsInput | string
     status?: EnumStatusPropertyFieldUpdateOperationsInput | $Enums.StatusProperty
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    propertyCategoryId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     location?: StringFieldUpdateOperationsInput | string
@@ -24322,7 +24279,7 @@ export namespace Prisma {
     room?: RoomUpdateManyWithoutPropertyNestedInput
     tenant?: TenantUpdateOneRequiredWithoutPropertyNestedInput
     review?: ReviewUpdateManyWithoutPropertyNestedInput
-    PropertyCategory?: PropertyCategoryUpdateManyWithoutPropertiesNestedInput
+    propertyCategory?: PropertyCategoryUpdateOneRequiredWithoutPropertiesNestedInput
   }
 
   export type PropertyUncheckedUpdateWithoutPropertyFacilityInput = {
@@ -24334,15 +24291,14 @@ export namespace Prisma {
     longitude?: StringFieldUpdateOperationsInput | string
     status?: EnumStatusPropertyFieldUpdateOperationsInput | $Enums.StatusProperty
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    propertyCategoryId?: IntFieldUpdateOperationsInput | number
     tenantId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     location?: StringFieldUpdateOperationsInput | string
+    propertyCategoryId?: IntFieldUpdateOperationsInput | number
     propertyImage?: PropertyImageUncheckedUpdateManyWithoutPropertyNestedInput
     room?: RoomUncheckedUpdateManyWithoutPropertyNestedInput
     review?: ReviewUncheckedUpdateManyWithoutPropertyNestedInput
-    PropertyCategory?: PropertyCategoryUncheckedUpdateManyWithoutPropertiesNestedInput
   }
 
   export type PeakSeasonRateCreateWithoutRoomInput = {
@@ -24463,7 +24419,6 @@ export namespace Prisma {
     longitude: string
     status: $Enums.StatusProperty
     isDeleted?: boolean
-    propertyCategoryId: number
     createdAt?: Date | string
     updatedAt?: Date | string
     location: string
@@ -24471,7 +24426,7 @@ export namespace Prisma {
     propertyFacility?: PropertyFacilityCreateNestedManyWithoutPropertyInput
     tenant: TenantCreateNestedOneWithoutPropertyInput
     review?: ReviewCreateNestedManyWithoutPropertyInput
-    PropertyCategory?: PropertyCategoryCreateNestedManyWithoutPropertiesInput
+    propertyCategory: PropertyCategoryCreateNestedOneWithoutPropertiesInput
   }
 
   export type PropertyUncheckedCreateWithoutRoomInput = {
@@ -24483,15 +24438,14 @@ export namespace Prisma {
     longitude: string
     status: $Enums.StatusProperty
     isDeleted?: boolean
-    propertyCategoryId: number
     tenantId: number
     createdAt?: Date | string
     updatedAt?: Date | string
     location: string
+    propertyCategoryId: number
     propertyImage?: PropertyImageUncheckedCreateNestedManyWithoutPropertyInput
     propertyFacility?: PropertyFacilityUncheckedCreateNestedManyWithoutPropertyInput
     review?: ReviewUncheckedCreateNestedManyWithoutPropertyInput
-    PropertyCategory?: PropertyCategoryUncheckedCreateNestedManyWithoutPropertiesInput
   }
 
   export type PropertyCreateOrConnectWithoutRoomInput = {
@@ -24666,7 +24620,6 @@ export namespace Prisma {
     longitude?: StringFieldUpdateOperationsInput | string
     status?: EnumStatusPropertyFieldUpdateOperationsInput | $Enums.StatusProperty
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    propertyCategoryId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     location?: StringFieldUpdateOperationsInput | string
@@ -24674,7 +24627,7 @@ export namespace Prisma {
     propertyFacility?: PropertyFacilityUpdateManyWithoutPropertyNestedInput
     tenant?: TenantUpdateOneRequiredWithoutPropertyNestedInput
     review?: ReviewUpdateManyWithoutPropertyNestedInput
-    PropertyCategory?: PropertyCategoryUpdateManyWithoutPropertiesNestedInput
+    propertyCategory?: PropertyCategoryUpdateOneRequiredWithoutPropertiesNestedInput
   }
 
   export type PropertyUncheckedUpdateWithoutRoomInput = {
@@ -24686,15 +24639,14 @@ export namespace Prisma {
     longitude?: StringFieldUpdateOperationsInput | string
     status?: EnumStatusPropertyFieldUpdateOperationsInput | $Enums.StatusProperty
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    propertyCategoryId?: IntFieldUpdateOperationsInput | number
     tenantId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     location?: StringFieldUpdateOperationsInput | string
+    propertyCategoryId?: IntFieldUpdateOperationsInput | number
     propertyImage?: PropertyImageUncheckedUpdateManyWithoutPropertyNestedInput
     propertyFacility?: PropertyFacilityUncheckedUpdateManyWithoutPropertyNestedInput
     review?: ReviewUncheckedUpdateManyWithoutPropertyNestedInput
-    PropertyCategory?: PropertyCategoryUncheckedUpdateManyWithoutPropertiesNestedInput
   }
 
   export type ReservationUpsertWithWhereUniqueWithoutRoomInput = {
@@ -25420,7 +25372,6 @@ export namespace Prisma {
     longitude: string
     status: $Enums.StatusProperty
     isDeleted?: boolean
-    propertyCategoryId: number
     createdAt?: Date | string
     updatedAt?: Date | string
     location: string
@@ -25428,7 +25379,7 @@ export namespace Prisma {
     propertyFacility?: PropertyFacilityCreateNestedManyWithoutPropertyInput
     room?: RoomCreateNestedManyWithoutPropertyInput
     tenant: TenantCreateNestedOneWithoutPropertyInput
-    PropertyCategory?: PropertyCategoryCreateNestedManyWithoutPropertiesInput
+    propertyCategory: PropertyCategoryCreateNestedOneWithoutPropertiesInput
   }
 
   export type PropertyUncheckedCreateWithoutReviewInput = {
@@ -25440,15 +25391,14 @@ export namespace Prisma {
     longitude: string
     status: $Enums.StatusProperty
     isDeleted?: boolean
-    propertyCategoryId: number
     tenantId: number
     createdAt?: Date | string
     updatedAt?: Date | string
     location: string
+    propertyCategoryId: number
     propertyImage?: PropertyImageUncheckedCreateNestedManyWithoutPropertyInput
     propertyFacility?: PropertyFacilityUncheckedCreateNestedManyWithoutPropertyInput
     room?: RoomUncheckedCreateNestedManyWithoutPropertyInput
-    PropertyCategory?: PropertyCategoryUncheckedCreateNestedManyWithoutPropertiesInput
   }
 
   export type PropertyCreateOrConnectWithoutReviewInput = {
@@ -25555,7 +25505,6 @@ export namespace Prisma {
     longitude?: StringFieldUpdateOperationsInput | string
     status?: EnumStatusPropertyFieldUpdateOperationsInput | $Enums.StatusProperty
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    propertyCategoryId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     location?: StringFieldUpdateOperationsInput | string
@@ -25563,7 +25512,7 @@ export namespace Prisma {
     propertyFacility?: PropertyFacilityUpdateManyWithoutPropertyNestedInput
     room?: RoomUpdateManyWithoutPropertyNestedInput
     tenant?: TenantUpdateOneRequiredWithoutPropertyNestedInput
-    PropertyCategory?: PropertyCategoryUpdateManyWithoutPropertiesNestedInput
+    propertyCategory?: PropertyCategoryUpdateOneRequiredWithoutPropertiesNestedInput
   }
 
   export type PropertyUncheckedUpdateWithoutReviewInput = {
@@ -25575,15 +25524,14 @@ export namespace Prisma {
     longitude?: StringFieldUpdateOperationsInput | string
     status?: EnumStatusPropertyFieldUpdateOperationsInput | $Enums.StatusProperty
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    propertyCategoryId?: IntFieldUpdateOperationsInput | number
     tenantId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     location?: StringFieldUpdateOperationsInput | string
+    propertyCategoryId?: IntFieldUpdateOperationsInput | number
     propertyImage?: PropertyImageUncheckedUpdateManyWithoutPropertyNestedInput
     propertyFacility?: PropertyFacilityUncheckedUpdateManyWithoutPropertyNestedInput
     room?: RoomUncheckedUpdateManyWithoutPropertyNestedInput
-    PropertyCategory?: PropertyCategoryUncheckedUpdateManyWithoutPropertiesNestedInput
   }
 
   export type PaymentUpsertWithoutReviewInput = {
@@ -25798,10 +25746,10 @@ export namespace Prisma {
     longitude: string
     status: $Enums.StatusProperty
     isDeleted?: boolean
-    propertyCategoryId: number
     createdAt?: Date | string
     updatedAt?: Date | string
     location: string
+    propertyCategoryId: number
   }
 
   export type PropertyCategoryCreateManyTenantInput = {
@@ -25819,7 +25767,6 @@ export namespace Prisma {
     longitude?: StringFieldUpdateOperationsInput | string
     status?: EnumStatusPropertyFieldUpdateOperationsInput | $Enums.StatusProperty
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    propertyCategoryId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     location?: StringFieldUpdateOperationsInput | string
@@ -25827,7 +25774,7 @@ export namespace Prisma {
     propertyFacility?: PropertyFacilityUpdateManyWithoutPropertyNestedInput
     room?: RoomUpdateManyWithoutPropertyNestedInput
     review?: ReviewUpdateManyWithoutPropertyNestedInput
-    PropertyCategory?: PropertyCategoryUpdateManyWithoutPropertiesNestedInput
+    propertyCategory?: PropertyCategoryUpdateOneRequiredWithoutPropertiesNestedInput
   }
 
   export type PropertyUncheckedUpdateWithoutTenantInput = {
@@ -25839,15 +25786,14 @@ export namespace Prisma {
     longitude?: StringFieldUpdateOperationsInput | string
     status?: EnumStatusPropertyFieldUpdateOperationsInput | $Enums.StatusProperty
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    propertyCategoryId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     location?: StringFieldUpdateOperationsInput | string
+    propertyCategoryId?: IntFieldUpdateOperationsInput | number
     propertyImage?: PropertyImageUncheckedUpdateManyWithoutPropertyNestedInput
     propertyFacility?: PropertyFacilityUncheckedUpdateManyWithoutPropertyNestedInput
     room?: RoomUncheckedUpdateManyWithoutPropertyNestedInput
     review?: ReviewUncheckedUpdateManyWithoutPropertyNestedInput
-    PropertyCategory?: PropertyCategoryUncheckedUpdateManyWithoutPropertiesNestedInput
   }
 
   export type PropertyUncheckedUpdateManyWithoutTenantInput = {
@@ -25859,10 +25805,10 @@ export namespace Prisma {
     longitude?: StringFieldUpdateOperationsInput | string
     status?: EnumStatusPropertyFieldUpdateOperationsInput | $Enums.StatusProperty
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    propertyCategoryId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     location?: StringFieldUpdateOperationsInput | string
+    propertyCategoryId?: IntFieldUpdateOperationsInput | number
   }
 
   export type PropertyCategoryUpdateWithoutTenantInput = {
@@ -26053,27 +25999,19 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type PropertyCategoryUpdateWithoutPropertiesInput = {
-    name?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    tenant?: TenantUpdateOneRequiredWithoutPropertyCategoryNestedInput
-  }
-
-  export type PropertyCategoryUncheckedUpdateWithoutPropertiesInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    name?: StringFieldUpdateOperationsInput | string
-    tenantId?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type PropertyCategoryUncheckedUpdateManyWithoutPropertiesInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    name?: StringFieldUpdateOperationsInput | string
-    tenantId?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  export type PropertyCreateManyPropertyCategoryInput = {
+    id?: number
+    slug: string
+    title: string
+    description: string
+    latitude: string
+    longitude: string
+    status: $Enums.StatusProperty
+    isDeleted?: boolean
+    tenantId: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    location: string
   }
 
   export type PropertyUpdateWithoutPropertyCategoryInput = {
@@ -26084,7 +26022,6 @@ export namespace Prisma {
     longitude?: StringFieldUpdateOperationsInput | string
     status?: EnumStatusPropertyFieldUpdateOperationsInput | $Enums.StatusProperty
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    propertyCategoryId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     location?: StringFieldUpdateOperationsInput | string
@@ -26104,7 +26041,6 @@ export namespace Prisma {
     longitude?: StringFieldUpdateOperationsInput | string
     status?: EnumStatusPropertyFieldUpdateOperationsInput | $Enums.StatusProperty
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    propertyCategoryId?: IntFieldUpdateOperationsInput | number
     tenantId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26124,7 +26060,6 @@ export namespace Prisma {
     longitude?: StringFieldUpdateOperationsInput | string
     status?: EnumStatusPropertyFieldUpdateOperationsInput | $Enums.StatusProperty
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    propertyCategoryId?: IntFieldUpdateOperationsInput | number
     tenantId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string

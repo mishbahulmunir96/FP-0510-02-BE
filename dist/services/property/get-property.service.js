@@ -17,26 +17,41 @@ const prisma_1 = __importDefault(require("../../lib/prisma"));
 const getPropertyService = (slug) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const property = yield prisma_1.default.property.findFirst({
-            where: { slug, isDeleted: false },
+            where: {
+                slug,
+                isDeleted: false,
+            },
             include: {
                 tenant: true,
                 room: {
                     include: {
                         roomImage: true,
                         roomFacility: true,
-                        peakSeasonRate: true,
+                        peakSeasonRate: {
+                            where: {
+                                isDeleted: false,
+                            },
+                        },
                         roomNonAvailability: {
-                            where: { isDeleted: false },
+                            where: {
+                                isDeleted: false,
+                            },
                         },
                         reservation: {
-                            include: { payment: true },
+                            include: {
+                                payment: true,
+                            },
                         },
                     },
                 },
                 propertyImage: true,
                 propertyFacility: true,
-                review: true,
-                PropertyCategory: true,
+                review: {
+                    orderBy: {
+                        createdAt: "desc",
+                    },
+                },
+                propertyCategory: true,
             },
         });
         if (!property) {

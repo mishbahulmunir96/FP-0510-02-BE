@@ -108,8 +108,8 @@ export const getPropertyController = async (
   next: NextFunction
 ) => {
   try {
-    const { id } = req.params;
-    const result = await getPropertyService(id);
+    const { slug } = req.params; // Changed from id to slug
+    const result = await getPropertyService(slug);
     res.status(200).send(result);
   } catch (error) {
     next(error);

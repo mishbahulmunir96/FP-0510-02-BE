@@ -11,7 +11,11 @@ import reviewRouter from "./routes/review.router";
 import categoryRouter from "./routes/category.router";
 import roomRouter from "./routes/room.router";
 import roomNonAvailabilityRouter from "./routes/roomNonAvailability.router";
-// import { initializeAutoCheckInOut } from "./services/transaction/autoCheckInOut.Service";
+import peakSeasonRateRouter from "./routes/peakSeasonRate.router";
+import statisticRouter from "./routes/statistic.router";
+import { initializeCheckInReminder } from "./script/checkInReminder";
+import { initializeAutoCheckInOut } from "./script/autoCheckInOut";
+
 
 const app = express();
 
@@ -20,20 +24,23 @@ app.use(express.json());
 
 app.use("/samples", sampleRouter);
 app.use("/transactions", transactionRouter);
-app.use("/properties", propertyRouter);
+app.use("/property", propertyRouter);
 app.use("/auth", authRouter);
 app.use("/account", accountRouter);
 app.use("/xendit", xenditRouter);
 app.use("/reviews", reviewRouter);
 app.use("/categories", categoryRouter);
 app.use("/rooms", roomRouter);
+app.use("/peak-season-rates", peakSeasonRateRouter);
 app.use("/room-non-availabilities", roomNonAvailabilityRouter);
+app.use("/statistics", statisticRouter);
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   res.status(400).send(err.message);
 });
 
-// initializeAutoCheckInOut();
+initializeAutoCheckInOut();
+initializeCheckInReminder();
 
 app.listen(PORT, () => {
   console.log(`server running on PORT: ${PORT}`);

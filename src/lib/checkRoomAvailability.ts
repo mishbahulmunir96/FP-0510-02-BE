@@ -1,3 +1,4 @@
+import { StatusPayment } from "../../prisma/generated/client";
 import prisma from "./prisma";
 
 export const checkRoomAvailability = async (
@@ -5,9 +6,32 @@ export const checkRoomAvailability = async (
   startDate: Date,
   endDate: Date
 ) => {
-  const reservations = await prisma.reservation.findMany({
+  const activeReservations = await prisma.reservation.findMany({
     where: {
       roomId,
+      OR: [
+        {
+          startDate: { lt: endDate },
+          endDate: { gt: startDate },
+        },
+      ],
+      payment: {
+        status: {
+          in: [
+            StatusPayment.WAITING_FOR_PAYMENT,
+            StatusPayment.WAITING_FOR_PAYMENT_CONFIRMATION,
+            StatusPayment.PROCESSED,
+            StatusPayment.CHECKED_IN,
+          ],
+        },
+      },
+    },
+  });
+
+  const nonAvailabilityPeriods = await prisma.roomNonAvailability.findMany({
+    where: {
+      roomId,
+      isDeleted: false,
       OR: [
         {
           startDate: { lt: endDate },
@@ -22,10 +46,15 @@ export const checkRoomAvailability = async (
     select: { stock: true },
   });
 
-  const availableStock = room?.stock || 0;
-  const bookedRooms = reservations.length;
+  if (!room) {
+    throw new Error("Room not found");
+  }
 
-  const isRoomAvailable = bookedRooms < availableStock;
+  const availableStock = room.stock;
+  const bookedRooms = activeReservations.length;
+
+  const isRoomAvailable =
+    nonAvailabilityPeriods.length === 0 && bookedRooms < availableStock;
 
   return isRoomAvailable;
 };
