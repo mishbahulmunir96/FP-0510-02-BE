@@ -12,13 +12,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getPropertyService = void 0;
+exports.getPropertyTenantService = void 0;
 const prisma_1 = __importDefault(require("../../lib/prisma"));
-const getPropertyService = (slug) => __awaiter(void 0, void 0, void 0, function* () {
+const getPropertyTenantService = (id) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const property = yield prisma_1.default.property.findFirst({
             where: {
-                slug,
+                id,
                 isDeleted: false,
             },
             include: {
@@ -27,35 +27,16 @@ const getPropertyService = (slug) => __awaiter(void 0, void 0, void 0, function*
                     include: {
                         roomImage: true,
                         roomFacility: true,
-                        peakSeasonRate: {
-                            where: {
-                                isDeleted: false,
-                            },
-                        },
-                        roomNonAvailability: {
-                            where: {
-                                isDeleted: false,
-                            },
-                        },
-                        reservation: {
-                            include: {
-                                payment: true,
-                            },
-                        },
                     },
                 },
                 propertyImage: true,
                 propertyFacility: true,
-                review: {
-                    orderBy: {
-                        createdAt: "desc",
-                    },
-                },
-                propertyCategory: true,
+                review: true,
+                propertyCategory: true, // Changed from PropertyCategory to match the schema
             },
         });
         if (!property) {
-            throw new Error("Invalid Property Slug");
+            throw new Error("Invalid Property id");
         }
         return property;
     }
@@ -63,4 +44,4 @@ const getPropertyService = (slug) => __awaiter(void 0, void 0, void 0, function*
         throw error;
     }
 });
-exports.getPropertyService = getPropertyService;
+exports.getPropertyTenantService = getPropertyTenantService;

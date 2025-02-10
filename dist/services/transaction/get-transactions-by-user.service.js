@@ -16,9 +16,17 @@ exports.getTransactionsByUserService = void 0;
 const prisma_1 = __importDefault(require("../../lib/prisma"));
 const getTransactionsByUserService = (userId, query) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { page, take, sortBy, sortOrder } = query;
+        const { page, take, sortBy, sortOrder, startDate, endDate } = query;
+        const where = Object.assign({ userId }, (startDate && endDate
+            ? {
+                createdAt: {
+                    gte: new Date(startDate),
+                    lte: new Date(endDate),
+                },
+            }
+            : {}));
         const transactions = yield prisma_1.default.payment.findMany({
-            where: { userId },
+            where,
             include: {
                 reservation: {
                     include: {
@@ -42,9 +50,6 @@ const getTransactionsByUserService = (userId, query) => __awaiter(void 0, void 0
         const count = yield prisma_1.default.payment.count({
             where: { userId },
         });
-        if (transactions.length === 0) {
-            throw new Error("No transactions found for this user.");
-        }
         return {
             data: transactions.map((transaction) => {
                 const checkInDate = transaction.reservation.length > 0

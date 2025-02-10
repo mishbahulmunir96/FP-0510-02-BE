@@ -13,11 +13,34 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.checkRoomAvailability = void 0;
+const client_1 = require("../../prisma/generated/client");
 const prisma_1 = __importDefault(require("./prisma"));
 const checkRoomAvailability = (roomId, startDate, endDate) => __awaiter(void 0, void 0, void 0, function* () {
-    const reservations = yield prisma_1.default.reservation.findMany({
+    const activeReservations = yield prisma_1.default.reservation.findMany({
         where: {
             roomId,
+            OR: [
+                {
+                    startDate: { lt: endDate },
+                    endDate: { gt: startDate },
+                },
+            ],
+            payment: {
+                status: {
+                    in: [
+                        client_1.StatusPayment.WAITING_FOR_PAYMENT,
+                        client_1.StatusPayment.WAITING_FOR_PAYMENT_CONFIRMATION,
+                        client_1.StatusPayment.PROCESSED,
+                        client_1.StatusPayment.CHECKED_IN,
+                    ],
+                },
+            },
+        },
+    });
+    const nonAvailabilityPeriods = yield prisma_1.default.roomNonAvailability.findMany({
+        where: {
+            roomId,
+            isDeleted: false,
             OR: [
                 {
                     startDate: { lt: endDate },
@@ -30,9 +53,12 @@ const checkRoomAvailability = (roomId, startDate, endDate) => __awaiter(void 0, 
         where: { id: roomId },
         select: { stock: true },
     });
-    const availableStock = (room === null || room === void 0 ? void 0 : room.stock) || 0;
-    const bookedRooms = reservations.length;
-    const isRoomAvailable = bookedRooms < availableStock;
+    if (!room) {
+        throw new Error("Room not found");
+    }
+    const availableStock = room.stock;
+    const bookedRooms = activeReservations.length;
+    const isRoomAvailable = nonAvailabilityPeriods.length === 0 && bookedRooms < availableStock;
     return isRoomAvailable;
 });
 exports.checkRoomAvailability = checkRoomAvailability;

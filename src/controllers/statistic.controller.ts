@@ -1,4 +1,3 @@
-// controllers/reportController.ts
 import { Request, Response, NextFunction } from "express";
 import prisma from "../lib/prisma";
 import { getPropertyReportService } from "../services/statistic/get-property-report.service";
@@ -73,7 +72,7 @@ export const getTransactionReportController = async (
       return;
     }
 
-    const { startDate, endDate } = req.query;
+    const { startDate, endDate, propertyId } = req.query;
 
     if (!startDate || !endDate) {
       res.status(400).json({
@@ -87,6 +86,7 @@ export const getTransactionReportController = async (
       tenantId: tenant.id,
       startDate: new Date(startDate as string),
       endDate: new Date(endDate as string),
+      propertyId: propertyId ? Number(propertyId) : undefined,
     });
 
     res.status(200).json({

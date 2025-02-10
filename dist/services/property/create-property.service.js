@@ -13,11 +13,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createPropertyService = void 0;
+const client_1 = require("../../../prisma/generated/client");
 const cloudinary_1 = require("../../lib/cloudinary");
 const prisma_1 = __importDefault(require("../../lib/prisma"));
 const createPropertyService = (body, file, userId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { description, latitude, longitude, slug, title, propertyCategoryId, location, } = body;
+        // Convert propertyCategoryId to number
+        const categoryId = Number(propertyCategoryId);
+        // Validate if conversion was successful
+        if (isNaN(categoryId)) {
+            throw new Error("Invalid property category ID");
+        }
         // Check if slug exists
         const existingProperty = yield prisma_1.default.property.findUnique({
             where: { slug },
@@ -35,7 +42,7 @@ const createPropertyService = (body, file, userId) => __awaiter(void 0, void 0, 
         if (!user) {
             throw new Error("User not found");
         }
-        if (user.role !== "TENANT") {
+        if (user.role !== client_1.Role.TENANT) {
             throw new Error("User doesn't have permission to create properties");
         }
         const tenant = yield prisma_1.default.tenant.findFirst({
@@ -47,10 +54,17 @@ const createPropertyService = (body, file, userId) => __awaiter(void 0, void 0, 
         if (!tenant) {
             throw new Error("Tenant profile not found");
         }
+        // Validate property category exists (using the converted number)
+        const categoryExists = yield prisma_1.default.propertyCategory.findUnique({
+            where: { id: categoryId },
+        });
+        if (!categoryExists) {
+            throw new Error("Property category not found");
+        }
         // Upload image if provided
         const imageResult = file ? yield (0, cloudinary_1.cloudinaryUpload)(file) : null;
         // Create property and image in a transaction
-        return yield prisma_1.default.$transaction((tx) => __awaiter(void 0, void 0, void 0, function* () {
+        const result = yield prisma_1.default.$transaction((tx) => __awaiter(void 0, void 0, void 0, function* () {
             const newProperty = yield tx.property.create({
                 data: {
                     description,
@@ -58,13 +72,16 @@ const createPropertyService = (body, file, userId) => __awaiter(void 0, void 0, 
                     longitude,
                     slug,
                     title,
-                    // Menggunakan propertyCategoryId sesuai schema
-                    propertyCategoryId: Number(propertyCategoryId),
+                    propertyCategoryId: categoryId, // Use the converted number
                     location,
-                    status: "PUBLISHED",
-                    tenant: {
-                        connect: { id: tenant.id },
-                    },
+                    status: client_1.StatusProperty.PUBLISHED,
+                    tenantId: tenant.id,
+                    isDeleted: false,
+                },
+                include: {
+                    propertyImage: true,
+                    propertyCategory: true,
+                    tenant: true,
                 },
             });
             if (imageResult === null || imageResult === void 0 ? void 0 : imageResult.secure_url) {
@@ -72,17 +89,22 @@ const createPropertyService = (body, file, userId) => __awaiter(void 0, void 0, 
                     data: {
                         imageUrl: imageResult.secure_url,
                         propertyId: newProperty.id,
+                        isDeleted: false,
                     },
                 });
             }
-            return {
-                message: "Property created successfully",
-                data: newProperty,
-            };
+            return newProperty;
         }));
+        return {
+            message: "Property created successfully",
+            data: result,
+        };
     }
     catch (error) {
-        throw error;
+        if (error instanceof Error) {
+            throw new Error(error.message);
+        }
+        throw new Error("Failed to create property");
     }
 });
 exports.createPropertyService = createPropertyService;

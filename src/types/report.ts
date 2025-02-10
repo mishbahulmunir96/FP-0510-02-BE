@@ -1,5 +1,3 @@
-import { Payment, Reservation } from "../../prisma/generated/client";
-
 export interface PropertyReport {
   propertyId: number;
   propertyName: string;

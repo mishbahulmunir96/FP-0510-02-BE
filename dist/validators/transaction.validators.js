@@ -11,11 +11,6 @@ const validateResult = (req, res, next) => {
     next();
 };
 exports.validateCreateReservation = [
-    (0, express_validator_1.body)("userId")
-        .notEmpty()
-        .withMessage("User ID is required")
-        .isInt({ min: 1 })
-        .withMessage("User ID must be a positive integer"),
     (0, express_validator_1.body)("roomId")
         .notEmpty()
         .withMessage("Room ID is required")
