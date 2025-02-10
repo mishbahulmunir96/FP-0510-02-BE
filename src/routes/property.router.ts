@@ -20,6 +20,9 @@ router.get("/search", getPropertiesByQueryController);
 router.get("/tenant", verifyToken, isTenant, getTenantPropertiesController);
 router.get("/tenant/:id", getPropertyTenantController);
 router.get("/:slug", getPropertyController);
+router.get("/search", getPropertiesByQueryController);
+router.get("/tenant", verifyToken, isTenant, getTenantPropertiesController);
+router.get("/tenant/:id", getPropertyTenantController);
 router.post(
   "/create-property",
   verifyToken,

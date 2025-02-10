@@ -16,6 +16,7 @@ import statisticRouter from "./routes/statistic.router";
 import { initializeCheckInReminder } from "./script/checkInReminder";
 import { initializeAutoCheckInOut } from "./script/autoCheckInOut";
 
+
 const app = express();
 
 app.use(cors());
