@@ -12,55 +12,44 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getPropertyService = void 0;
+exports.deletePeakSeasonRateManagementService = void 0;
+const client_1 = require("../../../prisma/generated/client");
 const prisma_1 = __importDefault(require("../../lib/prisma"));
-const getPropertyService = (slug) => __awaiter(void 0, void 0, void 0, function* () {
+const deletePeakSeasonRateManagementService = (userId, id) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const property = yield prisma_1.default.property.findFirst({
-            where: {
-                slug,
-                isDeleted: false,
-            },
+        const peakSeason = yield prisma_1.default.peakSeasonRate.findUnique({
+            where: { id },
             include: {
-                tenant: true,
                 room: {
                     include: {
-                        roomImage: true,
-                        roomFacility: true,
-                        peakSeasonRate: {
-                            where: {
-                                isDeleted: false,
-                            },
-                        },
-                        roomNonAvailability: {
-                            where: {
-                                isDeleted: false,
-                            },
-                        },
-                        reservation: {
+                        property: {
                             include: {
-                                payment: true,
+                                tenant: true,
                             },
                         },
                     },
                 },
-                propertyImage: true,
-                propertyFacility: true,
-                review: {
-                    orderBy: {
-                        createdAt: "desc",
-                    },
-                },
-                propertyCategory: true,
             },
         });
-        if (!property) {
-            throw new Error("Invalid Property Slug");
+        if (!peakSeason) {
+            throw new Error("Peak Season Rate not found");
         }
-        return property;
+        if (peakSeason.room.property.tenant.userId !== userId) {
+            throw new Error("Unauthorized: Peak Season Rate does not belong to this tenant");
+        }
+        const deletedPeakSeason = yield prisma_1.default.peakSeasonRate.delete({
+            where: { id },
+        });
+        return {
+            message: "Peak Season Rate deleted successfully",
+            data: deletedPeakSeason,
+        };
     }
     catch (error) {
+        if (error instanceof client_1.Prisma.PrismaClientKnownRequestError) {
+            throw new Error("Database error: " + error.message);
+        }
         throw error;
     }
 });
-exports.getPropertyService = getPropertyService;
+exports.deletePeakSeasonRateManagementService = deletePeakSeasonRateManagementService;

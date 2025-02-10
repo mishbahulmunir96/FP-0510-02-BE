@@ -16,19 +16,25 @@ exports.getTransactionsByTenantService = void 0;
 const prisma_1 = __importDefault(require("../../lib/prisma"));
 const getTransactionsByTenantService = (tenantId, query) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { page, take, sortBy, sortOrder } = query;
-        const transactions = yield prisma_1.default.payment.findMany({
-            where: {
-                reservation: {
-                    some: {
-                        room: {
-                            property: {
-                                tenantId,
-                            },
+        const { page, take, sortBy, sortOrder, startDate, endDate } = query;
+        const where = Object.assign({ reservation: {
+                some: {
+                    room: {
+                        property: {
+                            tenantId,
                         },
                     },
                 },
-            },
+            } }, (startDate && endDate
+            ? {
+                createdAt: {
+                    gte: new Date(startDate),
+                    lte: new Date(endDate),
+                },
+            }
+            : {}));
+        const transactions = yield prisma_1.default.payment.findMany({
+            where,
             include: {
                 user: {
                     select: {

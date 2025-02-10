@@ -18,9 +18,10 @@ const checkRoomAvailability_1 = require("../../lib/checkRoomAvailability");
 const prisma_1 = __importDefault(require("../../lib/prisma"));
 const node_schedule_1 = __importDefault(require("node-schedule"));
 const date_fns_1 = require("date-fns");
+const xendit_1 = __importDefault(require("../../lib/xendit"));
 const createRoomReservationService = (body) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { userId, roomId, startDate, endDate } = body;
+        const { userId, roomId, startDate, endDate, paymentMethode } = body;
         const isAvailable = yield (0, checkRoomAvailability_1.checkRoomAvailability)(roomId, startDate, endDate);
         if (!isAvailable) {
             throw new Error("The room is not available on the selected date.");
@@ -58,16 +59,66 @@ const createRoomReservationService = (body) => __awaiter(void 0, void 0, void 0,
                 totalPrice += room.price;
             }
         }
-        const payment = yield prisma_1.default.payment.create({
-            data: {
-                userId,
-                totalPrice,
-                duration: diffDays,
-                paymentMethode: "MANUAL",
-                paymentProof: null,
-                status: client_1.StatusPayment.WAITING_FOR_PAYMENT,
-            },
-        });
+        let payment;
+        if (paymentMethode === "OTOMATIS") {
+            const user = yield prisma_1.default.user.findUnique({
+                where: { id: userId },
+                select: { email: true },
+            });
+            payment = yield prisma_1.default.payment.create({
+                data: {
+                    userId,
+                    totalPrice,
+                    duration: diffDays,
+                    paymentMethode: "OTOMATIS",
+                    paymentProof: null,
+                    status: client_1.StatusPayment.WAITING_FOR_PAYMENT,
+                },
+            });
+            const invoice = yield xendit_1.default.Invoice.createInvoice({
+                data: {
+                    externalId: payment.uuid,
+                    amount: totalPrice,
+                    payerEmail: user === null || user === void 0 ? void 0 : user.email,
+                    description: `Room Reservation for ${diffDays} night(s)`,
+                    invoiceDuration: "3600",
+                    currency: "IDR",
+                    // reminderTime: 1,
+                },
+            });
+            payment = yield prisma_1.default.payment.update({
+                where: { id: payment.id },
+                data: {
+                    invoiceUrl: invoice.invoiceUrl,
+                    expiredAt: new Date(invoice.expiryDate),
+                },
+            });
+        }
+        else {
+            payment = yield prisma_1.default.payment.create({
+                data: {
+                    userId,
+                    totalPrice,
+                    duration: diffDays,
+                    paymentMethode: "MANUAL",
+                    paymentProof: null,
+                    status: client_1.StatusPayment.WAITING_FOR_PAYMENT,
+                },
+            });
+            const expirationTime = (0, date_fns_1.addMinutes)(new Date(), 1);
+            node_schedule_1.default.scheduleJob(Date.now() + 60 * 60 * 1000, () => __awaiter(void 0, void 0, void 0, function* () {
+                yield prisma_1.default.payment.update({
+                    where: {
+                        id: payment.id,
+                        status: client_1.StatusPayment.WAITING_FOR_PAYMENT,
+                    },
+                    data: {
+                        status: client_1.StatusPayment.CANCELLED,
+                        expiredAt: expirationTime,
+                    },
+                });
+            }));
+        }
         const reservations = [];
         for (let i = 0; i < diffDays; i++) {
             const currentStartDate = new Date(start);
@@ -95,19 +146,6 @@ const createRoomReservationService = (body) => __awaiter(void 0, void 0, void 0,
         yield prisma_1.default.reservation.createMany({
             data: reservations,
         });
-        const expirationTime = (0, date_fns_1.addMinutes)(new Date(), 1);
-        node_schedule_1.default.scheduleJob(Date.now() + 60 * 60 * 1000, () => __awaiter(void 0, void 0, void 0, function* () {
-            yield prisma_1.default.payment.update({
-                where: {
-                    id: payment.id,
-                    status: client_1.StatusPayment.WAITING_FOR_PAYMENT,
-                },
-                data: {
-                    status: client_1.StatusPayment.CANCELLED,
-                    expiredAt: expirationTime,
-                },
-            });
-        }));
         return { payment, reservations };
     }
     catch (error) {

@@ -53,7 +53,7 @@ const getPropertiesService = (query) => __awaiter(void 0, void 0, void 0, functi
         },
     })), (startDate &&
         endDate && {
-        // Filter properti berdasarkan tanggal pembuatan dan ketersediaan room
+        // Filter properti berdasarkan tanggal pembuatan (misalnya, sebelum endDate)
         createdAt: {
             lte: new Date(endDate),
         },
@@ -77,26 +77,18 @@ const getPropertiesService = (query) => __awaiter(void 0, void 0, void 0, functi
                         ],
                     },
                 }, 
-                // Pastikan tidak ada jadwal non-availability room di periode yang dipilih
+                // Pastikan tidak ada jadwal non-availability room yang tumpang tindih
                 roomNonAvailability: {
                     none: {
                         isDeleted: false,
-                        date: {
-                            gte: new Date(startDate),
-                            lte: new Date(endDate),
-                        },
+                        startDate: { lte: new Date(endDate) },
+                        endDate: { gte: new Date(startDate) },
                     },
                 } }),
         },
     }));
     // Membatasi field yang diizinkan untuk sorting
-    const allowedSortByFields = [
-        "createdAt",
-        "updatedAt",
-        "title",
-        "location",
-        // Perhatikan: karena kategori merupakan relasi, kita tidak mengizinkannya sebagai field sort langsung
-    ];
+    const allowedSortByFields = ["createdAt", "updatedAt", "title", "location"];
     const sortField = allowedSortByFields.includes(sortBy)
         ? sortBy
         : "createdAt";
@@ -111,6 +103,7 @@ const getPropertiesService = (query) => __awaiter(void 0, void 0, void 0, functi
             take,
             orderBy: orderByClause,
             include: {
+                propertyCategory: true, // Tambahkan ini
                 propertyImage: true,
                 propertyFacility: true,
                 tenant: true,

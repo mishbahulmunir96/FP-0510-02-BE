@@ -5,14 +5,31 @@ interface GetTransactionReportParams {
   tenantId: number;
   startDate: Date;
   endDate: Date;
+  propertyId?: number;
 }
 
 export const getTransactionReportService = async ({
   tenantId,
   startDate,
   endDate,
+  propertyId,
 }: GetTransactionReportParams): Promise<TransactionReport> => {
   try {
+    // Validasi property jika propertyId diberikan
+    if (propertyId) {
+      const propertyExists = await prisma.property.findFirst({
+        where: {
+          id: propertyId,
+          tenantId,
+          isDeleted: false,
+        },
+      });
+
+      if (!propertyExists) {
+        throw new Error("Property not found or unauthorized");
+      }
+    }
+
     const payments = await prisma.payment.findMany({
       where: {
         createdAt: {
@@ -24,6 +41,8 @@ export const getTransactionReportService = async ({
             room: {
               property: {
                 tenantId,
+                ...(propertyId && { id: propertyId }), // Filter berdasarkan propertyId jika ada
+                isDeleted: false,
               },
             },
           },
@@ -32,7 +51,11 @@ export const getTransactionReportService = async ({
       include: {
         reservation: {
           include: {
-            room: true,
+            room: {
+              include: {
+                property: true,
+              },
+            },
           },
         },
       },

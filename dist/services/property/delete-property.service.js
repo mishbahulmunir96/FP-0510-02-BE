@@ -16,13 +16,6 @@ exports.deletePropertyService = void 0;
 const prisma_1 = __importDefault(require("../../lib/prisma"));
 const deletePropertyService = (id, userId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        // Cari properti berdasarkan id
-        const property = yield prisma_1.default.property.findUnique({
-            where: { id },
-        });
-        if (!property) {
-            throw new Error("Property not found");
-        }
         // Validasi user
         const user = yield prisma_1.default.user.findUnique({
             where: { id: userId, isDeleted: false },
@@ -33,62 +26,93 @@ const deletePropertyService = (id, userId) => __awaiter(void 0, void 0, void 0, 
         if (user.role !== "TENANT") {
             throw new Error("User doesn't have permission to delete property");
         }
-        // Cari tenant yang terkait dengan user
+        // Validasi tenant
         const tenant = yield prisma_1.default.tenant.findFirst({
             where: { userId: user.id, isDeleted: false },
         });
         if (!tenant) {
             throw new Error("Tenant not found");
         }
-        // Pastikan properti yang akan dihapus dimiliki oleh tenant tersebut
+        // Validasi property
+        const property = yield prisma_1.default.property.findUnique({
+            where: { id },
+        });
+        if (!property) {
+            throw new Error("Property not found");
+        }
         if (property.tenantId !== tenant.id) {
             throw new Error("Property doesn't belong to the tenant");
         }
-        // Cari semua room terkait properti
-        const rooms = yield prisma_1.default.room.findMany({
-            where: { propertyId: id },
-            select: { id: true },
-        });
-        const roomIds = rooms.map((room) => room.id);
-        // Update soft delete untuk data yang berkaitan dengan room
-        yield prisma_1.default.roomFacility.updateMany({
-            where: { roomId: { in: roomIds } },
-            data: { isDeleted: true },
-        });
-        yield prisma_1.default.roomImage.updateMany({
-            where: { roomId: { in: roomIds } },
-            data: { isDeleted: true },
-        });
-        yield prisma_1.default.roomNonAvailability.updateMany({
-            where: { roomId: { in: roomIds } },
-            data: { isDeleted: true },
-        });
-        yield prisma_1.default.peakSeasonRate.updateMany({
-            where: { roomId: { in: roomIds } },
-            data: { isDeleted: true },
-        });
-        // Update soft delete untuk room yang terkait dengan properti
-        yield prisma_1.default.room.updateMany({
-            where: { propertyId: id },
-            data: { isDeleted: true },
-        });
-        // Update soft delete untuk data yang berkaitan langsung dengan properti
-        yield prisma_1.default.propertyFacility.updateMany({
-            where: { propertyId: id },
-            data: { isDeleted: true },
-        });
-        yield prisma_1.default.propertyImage.updateMany({
-            where: { propertyId: id },
-            data: { isDeleted: true },
-        });
-        // Update soft delete untuk properti itu sendiri
-        yield prisma_1.default.property.update({
-            where: { id },
-            data: { isDeleted: true },
-        });
+        // Lakukan hard delete menggunakan transaction
+        return yield prisma_1.default.$transaction((tx) => __awaiter(void 0, void 0, void 0, function* () {
+            // 1. Delete semua room facilities
+            yield tx.roomFacility.deleteMany({
+                where: {
+                    room: {
+                        propertyId: id,
+                    },
+                },
+            });
+            // 2. Delete semua room images
+            yield tx.roomImage.deleteMany({
+                where: {
+                    room: {
+                        propertyId: id,
+                    },
+                },
+            });
+            // 3. Delete semua room non-availabilities
+            yield tx.roomNonAvailability.deleteMany({
+                where: {
+                    room: {
+                        propertyId: id,
+                    },
+                },
+            });
+            // 4. Delete semua peak season rates
+            yield tx.peakSeasonRate.deleteMany({
+                where: {
+                    room: {
+                        propertyId: id,
+                    },
+                },
+            });
+            // 5. Delete semua rooms
+            yield tx.room.deleteMany({
+                where: { propertyId: id },
+            });
+            // 6. Delete property facilities
+            yield tx.propertyFacility.deleteMany({
+                where: { propertyId: id },
+            });
+            // 7. Delete property images
+            yield tx.propertyImage.deleteMany({
+                where: { propertyId: id },
+            });
+            // 8. Delete property reviews
+            yield tx.review.deleteMany({
+                where: { propertyId: id },
+            });
+            // 9. Finally delete the property
+            const deletedProperty = yield tx.property.delete({
+                where: { id },
+                include: {
+                    propertyImage: true,
+                    propertyCategory: true,
+                    room: true,
+                },
+            });
+            return {
+                message: "Property successfully deleted",
+                data: deletedProperty,
+            };
+        }));
     }
     catch (error) {
-        throw error;
+        if (error instanceof Error) {
+            throw new Error(error.message);
+        }
+        throw new Error("Failed to delete property");
     }
 });
 exports.deletePropertyService = deletePropertyService;
