@@ -22,11 +22,16 @@ const upload_payment_proof_service_1 = require("../services/transaction/upload-p
 const createRoomReservationController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const userId = res.locals.user.id;
+        const startDate = new Date(req.body.startDate);
+        const endDate = new Date(req.body.endDate);
+        if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+            throw new Error("Invalid date format");
+        }
         const reservationData = {
             userId,
             roomId: req.body.roomId,
-            startDate: new Date(req.body.startDate),
-            endDate: new Date(req.body.endDate),
+            startDate,
+            endDate,
             paymentMethode: req.body.paymentMethode,
         };
         const result = yield (0, create_room_reservation_service_1.createRoomReservationService)(reservationData);

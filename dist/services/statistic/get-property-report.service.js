@@ -77,7 +77,16 @@ const getPropertyReportService = (_a) => __awaiter(void 0, [_a], void 0, functio
             const totalDays = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
             const totalRooms = property.room.reduce((sum, room) => sum + room.stock, 0);
             const totalPossibleRoomDays = totalRooms * totalDays;
-            const occupiedRoomDays = allReservations.length;
+            const occupiedRoomDays = allReservations.reduce((total, reservation) => {
+                const checkIn = new Date(reservation.startDate);
+                const checkOut = new Date(reservation.endDate);
+                // Pastikan tanggal dalam range yang diminta
+                const effectiveStartDate = checkIn < startDate ? startDate : checkIn;
+                const effectiveEndDate = checkOut > endDate ? endDate : checkOut;
+                const stayDuration = Math.ceil((effectiveEndDate.getTime() - effectiveStartDate.getTime()) /
+                    (1000 * 60 * 60 * 24));
+                return total + stayDuration;
+            }, 0);
             const occupancyRate = totalPossibleRoomDays > 0
                 ? Number(((occupiedRoomDays / totalPossibleRoomDays) * 100).toFixed(2))
                 : 0;
@@ -106,6 +115,7 @@ const getPropertyReportService = (_a) => __awaiter(void 0, [_a], void 0, functio
                     totalBookings,
                     totalRevenue: roomRevenue,
                     averageStayDuration,
+                    stock: room.stock,
                 };
             });
             // Ambil 5 kamar terbaik berdasarkan jumlah booking
@@ -121,6 +131,7 @@ const getPropertyReportService = (_a) => __awaiter(void 0, [_a], void 0, functio
                 averageRating,
                 roomDetails,
                 bestPerformingRooms,
+                totalRooms: property.room.reduce((total, room) => total + room.stock, 0),
             };
         })));
         return reports;

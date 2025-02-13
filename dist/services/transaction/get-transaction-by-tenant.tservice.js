@@ -116,6 +116,8 @@ const getTransactionByTenantService = (id, tenantId) => __awaiter(void 0, void 0
             }),
         };
     }
-    catch (error) { }
+    catch (error) {
+        throw error;
+    }
 });
 exports.getTransactionByTenantService = getTransactionByTenantService;

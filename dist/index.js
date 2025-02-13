@@ -16,9 +16,9 @@ const review_router_1 = __importDefault(require("./routes/review.router"));
 const category_router_1 = __importDefault(require("./routes/category.router"));
 const room_router_1 = __importDefault(require("./routes/room.router"));
 const roomNonAvailability_router_1 = __importDefault(require("./routes/roomNonAvailability.router"));
-const autoCheckInOut_Service_1 = require("./script/autoCheckInOut.Service");
 const peakSeasonRate_router_1 = __importDefault(require("./routes/peakSeasonRate.router"));
 const statistic_router_1 = __importDefault(require("./routes/statistic.router"));
+const checkInReminder_1 = require("./script/checkInReminder");
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
@@ -37,7 +37,7 @@ app.use("/statistics", statistic_router_1.default);
 app.use((err, req, res, next) => {
     res.status(400).send(err.message);
 });
-(0, autoCheckInOut_Service_1.initializeAutoCheckInOut)();
+(0, checkInReminder_1.initializeCheckInReminder)();
 app.listen(config_1.PORT, () => {
     console.log(`server running on PORT: ${config_1.PORT}`);
 });

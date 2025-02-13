@@ -14,4 +14,5 @@ router.post("/reply/:reviewId", jwt_1.verifyToken, isTenant_1.isTenant, review_v
 router.get("/property/:propertyId", review_controller_1.getReviewsByPropertyController);
 router.get("/transactions/:paymentId", jwt_1.verifyToken, review_controller_1.getReviewByTransactionController);
 router.get("/tenant/transactions/:paymentId", jwt_1.verifyToken, review_controller_1.getReviewByTenantController);
+router.get("/room/:roomId", review_controller_1.getReviewsByRoomController);
 exports.default = router;

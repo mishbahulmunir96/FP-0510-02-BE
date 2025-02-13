@@ -1,5 +1,6 @@
 import prisma from "../../lib/prisma";
 import { TransactionReport } from "../../types/report";
+import { format } from "date-fns";
 
 interface GetTransactionReportParams {
   tenantId: number;
@@ -8,6 +9,66 @@ interface GetTransactionReportParams {
   propertyId?: number;
 }
 
+interface PeriodData {
+  date: string;
+  totalBookings: number;
+  totalRevenue: number;
+}
+
+const groupDataByPeriod = (
+  payments: any[],
+  startDate: Date,
+  endDate: Date
+): PeriodData[] => {
+  const diffInDays = Math.ceil(
+    (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
+  );
+
+  // Tentukan format pengelompokan berdasarkan rentang waktu
+  let groupingFunction: (date: Date) => string;
+
+  if (diffInDays <= 7) {
+    // Per hari untuk rentang 7 hari atau kurang
+    groupingFunction = (date) => format(date, "yyyy-MM-dd");
+  } else if (diffInDays <= 31) {
+    // Per minggu untuk rentang 31 hari atau kurang
+    groupingFunction = (date) => {
+      const weekNumber = Math.ceil(date.getDate() / 7);
+      return `${format(date, "yyyy-MM")}-W${weekNumber}`;
+    };
+  } else {
+    // Per bulan untuk rentang lebih dari 31 hari
+    groupingFunction = (date) => format(date, "yyyy-MM");
+  }
+
+  // Kelompokkan data
+  const groupedData = payments.reduce(
+    (acc: { [key: string]: PeriodData }, payment) => {
+      const date = new Date(payment.createdAt);
+      const key = groupingFunction(date);
+
+      if (!acc[key]) {
+        acc[key] = {
+          date: key,
+          totalBookings: 0,
+          totalRevenue: 0,
+        };
+      }
+
+      acc[key].totalBookings += 1;
+      acc[key].totalRevenue += payment.totalPrice;
+
+      return acc;
+    },
+    {}
+  );
+
+  // Konversi ke array dan urutkan berdasarkan tanggal
+  return Object.values(groupedData).sort((a, b) =>
+    a.date.localeCompare(b.date)
+  );
+};
+
 export const getTransactionReportService = async ({
   tenantId,
   startDate,
@@ -15,7 +76,7 @@ export const getTransactionReportService = async ({
   propertyId,
 }: GetTransactionReportParams): Promise<TransactionReport> => {
   try {
-    // Validasi property jika propertyId diberikan
+    // Validasi property jika ada
     if (propertyId) {
       const propertyExists = await prisma.property.findFirst({
         where: {
@@ -30,6 +91,7 @@ export const getTransactionReportService = async ({
       }
     }
 
+    // Ambil semua pembayaran dalam rentang waktu
     const payments = await prisma.payment.findMany({
       where: {
         createdAt: {
@@ -41,7 +103,7 @@ export const getTransactionReportService = async ({
             room: {
               property: {
                 tenantId,
-                ...(propertyId && { id: propertyId }), // Filter berdasarkan propertyId jika ada
+                ...(propertyId && { id: propertyId }),
                 isDeleted: false,
               },
             },
@@ -51,17 +113,13 @@ export const getTransactionReportService = async ({
       include: {
         reservation: {
           include: {
-            room: {
-              include: {
-                property: true,
-              },
-            },
+            room: true,
           },
         },
       },
     });
 
-    // Calculate basic metrics
+    // Hitung metrik dasar
     const totalTransactions = payments.length;
     const totalRevenue = payments.reduce(
       (sum, payment) => sum + payment.totalPrice,
@@ -72,7 +130,7 @@ export const getTransactionReportService = async ({
         ? Number((totalRevenue / totalTransactions).toFixed(2))
         : 0;
 
-    // Calculate payment method distribution
+    // Hitung distribusi metode pembayaran
     const paymentMethods = payments.reduce(
       (acc, payment) => {
         acc[payment.paymentMethode].count += 1;
@@ -91,7 +149,7 @@ export const getTransactionReportService = async ({
       ((paymentMethods.OTOMATIS.count / totalTransactions) * 100).toFixed(2)
     );
 
-    // Calculate payment status breakdown
+    // Hitung status pembayaran
     const successfulPayments = payments.filter((p) =>
       ["CHECKED_IN", "CHECKED_OUT"].includes(p.status)
     ).length;
@@ -121,19 +179,10 @@ export const getTransactionReportService = async ({
       totalPending: pendingPayments,
     };
 
-    // Calculate peak booking periods (grouped by date)
-    const bookingsByDate = payments.reduce((acc, payment) => {
-      const date = payment.createdAt.toISOString().split("T")[0];
-      acc[date] = (acc[date] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
+    // Kelompokkan data berdasarkan periode
+    const periodData = groupDataByPeriod(payments, startDate, endDate);
 
-    const peakBookingPeriods = Object.entries(bookingsByDate)
-      .map(([date, totalBookings]) => ({ date, totalBookings }))
-      .sort((a, b) => b.totalBookings - a.totalBookings)
-      .slice(0, 5);
-
-    // Calculate average booking duration
+    // Hitung rata-rata durasi booking
     const allReservations = payments.flatMap((p) => p.reservation);
     const durations = allReservations.map((reservation) => {
       const start = new Date(reservation.startDate);
@@ -153,7 +202,7 @@ export const getTransactionReportService = async ({
           )
         : 0;
 
-    // Calculate average lead time (time between booking and check-in)
+    // Hitung rata-rata lead time
     const leadTimes = allReservations.map((reservation) => {
       const bookingDate = new Date(reservation.createdAt);
       const checkInDate = new Date(reservation.startDate);
@@ -177,7 +226,11 @@ export const getTransactionReportService = async ({
       averageTransactionValue,
       paymentMethodDistribution: paymentMethods,
       paymentStatusBreakdown,
-      peakBookingPeriods,
+      peakBookingPeriods: periodData.map((period) => ({
+        date: period.date,
+        totalBookings: period.totalBookings,
+        totalRevenue: period.totalRevenue,
+      })),
       averageBookingDuration,
       averageBookingLeadTime,
     };

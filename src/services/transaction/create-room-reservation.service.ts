@@ -4,6 +4,8 @@ import prisma from "../../lib/prisma";
 import schedule from "node-schedule";
 import { addMinutes } from "date-fns";
 import xendit from "../../lib/xendit";
+import { checkPeakRate } from "../../lib/checkPeakRate";
+import { BASE_URL_FE } from "../../config";
 
 interface CreateRoomReservationBody {
   userId: number;
@@ -18,59 +20,70 @@ export const createRoomReservationService = async (
 ) => {
   try {
     const { userId, roomId, startDate, endDate, paymentMethode } = body;
+    const checkinDate = new Date(startDate);
+    checkinDate.setUTCHours(7, 0, 0, 0);
 
-    const isAvailable = await checkRoomAvailability(roomId, startDate, endDate);
+    const checkoutDate = new Date(endDate);
+    checkoutDate.setUTCHours(5, 0, 0, 0);
+
+    const isAvailable = await checkRoomAvailability(
+      roomId,
+      checkinDate,
+      checkoutDate
+    );
+
     if (!isAvailable) {
-      throw new Error("The room is not available on the selected date.");
+      throw new Error("Room not available on selected date.");
     }
 
-    const start = new Date(startDate);
-    const end = new Date(endDate);
-    const diffTime = Math.abs(end.getTime() - start.getTime());
+    const diffTime = checkoutDate.getTime() - checkinDate.getTime();
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
     if (diffDays < 1) {
-      throw new Error("The reservation duration must be at least 1 night.");
+      throw new Error("Minimum reservation is 1 night.");
     }
 
     const room = await prisma.room.findUnique({
-      where: { id: roomId },
-      select: { price: true },
+      where: {
+        id: roomId,
+        isDeleted: false,
+      },
+      select: {
+        price: true,
+        stock: true,
+      },
     });
 
     if (!room || room.price === undefined) {
-      throw new Error("Room price not found.");
+      throw new Error("Room not found.");
     }
 
     let totalPrice = 0;
+    const startForPrice = new Date(checkinDate);
 
     for (let i = 0; i < diffDays; i++) {
-      const currentDate = new Date(start);
-      currentDate.setDate(currentDate.getDate() + i);
+      const currentDate = new Date(startForPrice);
+      currentDate.setUTCDate(startForPrice.getUTCDate() + i);
+      currentDate.setUTCHours(0, 0, 0, 0);
 
-      const peakRate = await prisma.peakSeasonRate.findFirst({
-        where: {
-          roomId: roomId,
-          startDate: { lte: currentDate },
-          endDate: { gte: currentDate },
-          isDeleted: false,
-        },
-      });
-
-      if (peakRate) {
-        totalPrice += peakRate.price;
-      } else {
-        totalPrice += room.price;
-      }
+      const peakRate = await checkPeakRate(currentDate, roomId);
+      totalPrice += peakRate ? peakRate.price : room.price;
     }
 
     let payment: Payment;
 
     if (paymentMethode === "OTOMATIS") {
       const user = await prisma.user.findUnique({
-        where: { id: userId },
+        where: {
+          id: userId,
+          isDeleted: false,
+        },
         select: { email: true },
       });
+
+      if (!user?.email) {
+        throw new Error("User not found.");
+      }
 
       payment = await prisma.payment.create({
         data: {
@@ -87,11 +100,19 @@ export const createRoomReservationService = async (
         data: {
           externalId: payment.uuid,
           amount: totalPrice,
-          payerEmail: user?.email,
-          description: `Room Reservation for ${diffDays} night(s)`,
+          payerEmail: user.email,
+          description: `Room eservation for ${diffDays} night(s)`,
           invoiceDuration: "3600",
           currency: "IDR",
-          // reminderTime: 1,
+          shouldSendEmail: true,
+          reminderTime: 1,
+          successRedirectUrl: `http://${BASE_URL_FE}/transactions/${payment.id}`,
+          failureRedirectUrl: `http://${BASE_URL_FE}/transactions/${payment.id}`,
+          customerNotificationPreference: {
+            invoiceCreated: ["email"],
+            invoiceReminder: ["email"],
+            invoicePaid: ["email"],
+          },
         },
       });
 
@@ -114,37 +135,37 @@ export const createRoomReservationService = async (
         },
       });
 
-      const expirationTime = addMinutes(new Date(), 1);
-      schedule.scheduleJob(Date.now() + 60 * 60 * 1000, async () => {
-        await prisma.payment.update({
-          where: {
-            id: payment.id,
-            status: StatusPayment.WAITING_FOR_PAYMENT,
-          },
-          data: {
-            status: StatusPayment.CANCELLED,
-            expiredAt: expirationTime,
-          },
-        });
+      const expirationTime = addMinutes(new Date(), 60);
+
+      schedule.scheduleJob(expirationTime, async () => {
+        try {
+          await prisma.payment.updateMany({
+            where: {
+              id: payment.id,
+              status: StatusPayment.WAITING_FOR_PAYMENT,
+            },
+            data: {
+              status: StatusPayment.CANCELLED,
+              expiredAt: expirationTime,
+            },
+          });
+        } catch (error) {
+          console.error("Error cancelling payment:", error);
+        }
       });
     }
 
     const reservations = [];
     for (let i = 0; i < diffDays; i++) {
-      const currentStartDate = new Date(start);
-      currentStartDate.setDate(currentStartDate.getDate() + i);
+      const currentStartDate = new Date(checkinDate);
+      currentStartDate.setUTCDate(checkinDate.getUTCDate() + i);
+      currentStartDate.setUTCHours(7, 0, 0, 0);
 
       const currentEndDate = new Date(currentStartDate);
-      currentEndDate.setDate(currentStartDate.getDate() + 1);
+      currentEndDate.setUTCDate(currentStartDate.getUTCDate() + 1);
+      currentEndDate.setUTCHours(5, 0, 0, 0);
 
-      const peakRate = await prisma.peakSeasonRate.findFirst({
-        where: {
-          roomId: roomId,
-          startDate: { lte: currentStartDate },
-          endDate: { gte: currentStartDate },
-          isDeleted: false,
-        },
-      });
+      const peakRate = await checkPeakRate(currentStartDate, roomId);
 
       reservations.push({
         roomId,
@@ -161,7 +182,11 @@ export const createRoomReservationService = async (
       data: reservations,
     });
 
-    return { payment, reservations };
+    return {
+      payment,
+      reservations,
+      message: "Reservation Succesfully created.",
+    };
   } catch (error) {
     throw error;
   }

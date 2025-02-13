@@ -11,12 +11,15 @@ export interface PropertyReport {
     totalBookings: number;
     totalRevenue: number;
     averageStayDuration: number;
+    stock: number;
   }[];
   bestPerformingRooms: {
     roomId: number;
     roomType: string;
     totalBookings: number;
+    stock: number;
   }[];
+  totalRooms: number;
 }
 
 export interface TransactionReport {

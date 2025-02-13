@@ -4,6 +4,7 @@ import {
   getReviewByTenantController,
   getReviewByTransactionController,
   getReviewsByPropertyController,
+  getReviewsByRoomController,
   replyReviewController,
 } from "../controllers/review.controller";
 import { verifyToken } from "../lib/jwt";
@@ -34,5 +35,6 @@ router.get(
   verifyToken,
   getReviewByTenantController
 );
+router.get("/room/:roomId", getReviewsByRoomController);
 
 export default router;

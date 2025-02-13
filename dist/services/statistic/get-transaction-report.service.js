@@ -14,8 +14,60 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getTransactionReportService = void 0;
 const prisma_1 = __importDefault(require("../../lib/prisma"));
-const getTransactionReportService = (_a) => __awaiter(void 0, [_a], void 0, function* ({ tenantId, startDate, endDate, }) {
+const date_fns_1 = require("date-fns");
+const groupDataByPeriod = (payments, startDate, endDate) => {
+    const diffInDays = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+    // Tentukan format pengelompokan berdasarkan rentang waktu
+    let groupingFunction;
+    if (diffInDays <= 7) {
+        // Per hari untuk rentang 7 hari atau kurang
+        groupingFunction = (date) => (0, date_fns_1.format)(date, "yyyy-MM-dd");
+    }
+    else if (diffInDays <= 31) {
+        // Per minggu untuk rentang 31 hari atau kurang
+        groupingFunction = (date) => {
+            const weekNumber = Math.ceil(date.getDate() / 7);
+            return `${(0, date_fns_1.format)(date, "yyyy-MM")}-W${weekNumber}`;
+        };
+    }
+    else {
+        // Per bulan untuk rentang lebih dari 31 hari
+        groupingFunction = (date) => (0, date_fns_1.format)(date, "yyyy-MM");
+    }
+    // Kelompokkan data
+    const groupedData = payments.reduce((acc, payment) => {
+        const date = new Date(payment.createdAt);
+        const key = groupingFunction(date);
+        if (!acc[key]) {
+            acc[key] = {
+                date: key,
+                totalBookings: 0,
+                totalRevenue: 0,
+            };
+        }
+        acc[key].totalBookings += 1;
+        acc[key].totalRevenue += payment.totalPrice;
+        return acc;
+    }, {});
+    // Konversi ke array dan urutkan berdasarkan tanggal
+    return Object.values(groupedData).sort((a, b) => a.date.localeCompare(b.date));
+};
+const getTransactionReportService = (_a) => __awaiter(void 0, [_a], void 0, function* ({ tenantId, startDate, endDate, propertyId, }) {
     try {
+        // Validasi property jika ada
+        if (propertyId) {
+            const propertyExists = yield prisma_1.default.property.findFirst({
+                where: {
+                    id: propertyId,
+                    tenantId,
+                    isDeleted: false,
+                },
+            });
+            if (!propertyExists) {
+                throw new Error("Property not found or unauthorized");
+            }
+        }
+        // Ambil semua pembayaran dalam rentang waktu
         const payments = yield prisma_1.default.payment.findMany({
             where: {
                 createdAt: {
@@ -25,9 +77,7 @@ const getTransactionReportService = (_a) => __awaiter(void 0, [_a], void 0, func
                 reservation: {
                     some: {
                         room: {
-                            property: {
-                                tenantId,
-                            },
+                            property: Object.assign(Object.assign({ tenantId }, (propertyId && { id: propertyId })), { isDeleted: false }),
                         },
                     },
                 },
@@ -40,13 +90,13 @@ const getTransactionReportService = (_a) => __awaiter(void 0, [_a], void 0, func
                 },
             },
         });
-        // Calculate basic metrics
+        // Hitung metrik dasar
         const totalTransactions = payments.length;
         const totalRevenue = payments.reduce((sum, payment) => sum + payment.totalPrice, 0);
         const averageTransactionValue = totalTransactions > 0
             ? Number((totalRevenue / totalTransactions).toFixed(2))
             : 0;
-        // Calculate payment method distribution
+        // Hitung distribusi metode pembayaran
         const paymentMethods = payments.reduce((acc, payment) => {
             acc[payment.paymentMethode].count += 1;
             return acc;
@@ -56,7 +106,7 @@ const getTransactionReportService = (_a) => __awaiter(void 0, [_a], void 0, func
         });
         paymentMethods.MANUAL.percentage = Number(((paymentMethods.MANUAL.count / totalTransactions) * 100).toFixed(2));
         paymentMethods.OTOMATIS.percentage = Number(((paymentMethods.OTOMATIS.count / totalTransactions) * 100).toFixed(2));
-        // Calculate payment status breakdown
+        // Hitung status pembayaran
         const successfulPayments = payments.filter((p) => ["CHECKED_IN", "CHECKED_OUT"].includes(p.status)).length;
         const cancelledPayments = payments.filter((p) => p.status === "CANCELLED").length;
         const pendingPayments = payments.filter((p) => [
@@ -72,17 +122,9 @@ const getTransactionReportService = (_a) => __awaiter(void 0, [_a], void 0, func
             totalCancelled: cancelledPayments,
             totalPending: pendingPayments,
         };
-        // Calculate peak booking periods (grouped by date)
-        const bookingsByDate = payments.reduce((acc, payment) => {
-            const date = payment.createdAt.toISOString().split("T")[0];
-            acc[date] = (acc[date] || 0) + 1;
-            return acc;
-        }, {});
-        const peakBookingPeriods = Object.entries(bookingsByDate)
-            .map(([date, totalBookings]) => ({ date, totalBookings }))
-            .sort((a, b) => b.totalBookings - a.totalBookings)
-            .slice(0, 5);
-        // Calculate average booking duration
+        // Kelompokkan data berdasarkan periode
+        const periodData = groupDataByPeriod(payments, startDate, endDate);
+        // Hitung rata-rata durasi booking
         const allReservations = payments.flatMap((p) => p.reservation);
         const durations = allReservations.map((reservation) => {
             const start = new Date(reservation.startDate);
@@ -93,7 +135,7 @@ const getTransactionReportService = (_a) => __awaiter(void 0, [_a], void 0, func
             ? Number((durations.reduce((sum, duration) => sum + duration, 0) /
                 durations.length).toFixed(2))
             : 0;
-        // Calculate average lead time (time between booking and check-in)
+        // Hitung rata-rata lead time
         const leadTimes = allReservations.map((reservation) => {
             const bookingDate = new Date(reservation.createdAt);
             const checkInDate = new Date(reservation.startDate);
@@ -108,7 +150,11 @@ const getTransactionReportService = (_a) => __awaiter(void 0, [_a], void 0, func
             averageTransactionValue,
             paymentMethodDistribution: paymentMethods,
             paymentStatusBreakdown,
-            peakBookingPeriods,
+            peakBookingPeriods: periodData.map((period) => ({
+                date: period.date,
+                totalBookings: period.totalBookings,
+                totalRevenue: period.totalRevenue,
+            })),
             averageBookingDuration,
             averageBookingLeadTime,
         };

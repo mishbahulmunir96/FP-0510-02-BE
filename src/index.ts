@@ -14,8 +14,6 @@ import roomNonAvailabilityRouter from "./routes/roomNonAvailability.router";
 import peakSeasonRateRouter from "./routes/peakSeasonRate.router";
 import statisticRouter from "./routes/statistic.router";
 import { initializeCheckInReminder } from "./script/checkInReminder";
-import { initializeAutoCheckInOut } from "./script/autoCheckInOut";
-
 
 const app = express();
 
@@ -39,7 +37,6 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   res.status(400).send(err.message);
 });
 
-initializeAutoCheckInOut();
 initializeCheckInReminder();
 
 app.listen(PORT, () => {

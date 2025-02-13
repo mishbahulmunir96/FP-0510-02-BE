@@ -121,5 +121,7 @@ export const getTransactionByTenantService = async (
         };
       }),
     };
-  } catch (error) {}
+  } catch (error) {
+    throw error;
+  }
 };
