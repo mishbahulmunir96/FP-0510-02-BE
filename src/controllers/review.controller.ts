@@ -4,6 +4,7 @@ import { getReviewByTransactionService } from "../services/review/get-review-by-
 import { getReviewsByPropertyService } from "../services/review/get-reviews-by-property.service";
 import { replyReviewService } from "../services/review/create-review-reply.service";
 import { getReviewByTenantService } from "../services/review/get-review-by-tenant.service";
+import { getReviewsByRoomService } from "../services/review/get-review-by-room.service";
 
 export const createReviewController = async (
   req: Request,
@@ -121,6 +122,35 @@ export const getReviewByTenantController = async (
       res.status(404).send({ message: "Review not found" });
       return;
     }
+
+    res.status(200).send(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getReviewsByRoomController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const roomId = parseInt(req.params.roomId);
+    const page = parseInt(req.query.page as string) || 1;
+    const take = parseInt(req.query.take as string) || 10;
+    const sortBy = (req.query.sortBy as string) || "createdAt";
+    const sortOrder = (req.query.sortOrder as string) || "desc";
+
+    if (isNaN(roomId)) {
+      throw new Error("Invalid room ID");
+    }
+
+    const result = await getReviewsByRoomService(roomId, {
+      page,
+      take,
+      sortBy,
+      sortOrder,
+    });
 
     res.status(200).send(result);
   } catch (error) {

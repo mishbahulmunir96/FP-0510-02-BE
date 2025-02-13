@@ -69,7 +69,7 @@ const getTransactionReportController = (req, res, next) => __awaiter(void 0, voi
             });
             return;
         }
-        const { startDate, endDate } = req.query;
+        const { startDate, endDate, propertyId } = req.query;
         if (!startDate || !endDate) {
             res.status(400).json({
                 status: "error",
@@ -81,6 +81,7 @@ const getTransactionReportController = (req, res, next) => __awaiter(void 0, voi
             tenantId: tenant.id,
             startDate: new Date(startDate),
             endDate: new Date(endDate),
+            propertyId: propertyId ? Number(propertyId) : undefined,
         });
         res.status(200).json({
             status: "success",

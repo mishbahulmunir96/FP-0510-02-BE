@@ -95,7 +95,26 @@ export const getPropertyReportService = async ({
           0
         );
         const totalPossibleRoomDays = totalRooms * totalDays;
-        const occupiedRoomDays = allReservations.length;
+        const occupiedRoomDays = allReservations.reduce(
+          (total, reservation) => {
+            const checkIn = new Date(reservation.startDate);
+            const checkOut = new Date(reservation.endDate);
+
+            // Pastikan tanggal dalam range yang diminta
+            const effectiveStartDate =
+              checkIn < startDate ? startDate : checkIn;
+            const effectiveEndDate = checkOut > endDate ? endDate : checkOut;
+
+            const stayDuration = Math.ceil(
+              (effectiveEndDate.getTime() - effectiveStartDate.getTime()) /
+                (1000 * 60 * 60 * 24)
+            );
+
+            return total + stayDuration;
+          },
+          0
+        );
+
         const occupancyRate =
           totalPossibleRoomDays > 0
             ? Number(
@@ -150,6 +169,7 @@ export const getPropertyReportService = async ({
             totalBookings,
             totalRevenue: roomRevenue,
             averageStayDuration,
+            stock: room.stock,
           };
         });
 
@@ -167,6 +187,10 @@ export const getPropertyReportService = async ({
           averageRating,
           roomDetails,
           bestPerformingRooms,
+          totalRooms: property.room.reduce(
+            (total, room) => total + room.stock,
+            0
+          ),
         };
       })
     );

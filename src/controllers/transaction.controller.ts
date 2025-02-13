@@ -17,11 +17,18 @@ export const createRoomReservationController = async (
   try {
     const userId = res.locals.user.id;
 
+    const startDate = new Date(req.body.startDate);
+    const endDate = new Date(req.body.endDate);
+
+    if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+      throw new Error("Invalid date format");
+    }
+
     const reservationData = {
       userId,
       roomId: req.body.roomId,
-      startDate: new Date(req.body.startDate),
-      endDate: new Date(req.body.endDate),
+      startDate,
+      endDate,
       paymentMethode: req.body.paymentMethode,
     };
 

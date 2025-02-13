@@ -19,52 +19,58 @@ const prisma_1 = __importDefault(require("../../lib/prisma"));
 const node_schedule_1 = __importDefault(require("node-schedule"));
 const date_fns_1 = require("date-fns");
 const xendit_1 = __importDefault(require("../../lib/xendit"));
+const checkPeakRate_1 = require("../../lib/checkPeakRate");
+const config_1 = require("../../config");
 const createRoomReservationService = (body) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { userId, roomId, startDate, endDate, paymentMethode } = body;
-        const isAvailable = yield (0, checkRoomAvailability_1.checkRoomAvailability)(roomId, startDate, endDate);
+        const checkinDate = new Date(startDate);
+        checkinDate.setUTCHours(7, 0, 0, 0);
+        const checkoutDate = new Date(endDate);
+        checkoutDate.setUTCHours(5, 0, 0, 0);
+        const isAvailable = yield (0, checkRoomAvailability_1.checkRoomAvailability)(roomId, checkinDate, checkoutDate);
         if (!isAvailable) {
-            throw new Error("The room is not available on the selected date.");
+            throw new Error("Room not available on selected date.");
         }
-        const start = new Date(startDate);
-        const end = new Date(endDate);
-        const diffTime = Math.abs(end.getTime() - start.getTime());
+        const diffTime = checkoutDate.getTime() - checkinDate.getTime();
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
         if (diffDays < 1) {
-            throw new Error("The reservation duration must be at least 1 night.");
+            throw new Error("Minimum reservation is 1 night.");
         }
         const room = yield prisma_1.default.room.findUnique({
-            where: { id: roomId },
-            select: { price: true },
+            where: {
+                id: roomId,
+                isDeleted: false,
+            },
+            select: {
+                price: true,
+                stock: true,
+            },
         });
         if (!room || room.price === undefined) {
-            throw new Error("Room price not found.");
+            throw new Error("Room not found.");
         }
         let totalPrice = 0;
+        const startForPrice = new Date(checkinDate);
         for (let i = 0; i < diffDays; i++) {
-            const currentDate = new Date(start);
-            currentDate.setDate(currentDate.getDate() + i);
-            const peakRate = yield prisma_1.default.peakSeasonRate.findFirst({
-                where: {
-                    roomId: roomId,
-                    startDate: { lte: currentDate },
-                    endDate: { gte: currentDate },
-                    isDeleted: false,
-                },
-            });
-            if (peakRate) {
-                totalPrice += peakRate.price;
-            }
-            else {
-                totalPrice += room.price;
-            }
+            const currentDate = new Date(startForPrice);
+            currentDate.setUTCDate(startForPrice.getUTCDate() + i);
+            currentDate.setUTCHours(0, 0, 0, 0);
+            const peakRate = yield (0, checkPeakRate_1.checkPeakRate)(currentDate, roomId);
+            totalPrice += peakRate ? peakRate.price : room.price;
         }
         let payment;
         if (paymentMethode === "OTOMATIS") {
             const user = yield prisma_1.default.user.findUnique({
-                where: { id: userId },
+                where: {
+                    id: userId,
+                    isDeleted: false,
+                },
                 select: { email: true },
             });
+            if (!(user === null || user === void 0 ? void 0 : user.email)) {
+                throw new Error("User not found.");
+            }
             payment = yield prisma_1.default.payment.create({
                 data: {
                     userId,
@@ -79,11 +85,19 @@ const createRoomReservationService = (body) => __awaiter(void 0, void 0, void 0,
                 data: {
                     externalId: payment.uuid,
                     amount: totalPrice,
-                    payerEmail: user === null || user === void 0 ? void 0 : user.email,
-                    description: `Room Reservation for ${diffDays} night(s)`,
+                    payerEmail: user.email,
+                    description: `Room eservation for ${diffDays} night(s)`,
                     invoiceDuration: "3600",
                     currency: "IDR",
-                    // reminderTime: 1,
+                    shouldSendEmail: true,
+                    reminderTime: 1,
+                    successRedirectUrl: `http://${config_1.BASE_URL_FE}/transactions/${payment.id}`,
+                    failureRedirectUrl: `http://${config_1.BASE_URL_FE}/transactions/${payment.id}`,
+                    customerNotificationPreference: {
+                        invoiceCreated: ["email"],
+                        invoiceReminder: ["email"],
+                        invoicePaid: ["email"],
+                    },
                 },
             });
             payment = yield prisma_1.default.payment.update({
@@ -105,34 +119,34 @@ const createRoomReservationService = (body) => __awaiter(void 0, void 0, void 0,
                     status: client_1.StatusPayment.WAITING_FOR_PAYMENT,
                 },
             });
-            const expirationTime = (0, date_fns_1.addMinutes)(new Date(), 1);
-            node_schedule_1.default.scheduleJob(Date.now() + 60 * 60 * 1000, () => __awaiter(void 0, void 0, void 0, function* () {
-                yield prisma_1.default.payment.update({
-                    where: {
-                        id: payment.id,
-                        status: client_1.StatusPayment.WAITING_FOR_PAYMENT,
-                    },
-                    data: {
-                        status: client_1.StatusPayment.CANCELLED,
-                        expiredAt: expirationTime,
-                    },
-                });
+            const expirationTime = (0, date_fns_1.addMinutes)(new Date(), 60);
+            node_schedule_1.default.scheduleJob(expirationTime, () => __awaiter(void 0, void 0, void 0, function* () {
+                try {
+                    yield prisma_1.default.payment.updateMany({
+                        where: {
+                            id: payment.id,
+                            status: client_1.StatusPayment.WAITING_FOR_PAYMENT,
+                        },
+                        data: {
+                            status: client_1.StatusPayment.CANCELLED,
+                            expiredAt: expirationTime,
+                        },
+                    });
+                }
+                catch (error) {
+                    console.error("Error cancelling payment:", error);
+                }
             }));
         }
         const reservations = [];
         for (let i = 0; i < diffDays; i++) {
-            const currentStartDate = new Date(start);
-            currentStartDate.setDate(currentStartDate.getDate() + i);
+            const currentStartDate = new Date(checkinDate);
+            currentStartDate.setUTCDate(checkinDate.getUTCDate() + i);
+            currentStartDate.setUTCHours(7, 0, 0, 0);
             const currentEndDate = new Date(currentStartDate);
-            currentEndDate.setDate(currentStartDate.getDate() + 1);
-            const peakRate = yield prisma_1.default.peakSeasonRate.findFirst({
-                where: {
-                    roomId: roomId,
-                    startDate: { lte: currentStartDate },
-                    endDate: { gte: currentStartDate },
-                    isDeleted: false,
-                },
-            });
+            currentEndDate.setUTCDate(currentStartDate.getUTCDate() + 1);
+            currentEndDate.setUTCHours(5, 0, 0, 0);
+            const peakRate = yield (0, checkPeakRate_1.checkPeakRate)(currentStartDate, roomId);
             reservations.push({
                 roomId,
                 price: peakRate ? peakRate.price : room.price,
@@ -146,7 +160,11 @@ const createRoomReservationService = (body) => __awaiter(void 0, void 0, void 0,
         yield prisma_1.default.reservation.createMany({
             data: reservations,
         });
-        return { payment, reservations };
+        return {
+            payment,
+            reservations,
+            message: "Reservation Succesfully created.",
+        };
     }
     catch (error) {
         throw error;
