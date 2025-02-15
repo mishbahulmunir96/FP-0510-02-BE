@@ -18,7 +18,7 @@ const getTransactionsByTenantService = (tenantId, query) => __awaiter(void 0, vo
     try {
         const { page, take, sortBy, sortOrder, startDate, endDate } = query;
         const where = Object.assign({ reservation: {
-                some: {
+                every: {
                     room: {
                         property: {
                             tenantId,
@@ -122,6 +122,8 @@ const getTransactionsByTenantService = (tenantId, query) => __awaiter(void 0, vo
             meta: { page, take, total: count },
         };
     }
-    catch (error) { }
+    catch (error) {
+        throw error;
+    }
 });
 exports.getTransactionsByTenantService = getTransactionsByTenantService;
