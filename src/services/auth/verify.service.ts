@@ -5,9 +5,10 @@ import jwt from "jsonwebtoken";
 interface VerifyInput {
   token: string;
   password: string;
+  name: string;
 }
 
-export const verifyService = async ({ token, password }: VerifyInput) => {
+export const verifyService = async ({ token, password, name }: VerifyInput) => {
   try {
     // Verify token dan cek expiry
     const decoded = jwt.verify(token, process.env.JWT_SECRET!) as {
@@ -40,26 +41,32 @@ export const verifyService = async ({ token, password }: VerifyInput) => {
       throw new Error("Email already verified");
     }
 
-    // Validasi password
+    // Validasi input
     if (!password || password.length < 8) {
       throw new Error("Password must be at least 8 characters long");
+    }
+
+    if (!name || name.trim().length === 0) {
+      throw new Error("Name is required");
     }
 
     const hashedPassword = await hashPassword(password);
 
     // Update user data
-    await prisma.user.update({
+    const updatedUser = await prisma.user.update({
       where: { id: user.id },
       data: {
         password: hashedPassword,
         isVerified: true,
         token: null, // Reset token setelah verifikasi
+        name: name.trim(),
       },
     });
 
     return {
       message: "Email verified successfully. Please login to continue.",
-      email: user.email,
+      email: updatedUser.email,
+      name: updatedUser.name,
     };
   } catch (error: any) {
     if (error.name === "JsonWebTokenError") {

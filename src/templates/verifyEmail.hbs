@@ -27,6 +27,21 @@
     .body h2 {
       margin-top: 0;
     }
+    .manual-link {
+      display: block;
+      margin-top: 15px;
+      color: #666666;
+      font-size: 14px;
+      text-align: center;
+    }
+    .manual-link a {
+      color: #0066cc;
+      text-decoration: none;
+      word-break: break-all;
+    }
+    .manual-link a:hover {
+      text-decoration: underline;
+    }
     @media only screen and (max-width: 600px) {
       .container {
         width: 100%;
@@ -41,6 +56,10 @@
       <h2>Welcome, {{name}}!</h2>
       <p>Thank you for creating an account with us. Please verify your email address by clicking the button below:</p>
       {{> button }}
+      <p class="manual-link">
+        If the above button doesn't work, please copy and paste the following link in your browser:<br>
+        <a href="{{verificationLink}}">{{verificationLink}}</a>
+      </p>
       <p>If you did not create an account, you can safely ignore this email.</p>
     </div>
     {{> footer }}

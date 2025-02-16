@@ -60,7 +60,6 @@ export const registerService = async (
         data: {
           name: data.name,
           email: data.email,
-          imageUrl,
           token: verificationToken,
           role: role,
           isVerified: false, // Memastikan user belum terverifikasi

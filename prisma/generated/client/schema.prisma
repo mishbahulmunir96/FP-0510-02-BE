@@ -101,13 +101,15 @@ enum StatusProperty {
 
 model PropertyCategory {
   id         Int        @id @default(autoincrement())
-  name       String     @unique
+  name       String
   tenantId   Int
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
+  isDeleted  Boolean    @default(false)
   properties Property[]
   tenant     Tenant     @relation(fields: [tenantId], references: [id])
 
+  @@unique([name, tenantId])
   @@map("propertyCategories")
 }
 

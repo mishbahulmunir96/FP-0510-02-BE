@@ -174,7 +174,8 @@ exports.Prisma.PropertyCategoryScalarFieldEnum = {
   name: 'name',
   tenantId: 'tenantId',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  isDeleted: 'isDeleted'
 };
 
 exports.Prisma.PropertyImageScalarFieldEnum = {
