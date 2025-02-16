@@ -4,9 +4,8 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  //directUrl = env("DIRECT_URL") dikoment dulu
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model Sample {
@@ -101,6 +100,7 @@ enum StatusProperty {
 
 model PropertyCategory {
   id         Int        @id @default(autoincrement())
+
   name       String     
   tenantId   Int
   createdAt  DateTime   @default(now())
