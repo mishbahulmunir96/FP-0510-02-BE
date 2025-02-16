@@ -32,7 +32,7 @@ roomNonAvailabilityRouter.patch(
 );
 
 roomNonAvailabilityRouter.delete(
-  "/delete/:id",
+  "/:id",
   verifyToken,
   isTenant,
   deleteRoomNonAvailabilityController
