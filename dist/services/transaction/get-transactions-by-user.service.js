@@ -36,6 +36,13 @@ const getTransactionsByUserService = (userId, query) => __awaiter(void 0, void 0
                                     select: {
                                         title: true,
                                         location: true,
+                                        tenant: {
+                                            select: {
+                                                id: true,
+                                                name: true,
+                                                imageUrl: true,
+                                            },
+                                        },
                                     },
                                 },
                             },
@@ -52,6 +59,7 @@ const getTransactionsByUserService = (userId, query) => __awaiter(void 0, void 0
         });
         return {
             data: transactions.map((transaction) => {
+                var _a;
                 const checkInDate = transaction.reservation.length > 0
                     ? transaction.reservation[0].startDate
                     : null;
@@ -59,6 +67,7 @@ const getTransactionsByUserService = (userId, query) => __awaiter(void 0, void 0
                     ? transaction.reservation[transaction.reservation.length - 1]
                         .endDate
                     : null;
+                const tenant = (_a = transaction.reservation[0]) === null || _a === void 0 ? void 0 : _a.room.property.tenant;
                 return {
                     id: transaction.id,
                     uuid: transaction.uuid,
@@ -73,6 +82,13 @@ const getTransactionsByUserService = (userId, query) => __awaiter(void 0, void 0
                         roomType: reserv.room.type,
                         propertyTitle: reserv.room.property.title,
                         propertyLocation: reserv.room.property.location,
+                        tenant: tenant
+                            ? {
+                                id: tenant.id,
+                                name: tenant.name,
+                                imageUrl: tenant.imageUrl,
+                            }
+                            : null,
                     })),
                 };
             }),

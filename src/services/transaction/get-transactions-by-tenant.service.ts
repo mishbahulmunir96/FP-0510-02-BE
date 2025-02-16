@@ -15,7 +15,7 @@ export const getTransactionsByTenantService = async (
 
     const where = {
       reservation: {
-        some: {
+        every: {
           room: {
             property: {
               tenantId,
@@ -129,5 +129,7 @@ export const getTransactionsByTenantService = async (
       }),
       meta: { page, take, total: count },
     };
-  } catch (error) {}
+  } catch (error) {
+    throw error;
+  }
 };

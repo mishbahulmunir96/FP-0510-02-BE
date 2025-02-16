@@ -18810,16 +18810,17 @@ export namespace Prisma {
 
   export type PropertyCategoryWhereUniqueInput = Prisma.AtLeast<{
     id?: number
-    name?: string
+    name_tenantId?: PropertyCategoryNameTenantIdCompoundUniqueInput
     AND?: PropertyCategoryWhereInput | PropertyCategoryWhereInput[]
     OR?: PropertyCategoryWhereInput[]
     NOT?: PropertyCategoryWhereInput | PropertyCategoryWhereInput[]
+    name?: StringFilter<"PropertyCategory"> | string
     tenantId?: IntFilter<"PropertyCategory"> | number
     createdAt?: DateTimeFilter<"PropertyCategory"> | Date | string
     updatedAt?: DateTimeFilter<"PropertyCategory"> | Date | string
     properties?: PropertyListRelationFilter
     tenant?: XOR<TenantScalarRelationFilter, TenantWhereInput>
-  }, "id" | "name">
+  }, "id" | "name_tenantId">
 
   export type PropertyCategoryOrderByWithAggregationInput = {
     id?: SortOrder
@@ -21291,6 +21292,11 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumStatusPropertyFilter<$PrismaModel>
     _max?: NestedEnumStatusPropertyFilter<$PrismaModel>
+  }
+
+  export type PropertyCategoryNameTenantIdCompoundUniqueInput = {
+    name: string
+    tenantId: number
   }
 
   export type PropertyCategoryCountOrderByAggregateInput = {

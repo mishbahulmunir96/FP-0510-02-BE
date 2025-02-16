@@ -8,6 +8,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.cancelTransactionByTenantController = exports.approveTransactionByTenantController = exports.getTransactionByTenantController = exports.getTransactionsByTenantController = exports.cancelTransactionByUserController = exports.getTransactionsByUserController = exports.getTransactionByUserController = exports.uploadPaymentProofController = exports.createRoomReservationController = void 0;
 const approve_transaction_by_tenant_service_1 = require("../services/transaction/approve-transaction-by-tenant.service");
@@ -19,6 +22,7 @@ const get_transaction_by_user_service_1 = require("../services/transaction/get-t
 const get_transactions_by_tenant_service_1 = require("../services/transaction/get-transactions-by-tenant.service");
 const get_transactions_by_user_service_1 = require("../services/transaction/get-transactions-by-user.service");
 const upload_payment_proof_service_1 = require("../services/transaction/upload-payment-proof.service");
+const prisma_1 = __importDefault(require("../lib/prisma"));
 const createRoomReservationController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const userId = res.locals.user.id;
@@ -108,7 +112,24 @@ const cancelTransactionByUserController = (req, res, next) => __awaiter(void 0, 
 exports.cancelTransactionByUserController = cancelTransactionByUserController;
 const getTransactionsByTenantController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const tenantId = res.locals.id;
+        const userId = res.locals.user.id;
+        const tenant = yield prisma_1.default.tenant.findFirst({
+            where: {
+                userId: userId,
+                isDeleted: false,
+            },
+            select: {
+                id: true,
+            },
+        });
+        if (!tenant) {
+            res.status(404).json({
+                status: "error",
+                message: "Tenant not found",
+            });
+            return;
+        }
+        const tenantId = tenant === null || tenant === void 0 ? void 0 : tenant.id;
         const query = {
             take: parseInt(req.query.take) || 10,
             page: parseInt(req.query.page) || 1,
