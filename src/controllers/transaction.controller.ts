@@ -8,6 +8,7 @@ import { getTransactionByUserService } from "../services/transaction/get-transac
 import { getTransactionsByTenantService } from "../services/transaction/get-transactions-by-tenant.service";
 import { getTransactionsByUserService } from "../services/transaction/get-transactions-by-user.service";
 import { uploadPaymentProofService } from "../services/transaction/upload-payment-proof.service";
+import prisma from "../lib/prisma";
 
 export const createRoomReservationController = async (
   req: Request,
@@ -127,7 +128,28 @@ export const getTransactionsByTenantController = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const tenantId = res.locals.id;
+    const userId = res.locals.user.id;
+
+    const tenant = await prisma.tenant.findFirst({
+      where: {
+        userId: userId,
+        isDeleted: false,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!tenant) {
+      res.status(404).json({
+        status: "error",
+        message: "Tenant not found",
+      });
+      return;
+    }
+
+    const tenantId = tenant?.id;
+
     const query = {
       take: parseInt(req.query.take as string) || 10,
       page: parseInt(req.query.page as string) || 1,

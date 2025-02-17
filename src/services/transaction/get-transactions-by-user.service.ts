@@ -35,6 +35,13 @@ export const getTransactionsByUserService = async (
                   select: {
                     title: true,
                     location: true,
+                    tenant: {
+                      select: {
+                        id: true,
+                        name: true,
+                        imageUrl: true,
+                      },
+                    },
                   },
                 },
               },
@@ -64,6 +71,8 @@ export const getTransactionsByUserService = async (
                 .endDate
             : null;
 
+        const tenant = transaction.reservation[0]?.room.property.tenant;
+
         return {
           id: transaction.id,
           uuid: transaction.uuid,
@@ -78,6 +87,13 @@ export const getTransactionsByUserService = async (
             roomType: reserv.room.type,
             propertyTitle: reserv.room.property.title,
             propertyLocation: reserv.room.property.location,
+            tenant: tenant
+              ? {
+                  id: tenant.id,
+                  name: tenant.name,
+                  imageUrl: tenant.imageUrl,
+                }
+              : null,
           })),
         };
       }),
