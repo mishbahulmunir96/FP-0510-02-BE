@@ -5,6 +5,7 @@ import { cloudinaryUpload } from "../../lib/cloudinary";
 interface CreateRoomBody {
   type: "Deluxe" | "Standard" | "Suite"; // Sesuai dengan enum Type di schema Room
   stock: number;
+  name?: string;
   price: number;
   guest: number;
   propertyId: number;
@@ -20,6 +21,7 @@ export const createRoomService = async (
   try {
     const {
       type,
+      name,
       stock,
       price,
       guest,
@@ -53,6 +55,7 @@ export const createRoomService = async (
       const newRoom = await tx.room.create({
         data: {
           type, // Menggunakan field type dari body (enum)
+          name,
           stock: stockRoom,
           price: priceRoom,
           guest: guestRoom,

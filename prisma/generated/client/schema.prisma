@@ -143,6 +143,7 @@ model PropertyFacility {
 model Room {
   id         Int      @id @default(autoincrement())
   type       Type
+  name       String?
   stock      Int
   price      Int
   guest      Int

@@ -9716,6 +9716,7 @@ export namespace Prisma {
   export type RoomMinAggregateOutputType = {
     id: number | null
     type: $Enums.Type | null
+    name: string | null
     stock: number | null
     price: number | null
     guest: number | null
@@ -9728,6 +9729,7 @@ export namespace Prisma {
   export type RoomMaxAggregateOutputType = {
     id: number | null
     type: $Enums.Type | null
+    name: string | null
     stock: number | null
     price: number | null
     guest: number | null
@@ -9740,6 +9742,7 @@ export namespace Prisma {
   export type RoomCountAggregateOutputType = {
     id: number
     type: number
+    name: number
     stock: number
     price: number
     guest: number
@@ -9770,6 +9773,7 @@ export namespace Prisma {
   export type RoomMinAggregateInputType = {
     id?: true
     type?: true
+    name?: true
     stock?: true
     price?: true
     guest?: true
@@ -9782,6 +9786,7 @@ export namespace Prisma {
   export type RoomMaxAggregateInputType = {
     id?: true
     type?: true
+    name?: true
     stock?: true
     price?: true
     guest?: true
@@ -9794,6 +9799,7 @@ export namespace Prisma {
   export type RoomCountAggregateInputType = {
     id?: true
     type?: true
+    name?: true
     stock?: true
     price?: true
     guest?: true
@@ -9893,6 +9899,7 @@ export namespace Prisma {
   export type RoomGroupByOutputType = {
     id: number
     type: $Enums.Type
+    name: string | null
     stock: number
     price: number
     guest: number
@@ -9924,6 +9931,7 @@ export namespace Prisma {
   export type RoomSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     type?: boolean
+    name?: boolean
     stock?: boolean
     price?: boolean
     guest?: boolean
@@ -9943,6 +9951,7 @@ export namespace Prisma {
   export type RoomSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     type?: boolean
+    name?: boolean
     stock?: boolean
     price?: boolean
     guest?: boolean
@@ -9956,6 +9965,7 @@ export namespace Prisma {
   export type RoomSelectScalar = {
     id?: boolean
     type?: boolean
+    name?: boolean
     stock?: boolean
     price?: boolean
     guest?: boolean
@@ -9991,6 +10001,7 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: number
       type: $Enums.Type
+      name: string | null
       stock: number
       price: number
       guest: number
@@ -10399,6 +10410,7 @@ export namespace Prisma {
   interface RoomFieldRefs {
     readonly id: FieldRef<"Room", 'Int'>
     readonly type: FieldRef<"Room", 'Type'>
+    readonly name: FieldRef<"Room", 'String'>
     readonly stock: FieldRef<"Room", 'Int'>
     readonly price: FieldRef<"Room", 'Int'>
     readonly guest: FieldRef<"Room", 'Int'>
@@ -18153,6 +18165,7 @@ export namespace Prisma {
   export const RoomScalarFieldEnum: {
     id: 'id',
     type: 'type',
+    name: 'name',
     stock: 'stock',
     price: 'price',
     guest: 'guest',
@@ -18999,6 +19012,7 @@ export namespace Prisma {
     NOT?: RoomWhereInput | RoomWhereInput[]
     id?: IntFilter<"Room"> | number
     type?: EnumTypeFilter<"Room"> | $Enums.Type
+    name?: StringNullableFilter<"Room"> | string | null
     stock?: IntFilter<"Room"> | number
     price?: IntFilter<"Room"> | number
     guest?: IntFilter<"Room"> | number
@@ -19017,6 +19031,7 @@ export namespace Prisma {
   export type RoomOrderByWithRelationInput = {
     id?: SortOrder
     type?: SortOrder
+    name?: SortOrderInput | SortOrder
     stock?: SortOrder
     price?: SortOrder
     guest?: SortOrder
@@ -19038,6 +19053,7 @@ export namespace Prisma {
     OR?: RoomWhereInput[]
     NOT?: RoomWhereInput | RoomWhereInput[]
     type?: EnumTypeFilter<"Room"> | $Enums.Type
+    name?: StringNullableFilter<"Room"> | string | null
     stock?: IntFilter<"Room"> | number
     price?: IntFilter<"Room"> | number
     guest?: IntFilter<"Room"> | number
@@ -19056,6 +19072,7 @@ export namespace Prisma {
   export type RoomOrderByWithAggregationInput = {
     id?: SortOrder
     type?: SortOrder
+    name?: SortOrderInput | SortOrder
     stock?: SortOrder
     price?: SortOrder
     guest?: SortOrder
@@ -19076,6 +19093,7 @@ export namespace Prisma {
     NOT?: RoomScalarWhereWithAggregatesInput | RoomScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"Room"> | number
     type?: EnumTypeWithAggregatesFilter<"Room"> | $Enums.Type
+    name?: StringNullableWithAggregatesFilter<"Room"> | string | null
     stock?: IntWithAggregatesFilter<"Room"> | number
     price?: IntWithAggregatesFilter<"Room"> | number
     guest?: IntWithAggregatesFilter<"Room"> | number
@@ -20199,6 +20217,7 @@ export namespace Prisma {
 
   export type RoomCreateInput = {
     type: $Enums.Type
+    name?: string | null
     stock: number
     price: number
     guest: number
@@ -20216,6 +20235,7 @@ export namespace Prisma {
   export type RoomUncheckedCreateInput = {
     id?: number
     type: $Enums.Type
+    name?: string | null
     stock: number
     price: number
     guest: number
@@ -20232,6 +20252,7 @@ export namespace Prisma {
 
   export type RoomUpdateInput = {
     type?: EnumTypeFieldUpdateOperationsInput | $Enums.Type
+    name?: NullableStringFieldUpdateOperationsInput | string | null
     stock?: IntFieldUpdateOperationsInput | number
     price?: IntFieldUpdateOperationsInput | number
     guest?: IntFieldUpdateOperationsInput | number
@@ -20249,6 +20270,7 @@ export namespace Prisma {
   export type RoomUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     type?: EnumTypeFieldUpdateOperationsInput | $Enums.Type
+    name?: NullableStringFieldUpdateOperationsInput | string | null
     stock?: IntFieldUpdateOperationsInput | number
     price?: IntFieldUpdateOperationsInput | number
     guest?: IntFieldUpdateOperationsInput | number
@@ -20266,6 +20288,7 @@ export namespace Prisma {
   export type RoomCreateManyInput = {
     id?: number
     type: $Enums.Type
+    name?: string | null
     stock: number
     price: number
     guest: number
@@ -20277,6 +20300,7 @@ export namespace Prisma {
 
   export type RoomUpdateManyMutationInput = {
     type?: EnumTypeFieldUpdateOperationsInput | $Enums.Type
+    name?: NullableStringFieldUpdateOperationsInput | string | null
     stock?: IntFieldUpdateOperationsInput | number
     price?: IntFieldUpdateOperationsInput | number
     guest?: IntFieldUpdateOperationsInput | number
@@ -20288,6 +20312,7 @@ export namespace Prisma {
   export type RoomUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     type?: EnumTypeFieldUpdateOperationsInput | $Enums.Type
+    name?: NullableStringFieldUpdateOperationsInput | string | null
     stock?: IntFieldUpdateOperationsInput | number
     price?: IntFieldUpdateOperationsInput | number
     guest?: IntFieldUpdateOperationsInput | number
@@ -21503,6 +21528,7 @@ export namespace Prisma {
   export type RoomCountOrderByAggregateInput = {
     id?: SortOrder
     type?: SortOrder
+    name?: SortOrder
     stock?: SortOrder
     price?: SortOrder
     guest?: SortOrder
@@ -21523,6 +21549,7 @@ export namespace Prisma {
   export type RoomMaxOrderByAggregateInput = {
     id?: SortOrder
     type?: SortOrder
+    name?: SortOrder
     stock?: SortOrder
     price?: SortOrder
     guest?: SortOrder
@@ -21535,6 +21562,7 @@ export namespace Prisma {
   export type RoomMinOrderByAggregateInput = {
     id?: SortOrder
     type?: SortOrder
+    name?: SortOrder
     stock?: SortOrder
     price?: SortOrder
     guest?: SortOrder
@@ -23725,6 +23753,7 @@ export namespace Prisma {
 
   export type RoomCreateWithoutPropertyInput = {
     type: $Enums.Type
+    name?: string | null
     stock: number
     price: number
     guest: number
@@ -23741,6 +23770,7 @@ export namespace Prisma {
   export type RoomUncheckedCreateWithoutPropertyInput = {
     id?: number
     type: $Enums.Type
+    name?: string | null
     stock: number
     price: number
     guest: number
@@ -23932,6 +23962,7 @@ export namespace Prisma {
     NOT?: RoomScalarWhereInput | RoomScalarWhereInput[]
     id?: IntFilter<"Room"> | number
     type?: EnumTypeFilter<"Room"> | $Enums.Type
+    name?: StringNullableFilter<"Room"> | string | null
     stock?: IntFilter<"Room"> | number
     price?: IntFilter<"Room"> | number
     guest?: IntFilter<"Room"> | number
@@ -24723,6 +24754,7 @@ export namespace Prisma {
 
   export type RoomCreateWithoutPeakSeasonRateInput = {
     type: $Enums.Type
+    name?: string | null
     stock: number
     price: number
     guest: number
@@ -24739,6 +24771,7 @@ export namespace Prisma {
   export type RoomUncheckedCreateWithoutPeakSeasonRateInput = {
     id?: number
     type: $Enums.Type
+    name?: string | null
     stock: number
     price: number
     guest: number
@@ -24770,6 +24803,7 @@ export namespace Prisma {
 
   export type RoomUpdateWithoutPeakSeasonRateInput = {
     type?: EnumTypeFieldUpdateOperationsInput | $Enums.Type
+    name?: NullableStringFieldUpdateOperationsInput | string | null
     stock?: IntFieldUpdateOperationsInput | number
     price?: IntFieldUpdateOperationsInput | number
     guest?: IntFieldUpdateOperationsInput | number
@@ -24786,6 +24820,7 @@ export namespace Prisma {
   export type RoomUncheckedUpdateWithoutPeakSeasonRateInput = {
     id?: IntFieldUpdateOperationsInput | number
     type?: EnumTypeFieldUpdateOperationsInput | $Enums.Type
+    name?: NullableStringFieldUpdateOperationsInput | string | null
     stock?: IntFieldUpdateOperationsInput | number
     price?: IntFieldUpdateOperationsInput | number
     guest?: IntFieldUpdateOperationsInput | number
@@ -24801,6 +24836,7 @@ export namespace Prisma {
 
   export type RoomCreateWithoutRoomFacilityInput = {
     type: $Enums.Type
+    name?: string | null
     stock: number
     price: number
     guest: number
@@ -24817,6 +24853,7 @@ export namespace Prisma {
   export type RoomUncheckedCreateWithoutRoomFacilityInput = {
     id?: number
     type: $Enums.Type
+    name?: string | null
     stock: number
     price: number
     guest: number
@@ -24848,6 +24885,7 @@ export namespace Prisma {
 
   export type RoomUpdateWithoutRoomFacilityInput = {
     type?: EnumTypeFieldUpdateOperationsInput | $Enums.Type
+    name?: NullableStringFieldUpdateOperationsInput | string | null
     stock?: IntFieldUpdateOperationsInput | number
     price?: IntFieldUpdateOperationsInput | number
     guest?: IntFieldUpdateOperationsInput | number
@@ -24864,6 +24902,7 @@ export namespace Prisma {
   export type RoomUncheckedUpdateWithoutRoomFacilityInput = {
     id?: IntFieldUpdateOperationsInput | number
     type?: EnumTypeFieldUpdateOperationsInput | $Enums.Type
+    name?: NullableStringFieldUpdateOperationsInput | string | null
     stock?: IntFieldUpdateOperationsInput | number
     price?: IntFieldUpdateOperationsInput | number
     guest?: IntFieldUpdateOperationsInput | number
@@ -24879,6 +24918,7 @@ export namespace Prisma {
 
   export type RoomCreateWithoutRoomImageInput = {
     type: $Enums.Type
+    name?: string | null
     stock: number
     price: number
     guest: number
@@ -24895,6 +24935,7 @@ export namespace Prisma {
   export type RoomUncheckedCreateWithoutRoomImageInput = {
     id?: number
     type: $Enums.Type
+    name?: string | null
     stock: number
     price: number
     guest: number
@@ -24926,6 +24967,7 @@ export namespace Prisma {
 
   export type RoomUpdateWithoutRoomImageInput = {
     type?: EnumTypeFieldUpdateOperationsInput | $Enums.Type
+    name?: NullableStringFieldUpdateOperationsInput | string | null
     stock?: IntFieldUpdateOperationsInput | number
     price?: IntFieldUpdateOperationsInput | number
     guest?: IntFieldUpdateOperationsInput | number
@@ -24942,6 +24984,7 @@ export namespace Prisma {
   export type RoomUncheckedUpdateWithoutRoomImageInput = {
     id?: IntFieldUpdateOperationsInput | number
     type?: EnumTypeFieldUpdateOperationsInput | $Enums.Type
+    name?: NullableStringFieldUpdateOperationsInput | string | null
     stock?: IntFieldUpdateOperationsInput | number
     price?: IntFieldUpdateOperationsInput | number
     guest?: IntFieldUpdateOperationsInput | number
@@ -24957,6 +25000,7 @@ export namespace Prisma {
 
   export type RoomCreateWithoutRoomNonAvailabilityInput = {
     type: $Enums.Type
+    name?: string | null
     stock: number
     price: number
     guest: number
@@ -24973,6 +25017,7 @@ export namespace Prisma {
   export type RoomUncheckedCreateWithoutRoomNonAvailabilityInput = {
     id?: number
     type: $Enums.Type
+    name?: string | null
     stock: number
     price: number
     guest: number
@@ -25004,6 +25049,7 @@ export namespace Prisma {
 
   export type RoomUpdateWithoutRoomNonAvailabilityInput = {
     type?: EnumTypeFieldUpdateOperationsInput | $Enums.Type
+    name?: NullableStringFieldUpdateOperationsInput | string | null
     stock?: IntFieldUpdateOperationsInput | number
     price?: IntFieldUpdateOperationsInput | number
     guest?: IntFieldUpdateOperationsInput | number
@@ -25020,6 +25066,7 @@ export namespace Prisma {
   export type RoomUncheckedUpdateWithoutRoomNonAvailabilityInput = {
     id?: IntFieldUpdateOperationsInput | number
     type?: EnumTypeFieldUpdateOperationsInput | $Enums.Type
+    name?: NullableStringFieldUpdateOperationsInput | string | null
     stock?: IntFieldUpdateOperationsInput | number
     price?: IntFieldUpdateOperationsInput | number
     guest?: IntFieldUpdateOperationsInput | number
@@ -25213,6 +25260,7 @@ export namespace Prisma {
 
   export type RoomCreateWithoutReservationInput = {
     type: $Enums.Type
+    name?: string | null
     stock: number
     price: number
     guest: number
@@ -25229,6 +25277,7 @@ export namespace Prisma {
   export type RoomUncheckedCreateWithoutReservationInput = {
     id?: number
     type: $Enums.Type
+    name?: string | null
     stock: number
     price: number
     guest: number
@@ -25296,6 +25345,7 @@ export namespace Prisma {
 
   export type RoomUpdateWithoutReservationInput = {
     type?: EnumTypeFieldUpdateOperationsInput | $Enums.Type
+    name?: NullableStringFieldUpdateOperationsInput | string | null
     stock?: IntFieldUpdateOperationsInput | number
     price?: IntFieldUpdateOperationsInput | number
     guest?: IntFieldUpdateOperationsInput | number
@@ -25312,6 +25362,7 @@ export namespace Prisma {
   export type RoomUncheckedUpdateWithoutReservationInput = {
     id?: IntFieldUpdateOperationsInput | number
     type?: EnumTypeFieldUpdateOperationsInput | $Enums.Type
+    name?: NullableStringFieldUpdateOperationsInput | string | null
     stock?: IntFieldUpdateOperationsInput | number
     price?: IntFieldUpdateOperationsInput | number
     guest?: IntFieldUpdateOperationsInput | number
@@ -25898,6 +25949,7 @@ export namespace Prisma {
   export type RoomCreateManyPropertyInput = {
     id?: number
     type: $Enums.Type
+    name?: string | null
     stock: number
     price: number
     guest: number
@@ -25969,6 +26021,7 @@ export namespace Prisma {
 
   export type RoomUpdateWithoutPropertyInput = {
     type?: EnumTypeFieldUpdateOperationsInput | $Enums.Type
+    name?: NullableStringFieldUpdateOperationsInput | string | null
     stock?: IntFieldUpdateOperationsInput | number
     price?: IntFieldUpdateOperationsInput | number
     guest?: IntFieldUpdateOperationsInput | number
@@ -25985,6 +26038,7 @@ export namespace Prisma {
   export type RoomUncheckedUpdateWithoutPropertyInput = {
     id?: IntFieldUpdateOperationsInput | number
     type?: EnumTypeFieldUpdateOperationsInput | $Enums.Type
+    name?: NullableStringFieldUpdateOperationsInput | string | null
     stock?: IntFieldUpdateOperationsInput | number
     price?: IntFieldUpdateOperationsInput | number
     guest?: IntFieldUpdateOperationsInput | number
@@ -26001,6 +26055,7 @@ export namespace Prisma {
   export type RoomUncheckedUpdateManyWithoutPropertyInput = {
     id?: IntFieldUpdateOperationsInput | number
     type?: EnumTypeFieldUpdateOperationsInput | $Enums.Type
+    name?: NullableStringFieldUpdateOperationsInput | string | null
     stock?: IntFieldUpdateOperationsInput | number
     price?: IntFieldUpdateOperationsInput | number
     guest?: IntFieldUpdateOperationsInput | number

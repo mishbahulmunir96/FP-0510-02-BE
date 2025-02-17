@@ -1,12 +1,16 @@
-import { Prisma } from "@prisma/client";
+
 import prisma from "../../lib/prisma";
 import { cloudinaryUpload } from "../../lib/cloudinary";
+import { Prisma } from "../../../prisma/generated/client";
 
 interface UpdateRoomBody {
   type?: "Deluxe" | "Standard" | "Suite";
+  name?: string;
   stock?: number;
   price?: number;
   guest?: number;
+  facilityTitle?: string;
+  facilityDescription?: string;
   // propertyId tidak diizinkan untuk diupdate, jadi tidak dimasukkan di sini
 }
 
@@ -16,11 +20,15 @@ export const updateRoomService = async (
   file?: Express.Multer.File
 ) => {
   try {
-    // Cari room berdasarkan id beserta relasi roomImage
+    // Cari room berdasarkan id beserta relasi roomImage dan roomFacility
     const existingRoom = await prisma.room.findUnique({
       where: { id },
-      include: { roomImage: true },
+      include: { 
+        roomImage: true,
+        roomFacility: true
+      },
     });
+
     if (!existingRoom) {
       throw new Error("Room not found");
     }
@@ -47,13 +55,43 @@ export const updateRoomService = async (
       delete body["propertyId"];
     }
 
-    const updatedData = { ...body };
+    // Pisahkan data facility dari body
+    const { facilityTitle, facilityDescription, ...roomData } = body;
+
+    // Persiapkan data update untuk room
+    const updatedData: Prisma.RoomUpdateInput = {
+      ...roomData,
+      // Update facility jika ada perubahan
+      ...(facilityTitle || facilityDescription
+        ? {
+            roomFacility: {
+              upsert: {
+                where: {
+                  id: existingRoom.roomFacility[0]?.id ?? -1
+                },
+                create: {
+                  title: facilityTitle ?? "",
+                  description: facilityDescription ?? ""
+                },
+                update: {
+                  ...(facilityTitle && { title: facilityTitle }),
+                  ...(facilityDescription && { description: facilityDescription })
+                }
+              }
+            }
+          }
+        : {})
+    };
 
     return await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       // Update data room
       const updatedRoom = await tx.room.update({
         where: { id },
         data: updatedData,
+        include: {
+          roomFacility: true,
+          roomImage: true
+        }
       });
 
       // Jika file diunggah, update atau buat record roomImage

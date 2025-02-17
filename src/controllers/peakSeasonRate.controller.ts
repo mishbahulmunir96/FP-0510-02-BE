@@ -56,30 +56,26 @@ export const deletePeakSeasonRate = async (
 export const getPeakSeasons = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const query = {
-      take: Number(req.query.take) || 10,
-      page: Number(req.query.page) || 1,
-      sortBy: String(req.query.sortBy) || "createdAt",
-      sortOrder: String(req.query.sortOrder) || "desc",
-      search: String(req.query.search) || "",
-      price: Number(req.query.price) || undefined,
-      roomId: Number(req.query.roomId) || undefined,
-      startDate: req.query.startDate
-        ? new Date(String(req.query.startDate))
-        : undefined,
-      endDate: req.query.endDate
-        ? new Date(String(req.query.endDate))
-        : undefined,
+      take: parseInt(req.query.take as string) || 10,
+      page: parseInt(req.query.page as string) || 1,
+      sortBy: (req.query.sortBy as string) || 'createdAt',
+      sortOrder: (req.query.sortOrder as string) || 'asc',
+      search: (req.query.search as string) || '',
+      price: Number(req.query.search) || 0,
+      roomId: Number(req.query.search) || 0,
+      startDate: new Date(req.query.search as string) || undefined,
+      endDate: new Date(req.query.search as string) || undefined,
     };
-
+    
     const result = await getPeakSeasonsService(
       query,
-      Number(res.locals.user.id)
+      Number(res.locals.user.id),
     );
-    res.status(200).send(result);
+     res.status(200).send(result);
   } catch (error) {
     next(error);
   }
