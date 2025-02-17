@@ -91,6 +91,7 @@ export const getTransactionByUserService = async (
       paymentMethode: transaction.paymentMethode,
       status: transaction.status,
       paymentProof: transaction.paymentProof,
+      invoiceUrl: transaction.invoiceUrl,
       checkInDate,
       checkOutDate,
       peakSeasonDays: peakSeasonDays > 0 ? peakSeasonDays : undefined,
