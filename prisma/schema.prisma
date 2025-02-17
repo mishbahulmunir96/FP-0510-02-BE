@@ -100,7 +100,6 @@ enum StatusProperty {
 
 model PropertyCategory {
   id         Int        @id @default(autoincrement())
-
   name       String     
   tenantId   Int
   createdAt  DateTime   @default(now())
@@ -143,6 +142,7 @@ model PropertyFacility {
 model Room {
   id         Int      @id @default(autoincrement())
   type       Type
+  name  String ?
   stock      Int
   price      Int
   guest      Int

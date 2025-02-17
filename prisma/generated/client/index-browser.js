@@ -200,6 +200,7 @@ exports.Prisma.PropertyFacilityScalarFieldEnum = {
 exports.Prisma.RoomScalarFieldEnum = {
   id: 'id',
   type: 'type',
+  name: 'name',
   stock: 'stock',
   price: 'price',
   guest: 'guest',

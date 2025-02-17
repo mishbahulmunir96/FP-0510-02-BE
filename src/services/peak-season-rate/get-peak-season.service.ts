@@ -1,25 +1,27 @@
-import { Prisma } from "../../../prisma/generated/client";
-import prisma from "../../lib/prisma";
-import { PaginationQueryParams } from "../../types/pagination";
+
+import { Prisma } from '../../../prisma/generated/client';
+import prisma from '../../lib/prisma';
+import { PaginationQueryParams } from '../../types/pagination';
+
 
 interface GetPeakSeasonsQuery extends PaginationQueryParams {
-  search?: string;
-  price?: number;
-  startDate?: Date;
-  endDate?: Date;
-  roomId?: number;
+  search: string;
+  price: number;
+  startDate: Date;
+  endDate: Date;
+  roomId: number;
 }
 
 export const getPeakSeasonsService = async (
   query: GetPeakSeasonsQuery,
-  userId: number
+  userId: number,
 ) => {
   try {
     const {
-      take = 10,
-      page = 1,
-      sortBy = "createdAt",
-      sortOrder = "desc",
+      take,
+      page,
+      sortBy,
+      sortOrder,
       search,
       price,
       startDate,
@@ -27,59 +29,47 @@ export const getPeakSeasonsService = async (
       roomId,
     } = query;
 
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    if (user.role !== 'TENANT') {
+      throw new Error("User don't have access");
+    }
+
     const tenant = await prisma.tenant.findFirst({
-      where: {
-        userId,
-        isDeleted: false,
-        user: {
-          role: "TENANT",
-        },
-      },
+      where: { userId: user.id, isDeleted: false },
     });
 
     if (!tenant) {
-      throw new Error("Tenant not found or unauthorized");
+      throw new Error('Tenant not found');
     }
 
     const whereClause: Prisma.PeakSeasonRateWhereInput = {
       isDeleted: false,
-      room: {
-        property: {
-          tenantId: tenant.id,
-        },
-      },
-      ...(roomId && { roomId }),
-      ...(price && { price }),
-      ...(startDate && { startDate: { gte: new Date(startDate) } }),
-      ...(endDate && { endDate: { lte: new Date(endDate) } }),
+      room: { property: { tenantId: tenant.id } },
     };
 
-    const [peakSeasons, total] = await prisma.$transaction([
-      prisma.peakSeasonRate.findMany({
-        where: whereClause,
-        skip: (page - 1) * take,
-        take,
-        orderBy: { [sortBy]: sortOrder },
-        include: {
-          room: true,
-        },
-      }),
-      prisma.peakSeasonRate.count({ where: whereClause }),
-    ]);
-
-    return {
-      data: peakSeasons,
-      meta: {
-        page,
-        take,
-        total,
-        totalPages: Math.ceil(total / take),
+    const properties = await prisma.peakSeasonRate.findMany({
+      where: whereClause,
+      skip: (page - 1) * take,
+      take: take,
+      orderBy: { [sortBy]: sortOrder || 'asc' },
+      include: {
+        room: true,
       },
+    });
+
+    const count = await prisma.peakSeasonRate.count({ where: whereClause });
+    return {
+      data: properties,
+      meta: { page, take, total: count },
     };
   } catch (error) {
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      throw new Error("Database error: " + error.message);
-    }
     throw error;
   }
 };
