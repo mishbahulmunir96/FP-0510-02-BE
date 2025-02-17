@@ -172,7 +172,27 @@ export const getTransactionByTenantController = async (
   next: NextFunction
 ) => {
   try {
-    const tenantId = res.locals.user.id;
+    const userId = res.locals.user.id;
+
+    const tenant = await prisma.tenant.findFirst({
+      where: {
+        userId: userId,
+        isDeleted: false,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!tenant) {
+      res.status(404).json({
+        status: "error",
+        message: "Tenant not found",
+      });
+      return;
+    }
+
+    const tenantId = tenant?.id;
     const transactionId = parseInt(req.params.id);
 
     const transaction = await getTransactionByTenantService(
@@ -191,7 +211,27 @@ export const approveTransactionByTenantController = async (
   next: NextFunction
 ) => {
   try {
-    const tenantId = res.locals.user.id;
+    const userId = res.locals.user.id;
+
+    const tenant = await prisma.tenant.findFirst({
+      where: {
+        userId: userId,
+        isDeleted: false,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!tenant) {
+      res.status(404).json({
+        status: "error",
+        message: "Tenant not found",
+      });
+      return;
+    }
+
+    const tenantId = tenant?.id;
     const paymentId = parseInt(req.params.id);
     const isApproved = req.body.isApproved === true;
 
@@ -213,7 +253,27 @@ export const cancelTransactionByTenantController = async (
   next: NextFunction
 ) => {
   try {
-    const tenantId = res.locals.user.id;
+    const userId = res.locals.user.id;
+
+    const tenant = await prisma.tenant.findFirst({
+      where: {
+        userId: userId,
+        isDeleted: false,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!tenant) {
+      res.status(404).json({
+        status: "error",
+        message: "Tenant not found",
+      });
+      return;
+    }
+
+    const tenantId = tenant?.id;
     const paymentId = parseInt(req.params.id);
 
     const result = await cancelTransactionByTenantService(paymentId, tenantId);
