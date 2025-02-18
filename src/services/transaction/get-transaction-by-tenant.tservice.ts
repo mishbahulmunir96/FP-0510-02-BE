@@ -105,6 +105,7 @@ export const getTransactionByTenantService = async (
       updatedAt: transaction.updatedAt,
       reservations: transaction.reservation.map((reserv) => {
         return {
+          roomId: reserv.room.id,
           roomType: reserv.room.type,
           propertyTitle: reserv.room.property.title,
           roomPrice: reserv.price,

@@ -97,9 +97,11 @@ export const getTransactionByUserService = async (
       peakSeasonDays: peakSeasonDays > 0 ? peakSeasonDays : undefined,
       peakSeasonPrice: peakSeasonPrice,
       duration: transaction.duration,
+      expiredAt: transaction.expiredAt,
       updatedAt: transaction.updatedAt,
       reservations: transaction.reservation.map((reserv) => {
         return {
+          roomId: reserv.roomId,
           roomType: reserv.room.type,
           propertyTitle: reserv.room.property.title,
           roomPrice: reserv.price,
