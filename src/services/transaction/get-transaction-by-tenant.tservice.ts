@@ -32,9 +32,8 @@ export const getTransactionByTenantService = async (
             room: {
               include: {
                 property: {
-                  select: {
-                    title: true,
-                    location: true,
+                  include: {
+                    propertyImage: true,
                   },
                 },
                 roomImage: {
@@ -68,6 +67,18 @@ export const getTransactionByTenantService = async (
       throw new Error("Transaction not found");
     }
 
+    let peakSeasonDays = 0;
+    let peakSeasonPrice = null;
+
+    for (const reserv of transaction.reservation) {
+      if (reserv.price > reserv.room.price) {
+        peakSeasonDays++;
+        if (!peakSeasonPrice) {
+          peakSeasonPrice = reserv.price;
+        }
+      }
+    }
+
     const checkInDate =
       transaction.reservation.length > 0
         ? transaction.reservation[0].startDate
@@ -88,36 +99,24 @@ export const getTransactionByTenantService = async (
       paymentProof: transaction.paymentProof,
       checkInDate,
       checkOutDate,
+      peakSeasonDays: peakSeasonDays > 0 ? peakSeasonDays : undefined,
+      peakSeasonPrice: peakSeasonPrice,
       duration: transaction.duration,
       updatedAt: transaction.updatedAt,
       reservations: transaction.reservation.map((reserv) => {
-        const peakSeason = reserv.room.peakSeasonRate.find(
-          (peak) =>
-            reserv.startDate <= peak.endDate && reserv.endDate >= peak.startDate
-        );
-
-        let peakSeasonDays = 0;
-        if (peakSeason) {
-          const overlapStart = new Date(
-            Math.max(reserv.startDate.getTime(), peakSeason.startDate.getTime())
-          );
-          const overlapEnd = new Date(
-            Math.min(reserv.endDate.getTime(), peakSeason.endDate.getTime())
-          );
-          peakSeasonDays = differenceInDays(overlapEnd, overlapStart);
-        }
-
         return {
+          roomId: reserv.room.id,
           roomType: reserv.room.type,
           propertyTitle: reserv.room.property.title,
           roomPrice: reserv.price,
           propertyLocation: reserv.room.property.location,
+          propertyImages: reserv.room.property.propertyImage.map(
+            (image) => image.imageUrl
+          ),
           roomImages: reserv.room.roomImage.map((image) => image.imageUrl),
           roomFacilities: reserv.room.roomFacility.map(
             (facility) => facility.title
           ),
-          peakSeasonDays,
-          peakSeasonPrice: peakSeason?.price || null,
         };
       }),
     };

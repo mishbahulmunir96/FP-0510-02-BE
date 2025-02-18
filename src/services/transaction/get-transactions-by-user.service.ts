@@ -44,6 +44,13 @@ export const getTransactionsByUserService = async (
                     },
                   },
                 },
+                roomImage: {
+                  where: { isDeleted: false },
+
+                  select: {
+                    imageUrl: true,
+                  },
+                },
               },
             },
           },
@@ -87,6 +94,7 @@ export const getTransactionsByUserService = async (
             roomType: reserv.room.type,
             propertyTitle: reserv.room.property.title,
             propertyLocation: reserv.room.property.location,
+            roomImages: reserv.room.roomImage,
             tenant: tenant
               ? {
                   id: tenant.id,
