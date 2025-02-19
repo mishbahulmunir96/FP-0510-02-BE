@@ -3,6 +3,8 @@ import {
   approveTransactionByTenantController,
   cancelTransactionByTenantController,
   cancelTransactionByUserController,
+  confirmCheckInController,
+  confirmCheckOutController,
   createRoomReservationController,
   getTransactionByTenantController,
   getTransactionByUserController,
@@ -52,6 +54,13 @@ router.patch(
   verifyToken,
   isTenant,
   cancelTransactionByTenantController
+);
+router.patch("/check-in/:id", verifyToken, isTenant, confirmCheckInController);
+router.patch(
+  "/check-out/:id",
+  verifyToken,
+  isTenant,
+  confirmCheckOutController
 );
 
 export default router;

@@ -9,6 +9,8 @@ import { getTransactionsByTenantService } from "../services/transaction/get-tran
 import { getTransactionsByUserService } from "../services/transaction/get-transactions-by-user.service";
 import { uploadPaymentProofService } from "../services/transaction/upload-payment-proof.service";
 import prisma from "../lib/prisma";
+import { confirmCheckOutService } from "../services/transaction/confirm-check-out.service";
+import { confirmCheckInService } from "../services/transaction/confirm-check-in.service";
 
 export const createRoomReservationController = async (
   req: Request,
@@ -279,6 +281,82 @@ export const cancelTransactionByTenantController = async (
     const result = await cancelTransactionByTenantService(paymentId, tenantId);
 
     res.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const confirmCheckInController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const userId = res.locals.user.id;
+    const tenant = await prisma.tenant.findFirst({
+      where: {
+        userId: userId,
+        isDeleted: false,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!tenant) {
+      res.status(404).json({
+        status: "error",
+        message: "Tenant not found",
+      });
+      return;
+    }
+
+    const paymentId = parseInt(req.params.id);
+    const result = await confirmCheckInService(paymentId, tenant.id);
+
+    res.status(200).json({
+      status: "success",
+      message: "Check-in confirmed successfully",
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const confirmCheckOutController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const userId = res.locals.user.id;
+    const tenant = await prisma.tenant.findFirst({
+      where: {
+        userId: userId,
+        isDeleted: false,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!tenant) {
+      res.status(404).json({
+        status: "error",
+        message: "Tenant not found",
+      });
+      return;
+    }
+
+    const paymentId = parseInt(req.params.id);
+    const result = await confirmCheckOutService(paymentId, tenant.id);
+
+    res.status(200).json({
+      status: "success",
+      message: "Check-out confirmed successfully",
+      data: result,
+    });
   } catch (error) {
     next(error);
   }
