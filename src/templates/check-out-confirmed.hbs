@@ -1,0 +1,47 @@
+<html>
+  <head>
+    <style>
+      body { font-family: Arial, sans-serif; line-height: 1.6; color: #333;
+      max-width: 600px; margin: 0 auto; padding: 20px; } .header { text-align:
+      center; padding: 20px 0; background-color: #f8f9fa; margin-bottom: 20px; }
+      .content { padding: 20px; background-color: #ffffff; border-radius: 5px; }
+      .footer { text-align: center; padding: 20px; font-size: 12px; color: #666;
+      } .info-box { background-color: #f8f9fa; padding: 15px; border-radius:
+      5px; margin: 20px 0; } .review-button { display: inline-block; padding:
+      10px 20px; background-color: #007bff; color: white; text-decoration: none;
+      border-radius: 5px; margin: 20px 0; }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h2>Check-out Completed ✨</h2>
+    </div>
+
+    <div class="content">
+      <p>Dear {{userName}},</p>
+
+      <p>You have successfully checked out from
+        <strong>{{propertyName}}</strong>.</p>
+
+      <div class="info-box">
+        <h3>Stay Details:</h3>
+        <p><strong>Room:</strong> {{roomName}}</p>
+        <p><strong>Check-in:</strong> {{checkInDate}}</p>
+        <p><strong>Check-out:</strong> {{checkOutDate}}</p>
+      </div>
+
+      <p>Thank you for choosing our property for your stay. We hope you had a
+        pleasant experience!</p>
+
+      <p>Share your experience with other travelers:</p>
+      <a href="{{reviewLink}}" class="review-button">Write a Review</a>
+
+      <p>We look forward to hosting you again in the future!</p>
+    </div>
+
+    <div class="footer">
+      <p>This is an automated message, please do not reply.</p>
+      <p>&copy; 2025 RateHaven. All rights reserved.</p>
+    </div>
+  </body>
+</html>

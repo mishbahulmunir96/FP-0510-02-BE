@@ -9,7 +9,7 @@ export const checkRoomAvailability = async (
   const activeReservations = await prisma.reservation.findMany({
     where: {
       roomId,
-      OR: [
+      AND: [
         {
           startDate: { lt: endDate },
           endDate: { gt: startDate },
