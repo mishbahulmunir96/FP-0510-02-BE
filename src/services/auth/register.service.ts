@@ -8,8 +8,8 @@ import handlebars from "handlebars";
 
 interface RegisterInput {
   email: string;
-  role: "USER" | "TENANT";
-  name: string;
+  role?: "USER" | "TENANT"; // Make role optional
+  name?: string;
   phoneNumber?: string;
   bankName?: string;
   bankNumber?: string;
@@ -19,7 +19,8 @@ export const registerService = async (
   data: RegisterInput,
   file?: Express.Multer.File
 ) => {
-  const { email, role, name } = data;
+  const { email } = data;
+  const role = data.role || "USER"; // Default to USER if role is not provided
 
   // Cek apakah email sudah terdaftar
   const existingUser = await prisma.user.findUnique({
@@ -30,9 +31,9 @@ export const registerService = async (
     throw new Error("Email already registered");
   }
 
-  // Upload gambar jika ada
+  // Upload gambar jika ada (hanya untuk tenant)
   let imageUrl = "";
-  if (file) {
+  if (file && role === "TENANT") {
     try {
       const result = await cloudinaryUpload(file);
       imageUrl = result.secure_url;
@@ -40,6 +41,9 @@ export const registerService = async (
       throw new Error("Image upload failed");
     }
   }
+
+  // Generate name from email for USER role
+  const defaultName = email.split("@")[0];
 
   // Buat token verifikasi email dengan expiry 1 jam
   const verificationToken = jwt.sign(
@@ -58,16 +62,21 @@ export const registerService = async (
     const user = await prisma.$transaction(async (prisma) => {
       const newUser = await prisma.user.create({
         data: {
-          name: data.name,
-          email: data.email,
+          name: role === "USER" ? defaultName : data.name!,
+          email: email,
           token: verificationToken,
           role: role,
-          isVerified: false, // Memastikan user belum terverifikasi
+          isVerified: false,
         },
       });
 
       if (role === "TENANT") {
-        if (!data.phoneNumber || !data.bankName || !data.bankNumber) {
+        if (
+          !data.name ||
+          !data.phoneNumber ||
+          !data.bankName ||
+          !data.bankNumber
+        ) {
           throw new Error("Tenant data incomplete");
         }
 
@@ -108,7 +117,7 @@ export const registerService = async (
 
     // Data untuk template
     const replacements = {
-      name: data.name,
+      name: role === "USER" ? defaultName : data.name,
       verificationLink: `${process.env.BASE_URL_FE}/verify?token=${verificationToken}`,
       logoUrl:
         "https://res.cloudinary.com/andikalp/image/upload/v1738209868/qdx0l3jzw4fsqoag71dl.png",
