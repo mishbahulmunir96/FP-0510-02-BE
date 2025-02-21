@@ -25,7 +25,7 @@ roomRouter.post(
   createRoomController
 );
 
-roomRouter.patch(
+roomRouter.delete(
   "/delete-room/:id",
   verifyToken,
   isTenant,

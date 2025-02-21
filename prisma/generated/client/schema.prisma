@@ -104,7 +104,6 @@ model PropertyCategory {
   tenantId   Int
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
-  isDeleted  Boolean    @default(false)
   properties Property[]
   tenant     Tenant     @relation(fields: [tenantId], references: [id])
 
