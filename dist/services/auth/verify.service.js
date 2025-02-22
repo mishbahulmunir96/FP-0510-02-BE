@@ -16,7 +16,7 @@ exports.resendVerificationEmail = exports.verifyService = void 0;
 const prisma_1 = __importDefault(require("../../lib/prisma"));
 const argon_1 = require("../../lib/argon");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const verifyService = (_a) => __awaiter(void 0, [_a], void 0, function* ({ token, password }) {
+const verifyService = (_a) => __awaiter(void 0, [_a], void 0, function* ({ token, password, name }) {
     try {
         // Verify token dan cek expiry
         const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
@@ -40,23 +40,28 @@ const verifyService = (_a) => __awaiter(void 0, [_a], void 0, function* ({ token
         if (user.isVerified) {
             throw new Error("Email already verified");
         }
-        // Validasi password
+        // Validasi input
         if (!password || password.length < 8) {
             throw new Error("Password must be at least 8 characters long");
         }
+        if (!name || name.trim().length === 0) {
+            throw new Error("Name is required");
+        }
         const hashedPassword = yield (0, argon_1.hashPassword)(password);
         // Update user data
-        yield prisma_1.default.user.update({
+        const updatedUser = yield prisma_1.default.user.update({
             where: { id: user.id },
             data: {
                 password: hashedPassword,
                 isVerified: true,
                 token: null, // Reset token setelah verifikasi
+                name: name.trim(),
             },
         });
         return {
             message: "Email verified successfully. Please login to continue.",
-            email: user.email,
+            email: updatedUser.email,
+            name: updatedUser.name,
         };
     }
     catch (error) {

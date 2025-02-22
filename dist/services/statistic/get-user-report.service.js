@@ -14,15 +14,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getUserReportService = void 0;
 const prisma_1 = __importDefault(require("../../lib/prisma"));
-const getUserReportService = (_a) => __awaiter(void 0, [_a], void 0, function* ({ tenantId, startDate, endDate, limit = 10, // Default limit for top users
- }) {
+const date_utils_1 = require("../../utils/date.utils");
+const getUserReportService = (_a) => __awaiter(void 0, [_a], void 0, function* ({ tenantId, startDate, endDate, limit = 10, }) {
     try {
+        const utcStartDate = (0, date_utils_1.normalizeToUTC)(startDate);
+        const utcEndDate = (0, date_utils_1.normalizeToUTC)(endDate);
         // Get all payments for tenant's properties with user data
         const payments = (yield prisma_1.default.payment.findMany({
             where: {
                 createdAt: {
-                    gte: startDate,
-                    lte: endDate,
+                    gte: utcStartDate,
+                    lte: utcEndDate,
                 },
                 reservation: {
                     some: {
@@ -42,8 +44,8 @@ const getUserReportService = (_a) => __awaiter(void 0, [_a], void 0, function* (
                         review: {
                             where: {
                                 createdAt: {
-                                    gte: startDate,
-                                    lte: endDate,
+                                    gte: utcStartDate,
+                                    lte: utcEndDate,
                                 },
                             },
                             select: {
@@ -72,7 +74,6 @@ const getUserReportService = (_a) => __awaiter(void 0, [_a], void 0, function* (
             acc[payment.userId].totalSpent += payment.totalPrice;
             return acc;
         }, {});
-        // Calculate repeat customers
         const repeatCustomers = Object.values(userBookings)
             .filter((user) => user.bookings.length > 1)
             .map((user) => ({
@@ -91,27 +92,23 @@ const getUserReportService = (_a) => __awaiter(void 0, [_a], void 0, function* (
         }))
             .sort((a, b) => b.totalSpent - a.totalSpent)
             .slice(0, limit);
-        // Calculate booking patterns
         const bookingPatterns = Object.values(userBookings).map((user) => {
             const userPayments = user.bookings;
             const totalBookings = userPayments.length;
-            // Calculate average stay duration
             const stayDurations = userPayments.flatMap((payment) => payment.reservation.map((res) => {
-                const start = new Date(res.startDate);
-                const end = new Date(res.endDate);
+                const start = (0, date_utils_1.normalizeToUTC)(new Date(res.startDate));
+                const end = (0, date_utils_1.normalizeToUTC)(new Date(res.endDate));
                 return Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
             }));
             const averageStayDuration = stayDurations.length > 0
-                ? Number((stayDurations.reduce((sum, duration) => sum + duration, 0) / stayDurations.length).toFixed(2))
+                ? Number((stayDurations.reduce((sum, duration) => sum + duration, 0) /
+                    stayDurations.length).toFixed(2))
                 : 0;
-            // Calculate preferred payment method
             const paymentMethods = userPayments.reduce((acc, payment) => {
-                acc[payment.paymentMethode] =
-                    (acc[payment.paymentMethode] || 0) + 1;
+                acc[payment.paymentMethode] = (acc[payment.paymentMethode] || 0) + 1;
                 return acc;
             }, {});
             const preferredPaymentMethod = Object.entries(paymentMethods).sort((a, b) => b[1] - a[1])[0][0];
-            // Calculate cancellations
             const totalCancellations = userPayments.filter((payment) => payment.status === "CANCELLED").length;
             return {
                 userId: user.userId,
@@ -124,12 +121,10 @@ const getUserReportService = (_a) => __awaiter(void 0, [_a], void 0, function* (
                 },
             };
         });
-        // Calculate average spending per user
         const totalSpending = payments.reduce((sum, payment) => sum + payment.totalPrice, 0);
         const averageSpendingPerUser = totalUniqueUsers > 0
             ? Number((totalSpending / totalUniqueUsers).toFixed(2))
             : 0;
-        // Calculate rating distribution
         const allRatings = payments.flatMap((p) => p.user.review.map((r) => r.rating));
         const ratingCounts = allRatings.reduce((acc, rating) => {
             acc[rating] = (acc[rating] || 0) + 1;
@@ -138,13 +133,17 @@ const getUserReportService = (_a) => __awaiter(void 0, [_a], void 0, function* (
         const ratingDistribution = Object.entries(ratingCounts).map(([rating, count]) => ({
             rating: Number(rating),
             count,
-            percentage: Number(((count / allRatings.length) * 100).toFixed(2)),
+            percentage: allRatings.length > 0
+                ? Number(((count / allRatings.length) * 100).toFixed(2))
+                : 0,
         }));
         return {
             totalUniqueUsers,
             repeatCustomers: {
                 count: repeatCustomers.length,
-                percentage: Number(((repeatCustomers.length / totalUniqueUsers) * 100).toFixed(2)),
+                percentage: totalUniqueUsers > 0
+                    ? Number(((repeatCustomers.length / totalUniqueUsers) * 100).toFixed(2))
+                    : 0,
                 users: repeatCustomers,
             },
             topSpenders,
@@ -154,6 +153,7 @@ const getUserReportService = (_a) => __awaiter(void 0, [_a], void 0, function* (
         };
     }
     catch (error) {
+        console.error("Error in getUserReportService:", error);
         throw error;
     }
 });

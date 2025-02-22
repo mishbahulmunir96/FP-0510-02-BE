@@ -6,6 +6,7 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  // directUrl = env("DIRECT_URL")
 }
 
 model Sample {
@@ -100,15 +101,15 @@ enum StatusProperty {
 
 model PropertyCategory {
   id         Int        @id @default(autoincrement())
-  name       String     
+  name       String
   tenantId   Int
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
-  isDeleted   Boolean        @default(false)
+  isDeleted  Boolean    @default(false)
   properties Property[]
   tenant     Tenant     @relation(fields: [tenantId], references: [id])
 
-  @@unique([name, tenantId]) 
+  @@unique([name, tenantId])
   @@map("propertyCategories")
 }
 
@@ -142,7 +143,7 @@ model PropertyFacility {
 model Room {
   id         Int      @id @default(autoincrement())
   type       Type
-  name  String ?
+  name       String?
   stock      Int
   price      Int
   guest      Int

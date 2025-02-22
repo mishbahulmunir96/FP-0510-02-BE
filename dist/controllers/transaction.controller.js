@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.cancelTransactionByTenantController = exports.approveTransactionByTenantController = exports.getTransactionByTenantController = exports.getTransactionsByTenantController = exports.cancelTransactionByUserController = exports.getTransactionsByUserController = exports.getTransactionByUserController = exports.uploadPaymentProofController = exports.createRoomReservationController = void 0;
+exports.confirmCheckOutController = exports.confirmCheckInController = exports.cancelTransactionByTenantController = exports.approveTransactionByTenantController = exports.getTransactionByTenantController = exports.getTransactionsByTenantController = exports.cancelTransactionByUserController = exports.getTransactionsByUserController = exports.getTransactionByUserController = exports.uploadPaymentProofController = exports.createRoomReservationController = void 0;
 const approve_transaction_by_tenant_service_1 = require("../services/transaction/approve-transaction-by-tenant.service");
 const cancel_transaction_by_tenant_service_1 = require("../services/transaction/cancel-transaction-by-tenant.service");
 const cancel_transaction_by_user_service_1 = require("../services/transaction/cancel-transaction-by-user.service");
@@ -23,6 +23,8 @@ const get_transactions_by_tenant_service_1 = require("../services/transaction/ge
 const get_transactions_by_user_service_1 = require("../services/transaction/get-transactions-by-user.service");
 const upload_payment_proof_service_1 = require("../services/transaction/upload-payment-proof.service");
 const prisma_1 = __importDefault(require("../lib/prisma"));
+const confirm_check_out_service_1 = require("../services/transaction/confirm-check-out.service");
+const confirm_check_in_service_1 = require("../services/transaction/confirm-check-in.service");
 const createRoomReservationController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const userId = res.locals.user.id;
@@ -52,8 +54,7 @@ const uploadPaymentProofController = (req, res, next) => __awaiter(void 0, void 
         const paymentId = Number(req.params.id);
         const userId = res.locals.user.id;
         if (!proofFile) {
-            res.status(400).send("Payment proof is required.");
-            return;
+            throw new Error("Proof file is required");
         }
         const updatedTransaction = yield (0, upload_payment_proof_service_1.uploadPaymentProofService)({
             userId,
@@ -123,11 +124,7 @@ const getTransactionsByTenantController = (req, res, next) => __awaiter(void 0, 
             },
         });
         if (!tenant) {
-            res.status(404).json({
-                status: "error",
-                message: "Tenant not found",
-            });
-            return;
+            throw new Error("Tenant not found");
         }
         const tenantId = tenant === null || tenant === void 0 ? void 0 : tenant.id;
         const query = {
@@ -148,7 +145,20 @@ const getTransactionsByTenantController = (req, res, next) => __awaiter(void 0, 
 exports.getTransactionsByTenantController = getTransactionsByTenantController;
 const getTransactionByTenantController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const tenantId = res.locals.user.id;
+        const userId = res.locals.user.id;
+        const tenant = yield prisma_1.default.tenant.findFirst({
+            where: {
+                userId: userId,
+                isDeleted: false,
+            },
+            select: {
+                id: true,
+            },
+        });
+        if (!tenant) {
+            throw new Error("Tenant not found");
+        }
+        const tenantId = tenant === null || tenant === void 0 ? void 0 : tenant.id;
         const transactionId = parseInt(req.params.id);
         const transaction = yield (0, get_transaction_by_tenant_tservice_1.getTransactionByTenantService)(transactionId, tenantId);
         res.status(200).json(transaction);
@@ -160,7 +170,20 @@ const getTransactionByTenantController = (req, res, next) => __awaiter(void 0, v
 exports.getTransactionByTenantController = getTransactionByTenantController;
 const approveTransactionByTenantController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const tenantId = res.locals.user.id;
+        const userId = res.locals.user.id;
+        const tenant = yield prisma_1.default.tenant.findFirst({
+            where: {
+                userId: userId,
+                isDeleted: false,
+            },
+            select: {
+                id: true,
+            },
+        });
+        if (!tenant) {
+            throw new Error("Tenant not found");
+        }
+        const tenantId = tenant === null || tenant === void 0 ? void 0 : tenant.id;
         const paymentId = parseInt(req.params.id);
         const isApproved = req.body.isApproved === true;
         const result = yield (0, approve_transaction_by_tenant_service_1.approveTransactionByTenantService)(paymentId, tenantId, isApproved);
@@ -173,7 +196,20 @@ const approveTransactionByTenantController = (req, res, next) => __awaiter(void 
 exports.approveTransactionByTenantController = approveTransactionByTenantController;
 const cancelTransactionByTenantController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const tenantId = res.locals.user.id;
+        const userId = res.locals.user.id;
+        const tenant = yield prisma_1.default.tenant.findFirst({
+            where: {
+                userId: userId,
+                isDeleted: false,
+            },
+            select: {
+                id: true,
+            },
+        });
+        if (!tenant) {
+            throw new Error("Tenant not found");
+        }
+        const tenantId = tenant === null || tenant === void 0 ? void 0 : tenant.id;
         const paymentId = parseInt(req.params.id);
         const result = yield (0, cancel_transaction_by_tenant_service_1.cancelTransactionByTenantService)(paymentId, tenantId);
         res.status(200).json(result);
@@ -183,3 +219,59 @@ const cancelTransactionByTenantController = (req, res, next) => __awaiter(void 0
     }
 });
 exports.cancelTransactionByTenantController = cancelTransactionByTenantController;
+const confirmCheckInController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const userId = res.locals.user.id;
+        const tenant = yield prisma_1.default.tenant.findFirst({
+            where: {
+                userId: userId,
+                isDeleted: false,
+            },
+            select: {
+                id: true,
+            },
+        });
+        if (!tenant) {
+            throw new Error("Tenant not found");
+        }
+        const paymentId = parseInt(req.params.id);
+        const result = yield (0, confirm_check_in_service_1.confirmCheckInService)(paymentId, tenant.id);
+        res.status(200).json({
+            status: "success",
+            message: "Check-in confirmed successfully",
+            data: result,
+        });
+    }
+    catch (error) {
+        next(error);
+    }
+});
+exports.confirmCheckInController = confirmCheckInController;
+const confirmCheckOutController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const userId = res.locals.user.id;
+        const tenant = yield prisma_1.default.tenant.findFirst({
+            where: {
+                userId: userId,
+                isDeleted: false,
+            },
+            select: {
+                id: true,
+            },
+        });
+        if (!tenant) {
+            throw new Error("Tenant not found");
+        }
+        const paymentId = parseInt(req.params.id);
+        const result = yield (0, confirm_check_out_service_1.confirmCheckOutService)(paymentId, tenant.id);
+        res.status(200).json({
+            status: "success",
+            message: "Check-out confirmed successfully",
+            data: result,
+        });
+    }
+    catch (error) {
+        next(error);
+    }
+});
+exports.confirmCheckOutController = confirmCheckOutController;
