@@ -6,6 +6,7 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  // directUrl = env("DIRECT_URL")
 }
 
 model Sample {
@@ -104,6 +105,7 @@ model PropertyCategory {
   tenantId   Int
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
+  isDeleted  Boolean    @default(false)
   properties Property[]
   tenant     Tenant     @relation(fields: [tenantId], references: [id])
 

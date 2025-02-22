@@ -17,4 +17,6 @@ router.patch("/:id", jwt_1.verifyToken, fileFilter_1.fileFilter, (0, multer_1.up
 router.patch("/cancel/:id", jwt_1.verifyToken, transaction_controller_1.cancelTransactionByUserController);
 router.patch("/tenant/:id", jwt_1.verifyToken, isTenant_1.isTenant, transaction_controller_1.approveTransactionByTenantController);
 router.patch("/tenant/cancel/:id", jwt_1.verifyToken, isTenant_1.isTenant, transaction_controller_1.cancelTransactionByTenantController);
+router.patch("/check-in/:id", jwt_1.verifyToken, isTenant_1.isTenant, transaction_controller_1.confirmCheckInController);
+router.patch("/check-out/:id", jwt_1.verifyToken, isTenant_1.isTenant, transaction_controller_1.confirmCheckOutController);
 exports.default = router;

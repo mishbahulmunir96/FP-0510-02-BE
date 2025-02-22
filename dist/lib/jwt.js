@@ -10,7 +10,6 @@ const verifyToken = (req, res, next) => {
         return res.status(401).send({
             message: "authentication failed, token missing",
         });
-        return;
     }
     (0, jsonwebtoken_1.verify)(token, config_1.JWT_SECRET, (err, payload) => {
         if (err) {

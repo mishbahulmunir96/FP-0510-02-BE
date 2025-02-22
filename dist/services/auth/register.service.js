@@ -54,7 +54,6 @@ const registerService = (data, file) => __awaiter(void 0, void 0, void 0, functi
                 data: {
                     name: data.name,
                     email: data.email,
-                    imageUrl,
                     token: verificationToken,
                     role: role,
                     isVerified: false, // Memastikan user belum terverifikasi

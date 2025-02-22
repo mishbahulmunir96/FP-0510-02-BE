@@ -13,7 +13,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getTransactionReportService = void 0;
+// services/statistic/get-transaction-report.service.ts
 const prisma_1 = __importDefault(require("../../lib/prisma"));
+const date_utils_1 = require("../../utils/date.utils");
 const date_fns_1 = require("date-fns");
 const groupDataByPeriod = (payments, startDate, endDate) => {
     const diffInDays = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
@@ -21,18 +23,18 @@ const groupDataByPeriod = (payments, startDate, endDate) => {
     let groupingFunction;
     if (diffInDays <= 7) {
         // Per hari untuk rentang 7 hari atau kurang
-        groupingFunction = (date) => (0, date_fns_1.format)(date, "yyyy-MM-dd");
+        groupingFunction = (date) => (0, date_fns_1.format)((0, date_utils_1.normalizeToUTC)(date), "yyyy-MM-dd");
     }
     else if (diffInDays <= 31) {
         // Per minggu untuk rentang 31 hari atau kurang
         groupingFunction = (date) => {
             const weekNumber = Math.ceil(date.getDate() / 7);
-            return `${(0, date_fns_1.format)(date, "yyyy-MM")}-W${weekNumber}`;
+            return `${(0, date_fns_1.format)((0, date_utils_1.normalizeToUTC)(date), "yyyy-MM")}-W${weekNumber}`;
         };
     }
     else {
         // Per bulan untuk rentang lebih dari 31 hari
-        groupingFunction = (date) => (0, date_fns_1.format)(date, "yyyy-MM");
+        groupingFunction = (date) => (0, date_fns_1.format)((0, date_utils_1.normalizeToUTC)(date), "yyyy-MM");
     }
     // Kelompokkan data
     const groupedData = payments.reduce((acc, payment) => {
@@ -54,25 +56,14 @@ const groupDataByPeriod = (payments, startDate, endDate) => {
 };
 const getTransactionReportService = (_a) => __awaiter(void 0, [_a], void 0, function* ({ tenantId, startDate, endDate, propertyId, }) {
     try {
-        // Validasi property jika ada
-        if (propertyId) {
-            const propertyExists = yield prisma_1.default.property.findFirst({
-                where: {
-                    id: propertyId,
-                    tenantId,
-                    isDeleted: false,
-                },
-            });
-            if (!propertyExists) {
-                throw new Error("Property not found or unauthorized");
-            }
-        }
+        const utcStartDate = (0, date_utils_1.normalizeToUTC)(startDate);
+        const utcEndDate = (0, date_utils_1.normalizeToUTC)(endDate);
         // Ambil semua pembayaran dalam rentang waktu
         const payments = yield prisma_1.default.payment.findMany({
             where: {
                 createdAt: {
-                    gte: startDate,
-                    lte: endDate,
+                    gte: utcStartDate,
+                    lte: utcEndDate,
                 },
                 reservation: {
                     some: {
@@ -104,31 +95,34 @@ const getTransactionReportService = (_a) => __awaiter(void 0, [_a], void 0, func
             MANUAL: { count: 0, percentage: 0 },
             OTOMATIS: { count: 0, percentage: 0 },
         });
-        paymentMethods.MANUAL.percentage = Number(((paymentMethods.MANUAL.count / totalTransactions) * 100).toFixed(2));
-        paymentMethods.OTOMATIS.percentage = Number(((paymentMethods.OTOMATIS.count / totalTransactions) * 100).toFixed(2));
-        // Hitung status pembayaran
-        const successfulPayments = payments.filter((p) => ["CHECKED_IN", "CHECKED_OUT"].includes(p.status)).length;
+        if (totalTransactions > 0) {
+            paymentMethods.MANUAL.percentage = Number(((paymentMethods.MANUAL.count / totalTransactions) * 100).toFixed(2));
+            paymentMethods.OTOMATIS.percentage = Number(((paymentMethods.OTOMATIS.count / totalTransactions) * 100).toFixed(2));
+        }
+        const successfulPayments = payments.filter((p) => ["CHECKED_IN", "PROCESSED", "CHECKED_OUT"].includes(p.status)).length;
         const cancelledPayments = payments.filter((p) => p.status === "CANCELLED").length;
-        const pendingPayments = payments.filter((p) => [
-            "WAITING_FOR_PAYMENT",
-            "WAITING_FOR_PAYMENT_CONFIRMATION",
-            "PROCESSED",
-        ].includes(p.status)).length;
+        const pendingPayments = payments.filter((p) => ["WAITING_FOR_PAYMENT", "WAITING_FOR_PAYMENT_CONFIRMATION"].includes(p.status)).length;
         const paymentStatusBreakdown = {
-            successRate: Number(((successfulPayments / totalTransactions) * 100).toFixed(2)),
-            cancellationRate: Number(((cancelledPayments / totalTransactions) * 100).toFixed(2)),
-            pendingRate: Number(((pendingPayments / totalTransactions) * 100).toFixed(2)),
+            successRate: totalTransactions > 0
+                ? Number(((successfulPayments / totalTransactions) * 100).toFixed(2))
+                : 0,
+            cancellationRate: totalTransactions > 0
+                ? Number(((cancelledPayments / totalTransactions) * 100).toFixed(2))
+                : 0,
+            pendingRate: totalTransactions > 0
+                ? Number(((pendingPayments / totalTransactions) * 100).toFixed(2))
+                : 0,
             totalSuccessful: successfulPayments,
             totalCancelled: cancelledPayments,
             totalPending: pendingPayments,
         };
         // Kelompokkan data berdasarkan periode
-        const periodData = groupDataByPeriod(payments, startDate, endDate);
+        const periodData = groupDataByPeriod(payments, utcStartDate, utcEndDate);
         // Hitung rata-rata durasi booking
         const allReservations = payments.flatMap((p) => p.reservation);
         const durations = allReservations.map((reservation) => {
-            const start = new Date(reservation.startDate);
-            const end = new Date(reservation.endDate);
+            const start = (0, date_utils_1.normalizeToUTC)(new Date(reservation.startDate));
+            const end = (0, date_utils_1.normalizeToUTC)(new Date(reservation.endDate));
             return Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
         });
         const averageBookingDuration = durations.length > 0
@@ -137,8 +131,8 @@ const getTransactionReportService = (_a) => __awaiter(void 0, [_a], void 0, func
             : 0;
         // Hitung rata-rata lead time
         const leadTimes = allReservations.map((reservation) => {
-            const bookingDate = new Date(reservation.createdAt);
-            const checkInDate = new Date(reservation.startDate);
+            const bookingDate = (0, date_utils_1.normalizeToUTC)(new Date(reservation.createdAt));
+            const checkInDate = (0, date_utils_1.normalizeToUTC)(new Date(reservation.startDate));
             return Math.ceil((checkInDate.getTime() - bookingDate.getTime()) / (1000 * 60 * 60 * 24));
         });
         const averageBookingLeadTime = leadTimes.length > 0
@@ -150,16 +144,13 @@ const getTransactionReportService = (_a) => __awaiter(void 0, [_a], void 0, func
             averageTransactionValue,
             paymentMethodDistribution: paymentMethods,
             paymentStatusBreakdown,
-            peakBookingPeriods: periodData.map((period) => ({
-                date: period.date,
-                totalBookings: period.totalBookings,
-                totalRevenue: period.totalRevenue,
-            })),
+            peakBookingPeriods: periodData,
             averageBookingDuration,
             averageBookingLeadTime,
         };
     }
     catch (error) {
+        console.error("Error in getTransactionReportService:", error);
         throw error;
     }
 });

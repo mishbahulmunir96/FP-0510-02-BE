@@ -54,8 +54,7 @@ export const uploadPaymentProofController = async (
     const userId = res.locals.user.id;
 
     if (!proofFile) {
-      res.status(400).send("Payment proof is required.");
-      return;
+      throw new Error("Proof file is required");
     }
 
     const updatedTransaction = await uploadPaymentProofService({
@@ -143,11 +142,7 @@ export const getTransactionsByTenantController = async (
     });
 
     if (!tenant) {
-      res.status(404).json({
-        status: "error",
-        message: "Tenant not found",
-      });
-      return;
+      throw new Error("Tenant not found");
     }
 
     const tenantId = tenant?.id;
@@ -187,11 +182,7 @@ export const getTransactionByTenantController = async (
     });
 
     if (!tenant) {
-      res.status(404).json({
-        status: "error",
-        message: "Tenant not found",
-      });
-      return;
+      throw new Error("Tenant not found");
     }
 
     const tenantId = tenant?.id;
@@ -226,11 +217,7 @@ export const approveTransactionByTenantController = async (
     });
 
     if (!tenant) {
-      res.status(404).json({
-        status: "error",
-        message: "Tenant not found",
-      });
-      return;
+      throw new Error("Tenant not found");
     }
 
     const tenantId = tenant?.id;
@@ -268,11 +255,7 @@ export const cancelTransactionByTenantController = async (
     });
 
     if (!tenant) {
-      res.status(404).json({
-        status: "error",
-        message: "Tenant not found",
-      });
-      return;
+      throw new Error("Tenant not found");
     }
 
     const tenantId = tenant?.id;
@@ -304,11 +287,7 @@ export const confirmCheckInController = async (
     });
 
     if (!tenant) {
-      res.status(404).json({
-        status: "error",
-        message: "Tenant not found",
-      });
-      return;
+      throw new Error("Tenant not found");
     }
 
     const paymentId = parseInt(req.params.id);
@@ -342,11 +321,7 @@ export const confirmCheckOutController = async (
     });
 
     if (!tenant) {
-      res.status(404).json({
-        status: "error",
-        message: "Tenant not found",
-      });
-      return;
+      throw new Error("Tenant not found");
     }
 
     const paymentId = parseInt(req.params.id);

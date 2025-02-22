@@ -13,7 +13,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getTransactionByTenantService = void 0;
-const date_fns_1 = require("date-fns");
 const prisma_1 = __importDefault(require("../../lib/prisma"));
 const getTransactionByTenantService = (id, tenantId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -43,9 +42,8 @@ const getTransactionByTenantService = (id, tenantId) => __awaiter(void 0, void 0
                         room: {
                             include: {
                                 property: {
-                                    select: {
-                                        title: true,
-                                        location: true,
+                                    include: {
+                                        propertyImage: true,
                                     },
                                 },
                                 roomImage: {
@@ -77,6 +75,16 @@ const getTransactionByTenantService = (id, tenantId) => __awaiter(void 0, void 0
         if (!transaction) {
             throw new Error("Transaction not found");
         }
+        let peakSeasonDays = 0;
+        let peakSeasonPrice = null;
+        for (const reserv of transaction.reservation) {
+            if (reserv.price > reserv.room.price) {
+                peakSeasonDays++;
+                if (!peakSeasonPrice) {
+                    peakSeasonPrice = reserv.price;
+                }
+            }
+        }
         const checkInDate = transaction.reservation.length > 0
             ? transaction.reservation[0].startDate
             : null;
@@ -93,25 +101,20 @@ const getTransactionByTenantService = (id, tenantId) => __awaiter(void 0, void 0
             paymentProof: transaction.paymentProof,
             checkInDate,
             checkOutDate,
+            peakSeasonDays: peakSeasonDays > 0 ? peakSeasonDays : undefined,
+            peakSeasonPrice: peakSeasonPrice,
             duration: transaction.duration,
             updatedAt: transaction.updatedAt,
             reservations: transaction.reservation.map((reserv) => {
-                const peakSeason = reserv.room.peakSeasonRate.find((peak) => reserv.startDate <= peak.endDate && reserv.endDate >= peak.startDate);
-                let peakSeasonDays = 0;
-                if (peakSeason) {
-                    const overlapStart = new Date(Math.max(reserv.startDate.getTime(), peakSeason.startDate.getTime()));
-                    const overlapEnd = new Date(Math.min(reserv.endDate.getTime(), peakSeason.endDate.getTime()));
-                    peakSeasonDays = (0, date_fns_1.differenceInDays)(overlapEnd, overlapStart);
-                }
                 return {
+                    roomId: reserv.room.id,
                     roomType: reserv.room.type,
                     propertyTitle: reserv.room.property.title,
                     roomPrice: reserv.price,
                     propertyLocation: reserv.room.property.location,
+                    propertyImages: reserv.room.property.propertyImage.map((image) => image.imageUrl),
                     roomImages: reserv.room.roomImage.map((image) => image.imageUrl),
                     roomFacilities: reserv.room.roomFacility.map((facility) => facility.title),
-                    peakSeasonDays,
-                    peakSeasonPrice: (peakSeason === null || peakSeason === void 0 ? void 0 : peakSeason.price) || null,
                 };
             }),
         };

@@ -65,10 +65,7 @@ const getReviewByTransactionController = (req, res, next) => __awaiter(void 0, v
         }
         const result = yield (0, get_review_by_transaction_service_1.getReviewByTransactionService)(paymentId, userId);
         if (!result) {
-            res.status(404).send({
-                message: "Review not found",
-            });
-            return;
+            throw new Error("Review not found");
         }
         res.status(200).send(result);
     }
@@ -99,8 +96,7 @@ const getReviewByTenantController = (req, res, next) => __awaiter(void 0, void 0
         const paymentId = parseInt(req.params.paymentId);
         const result = yield (0, get_review_by_tenant_service_1.getReviewByTenantService)(paymentId);
         if (!result) {
-            res.status(404).send({ message: "Review not found" });
-            return;
+            throw new Error("Review not found");
         }
         res.status(200).send(result);
     }
