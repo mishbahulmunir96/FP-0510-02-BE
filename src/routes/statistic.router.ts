@@ -19,7 +19,6 @@ router.get(
   getTransactionReportController
 );
 router.get("/user", verifyToken, isTenant, getUserReportController);
-// router.get("/calendar", verifyToken, isTenant, getCalendarReportController);
 router.get(
   "/calendar-report",
   verifyToken,

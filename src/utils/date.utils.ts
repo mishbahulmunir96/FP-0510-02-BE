@@ -20,7 +20,7 @@ export const validateDateRange = (startDate: Date, endDate: Date): void => {
     throw new Error("End date must be greater than start date");
   }
 
-  const maxRange = 365;
+  const maxRange = 366;
   const daysDiff = Math.ceil(
     (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
   );
