@@ -293,11 +293,7 @@ export const confirmCheckInController = async (
     const paymentId = parseInt(req.params.id);
     const result = await confirmCheckInService(paymentId, tenant.id);
 
-    res.status(200).json({
-      status: "success",
-      message: "Check-in confirmed successfully",
-      data: result,
-    });
+    res.status(200).json(result);
   } catch (error) {
     next(error);
   }
@@ -327,11 +323,7 @@ export const confirmCheckOutController = async (
     const paymentId = parseInt(req.params.id);
     const result = await confirmCheckOutService(paymentId, tenant.id);
 
-    res.status(200).json({
-      status: "success",
-      message: "Check-out confirmed successfully",
-      data: result,
-    });
+    res.status(200).json(result);
   } catch (error) {
     next(error);
   }

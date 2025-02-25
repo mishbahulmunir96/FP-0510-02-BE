@@ -42,9 +42,8 @@ export const confirmCheckInService = async (
       throw new Error("Payment not found or not eligible for check-in");
     }
 
-    // Cek apakah sudah waktunya check-in (14:00 WIB)
     const checkInTime = new Date(payment.reservation[0].startDate);
-    checkInTime.setUTCHours(7, 0, 0, 0); // 14:00 WIB = 07:00 UTC
+    checkInTime.setUTCHours(7, 0, 0, 0);
     const now = new Date();
 
     if (now < checkInTime) {
@@ -60,7 +59,6 @@ export const confirmCheckInService = async (
       },
     });
 
-    // Kirim email konfirmasi check-in
     const templatePath = path.join(
       __dirname,
       "../../templates/check-in-confirmed.hbs"

@@ -1,4 +1,3 @@
-import { differenceInDays } from "date-fns";
 import prisma from "../../lib/prisma";
 
 export const getTransactionByTenantService = async (
