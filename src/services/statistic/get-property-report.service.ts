@@ -1,5 +1,6 @@
 import prisma from "../../lib/prisma";
 import { PropertyReport } from "../../types/report";
+import { normalizeToUTC } from "../../utils/date.utils";
 
 interface GetPropertyReportParams {
   tenantId: number;
@@ -15,20 +16,8 @@ export const getPropertyReportService = async ({
   propertyId,
 }: GetPropertyReportParams): Promise<PropertyReport[]> => {
   try {
-    // Validasi property jika propertyId diberikan
-    if (propertyId) {
-      const propertyExists = await prisma.property.findFirst({
-        where: {
-          id: propertyId,
-          tenantId,
-          isDeleted: false,
-        },
-      });
-
-      if (!propertyExists) {
-        throw new Error("Property not found or unauthorized");
-      }
-    }
+    const utcStartDate = normalizeToUTC(startDate);
+    const utcEndDate = normalizeToUTC(endDate);
 
     const properties = await prisma.property.findMany({
       where: {
@@ -46,11 +35,11 @@ export const getPropertyReportService = async ({
               where: {
                 payment: {
                   status: {
-                    in: ["CHECKED_IN", "CHECKED_OUT"],
+                    in: ["PROCESSED", "CHECKED_IN", "CHECKED_OUT"],
                   },
                   createdAt: {
-                    gte: startDate,
-                    lte: endDate,
+                    gte: utcStartDate,
+                    lte: utcEndDate,
                   },
                 },
               },
@@ -63,8 +52,8 @@ export const getPropertyReportService = async ({
         review: {
           where: {
             createdAt: {
-              gte: startDate,
-              lte: endDate,
+              gte: utcStartDate,
+              lte: utcEndDate,
             },
           },
           select: {
@@ -76,34 +65,54 @@ export const getPropertyReportService = async ({
 
     const reports = await Promise.all(
       properties.map(async (property) => {
-        // Hitung total transaksi dan pendapatan
+        // Flatten all reservations from all rooms
         const allReservations = property.room.flatMap(
           (room) => room.reservation
         );
-        const totalTransactions = allReservations.length;
-        const totalRevenue = allReservations.reduce(
-          (sum, reservation) => sum + reservation.price,
+
+        // Group reservations by payment to avoid double counting
+        const paymentGroups = allReservations.reduce((groups, reservation) => {
+          const paymentId = reservation.payment.id;
+          if (!groups[paymentId]) {
+            groups[paymentId] = {
+              payment: reservation.payment,
+              reservations: [],
+            };
+          }
+          groups[paymentId].reservations.push(reservation);
+          return groups;
+        }, {} as Record<number, { payment: any; reservations: typeof allReservations }>);
+
+        // Calculate total revenue from unique payments
+        const totalRevenue = Object.values(paymentGroups).reduce(
+          (sum, group) => sum + group.payment.totalPrice,
           0
         );
 
-        // Hitung occupancy rate
+        // Basic metrics
+        const totalTransactions = Object.keys(paymentGroups).length; // Count unique payments instead of reservations
+
+        // Calculate occupancy rate with UTC dates
         const totalDays = Math.ceil(
-          (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
+          (utcEndDate.getTime() - utcStartDate.getTime()) /
+            (1000 * 60 * 60 * 24)
         );
         const totalRooms = property.room.reduce(
           (sum, room) => sum + room.stock,
           0
         );
         const totalPossibleRoomDays = totalRooms * totalDays;
+
         const occupiedRoomDays = allReservations.reduce(
           (total, reservation) => {
-            const checkIn = new Date(reservation.startDate);
-            const checkOut = new Date(reservation.endDate);
+            const checkIn = normalizeToUTC(new Date(reservation.startDate));
+            const checkOut = normalizeToUTC(new Date(reservation.endDate));
 
-            // Pastikan tanggal dalam range yang diminta
+            // Ensure dates are within the requested range
             const effectiveStartDate =
-              checkIn < startDate ? startDate : checkIn;
-            const effectiveEndDate = checkOut > endDate ? endDate : checkOut;
+              checkIn < utcStartDate ? utcStartDate : checkIn;
+            const effectiveEndDate =
+              checkOut > utcEndDate ? utcEndDate : checkOut;
 
             const stayDuration = Math.ceil(
               (effectiveEndDate.getTime() - effectiveStartDate.getTime()) /
@@ -122,7 +131,7 @@ export const getPropertyReportService = async ({
               )
             : 0;
 
-        // Hitung rata-rata rating
+        // Calculate average rating
         const averageRating =
           property.review.length > 0
             ? Number(
@@ -135,19 +144,57 @@ export const getPropertyReportService = async ({
               )
             : 0;
 
-        // Hitung detail per room
+        // Calculate room details with payment-based revenue
         const roomDetails = property.room.map((room) => {
           const roomReservations = room.reservation;
           const totalBookings = roomReservations.length;
-          const roomRevenue = roomReservations.reduce(
-            (sum, reservation) => sum + reservation.price,
+
+          // Group room reservations by payment
+          const roomPaymentGroups = roomReservations.reduce(
+            (groups, reservation) => {
+              const paymentId = reservation.payment.id;
+              if (!groups[paymentId]) {
+                groups[paymentId] = {
+                  payment: reservation.payment,
+                  reservations: [],
+                };
+              }
+              groups[paymentId].reservations.push(reservation);
+              return groups;
+            },
+            {} as Record<
+              number,
+              { payment: any; reservations: typeof roomReservations }
+            >
+          );
+
+          // Calculate room revenue from payments
+          const roomRevenue = Object.values(roomPaymentGroups).reduce(
+            (sum, group) => {
+              // If there's only one reservation in the payment, use full payment amount
+              if (group.reservations.length === 1) {
+                return sum + group.payment.totalPrice;
+              }
+              // If multiple reservations, distribute payment amount proportionally based on reservation price
+              const paymentTotal = group.payment.totalPrice;
+              const reservationTotal = group.reservations.reduce(
+                (total, res) => total + res.price,
+                0
+              );
+              const roomReservationTotal = group.reservations
+                .filter((res) => res.roomId === room.id)
+                .reduce((total, res) => total + res.price, 0);
+              return (
+                sum + (paymentTotal * roomReservationTotal) / reservationTotal
+              );
+            },
             0
           );
 
-          // Hitung rata-rata durasi menginap
+          // Calculate average stay duration with UTC dates
           const stayDurations = roomReservations.map((reservation) => {
-            const start = new Date(reservation.startDate);
-            const end = new Date(reservation.endDate);
+            const start = normalizeToUTC(new Date(reservation.startDate));
+            const end = normalizeToUTC(new Date(reservation.endDate));
             return Math.ceil(
               (end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)
             );
@@ -173,7 +220,7 @@ export const getPropertyReportService = async ({
           };
         });
 
-        // Ambil 5 kamar terbaik berdasarkan jumlah booking
+        // Get best performing rooms
         const bestPerformingRooms = [...roomDetails]
           .sort((a, b) => b.totalBookings - a.totalBookings)
           .slice(0, 5);

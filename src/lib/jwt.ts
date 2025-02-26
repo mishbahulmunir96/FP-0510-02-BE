@@ -17,8 +17,6 @@ export const verifyToken = (
     return res.status(401).send({
       message: "authentication failed, token missing",
     });
-
-    return;
   }
 
   verify(token, JWT_SECRET!, (err, payload) => {

@@ -17,7 +17,7 @@ const prisma_1 = __importDefault(require("../../lib/prisma"));
 const cloudinary_1 = require("../../lib/cloudinary");
 const createRoomService = (body, file, tenantId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { type, stock, price, guest, propertyId, facilityTitle, facilityDescription, } = body;
+        const { type, name, stock, price, guest, propertyId, facilityTitle, facilityDescription, } = body;
         const propertyIdNoNaN = Number(propertyId);
         const stockRoom = Number(stock);
         const priceRoom = Number(price);
@@ -40,6 +40,7 @@ const createRoomService = (body, file, tenantId) => __awaiter(void 0, void 0, vo
             const newRoom = yield tx.room.create({
                 data: {
                     type, // Menggunakan field type dari body (enum)
+                    name,
                     stock: stockRoom,
                     price: priceRoom,
                     guest: guestRoom,

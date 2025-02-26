@@ -52,57 +52,60 @@ const hbs = __importStar(require("handlebars"));
 const fs = __importStar(require("fs"));
 const path = __importStar(require("path"));
 const cancelTransactionByTenantService = (paymentId, tenantId) => __awaiter(void 0, void 0, void 0, function* () {
-    const payment = yield prisma_1.default.payment.findFirst({
-        where: {
-            id: paymentId,
-            status: "WAITING_FOR_PAYMENT",
-            paymentProof: null,
-            reservation: {
-                some: {
-                    room: {
-                        property: {
-                            tenantId,
+    try {
+        const payment = yield prisma_1.default.payment.findFirst({
+            where: {
+                id: paymentId,
+                status: "WAITING_FOR_PAYMENT",
+                paymentProof: null,
+                reservation: {
+                    some: {
+                        room: {
+                            property: {
+                                tenantId,
+                            },
                         },
                     },
                 },
             },
-        },
-        include: {
-            user: true,
-            reservation: {
-                include: {
-                    room: {
-                        include: {
-                            property: true,
+            include: {
+                user: true,
+                reservation: {
+                    include: {
+                        room: {
+                            include: {
+                                property: true,
+                            },
                         },
                     },
                 },
             },
-        },
-    });
-    if (!payment) {
-        throw new Error("Transaction not found or cannot be cancelled");
+        });
+        if (!payment) {
+            throw new Error("Transaction not found or cannot be cancelled");
+        }
+        const cancelledPayment = yield prisma_1.default.payment.update({
+            where: { id: paymentId },
+            data: { status: "CANCELLED" },
+        });
+        const templatePath = path.join(__dirname, "../../templates/payment-cancelled.hbs");
+        const template = fs.readFileSync(templatePath, "utf8");
+        const compiledTemplate = hbs.compile(template);
+        const emailData = {
+            userName: payment.user.name,
+            propertyName: payment.reservation[0].room.property.title,
+            transactionId: payment.uuid,
+            totalPrice: payment.totalPrice,
+        };
+        yield nodemailer_1.transporter.sendMail({
+            to: payment.user.email,
+            subject: "Booking Cancelled by Property Owner",
+            html: compiledTemplate(emailData),
+        });
+        return cancelledPayment;
     }
-    // Update status to cancelled
-    const cancelledPayment = yield prisma_1.default.payment.update({
-        where: { id: paymentId },
-        data: { status: "CANCELLED" },
-    });
-    // Send email notification
-    const templatePath = path.join(__dirname, "../../templates/payment-cancelled.hbs");
-    const template = fs.readFileSync(templatePath, "utf8");
-    const compiledTemplate = hbs.compile(template);
-    const emailData = {
-        userName: payment.user.name,
-        propertyName: payment.reservation[0].room.property.title,
-        transactionId: payment.uuid,
-        totalPrice: payment.totalPrice,
-    };
-    yield nodemailer_1.transporter.sendMail({
-        to: payment.user.email,
-        subject: "Booking Cancelled by Property Owner",
-        html: compiledTemplate(emailData),
-    });
-    return cancelledPayment;
+    catch (error) {
+        throw error;
+    }
 });
 exports.cancelTransactionByTenantService = cancelTransactionByTenantService;

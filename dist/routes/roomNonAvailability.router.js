@@ -8,5 +8,5 @@ const roomNonAvailabilityRouter = (0, express_1.Router)();
 roomNonAvailabilityRouter.get("/", jwt_1.verifyToken, isTenant_1.isTenant, roomNonAvailability_service_1.getRoomNonAvailabilitiesController);
 roomNonAvailabilityRouter.post("/create", jwt_1.verifyToken, isTenant_1.isTenant, roomNonAvailability_service_1.createRoomNonAvailabilityController);
 roomNonAvailabilityRouter.patch("/update/:id", jwt_1.verifyToken, isTenant_1.isTenant, roomNonAvailability_service_1.updateRoomNonAvailabilitiyController);
-roomNonAvailabilityRouter.delete("/delete/:id", jwt_1.verifyToken, isTenant_1.isTenant, roomNonAvailability_service_1.deleteRoomNonAvailabilityController);
+roomNonAvailabilityRouter.delete("/:id", jwt_1.verifyToken, isTenant_1.isTenant, roomNonAvailability_service_1.deleteRoomNonAvailabilityController);
 exports.default = roomNonAvailabilityRouter;
