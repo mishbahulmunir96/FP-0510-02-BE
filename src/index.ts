@@ -14,6 +14,7 @@ import roomNonAvailabilityRouter from "./routes/roomNonAvailability.router";
 import peakSeasonRateRouter from "./routes/peakSeasonRate.router";
 import statisticRouter from "./routes/statistic.router";
 import { initializeCheckInReminder } from "./script/checkInReminder";
+import calendarRouter from "./routes/calendar.router";
 
 const app = express();
 
@@ -32,6 +33,7 @@ app.use("/rooms", roomRouter);
 app.use("/peak-season-rates", peakSeasonRateRouter);
 app.use("/room-non-availabilities", roomNonAvailabilityRouter);
 app.use("/statistics", statisticRouter);
+app.use("/calendar", calendarRouter);
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   res.status(400).send(err.message);
