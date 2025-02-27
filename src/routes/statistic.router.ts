@@ -1,24 +1,14 @@
 import { Router } from "express";
 import {
-  // getCalendarReportController,
   getPropertyCalendarReportController,
-  getPropertyReportController,
-  getTransactionReportController,
-  getUserReportController,
+  getSalesReportController,
 } from "../controllers/statistic.controller";
 import { isTenant } from "../lib/isTenant";
 import { verifyToken } from "../lib/jwt";
 
 const router = Router();
 
-router.get("/property", verifyToken, isTenant, getPropertyReportController);
-router.get(
-  "/transaction",
-  verifyToken,
-  isTenant,
-  getTransactionReportController
-);
-router.get("/user", verifyToken, isTenant, getUserReportController);
+router.get("/report", verifyToken, isTenant, getSalesReportController);
 router.get(
   "/calendar-report",
   verifyToken,

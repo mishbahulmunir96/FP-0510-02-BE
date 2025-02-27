@@ -101,7 +101,7 @@ const approveTransactionByTenantService = (paymentId, tenantId, isApproved) => _
             checkOutDate: payment.reservation[0].endDate,
             duration: payment.duration,
             reservationId: payment.reservation[0].uuid,
-            paymentLink: `${process.env.FRONTEND_URL}/payment/${payment.uuid}`,
+            paymentLink: `https://${process.env.FRONTEND_URL}/user/dashboard/transactions/${payment.id}`,
         };
         const emailHtml = compiledTemplate(emailData);
         yield nodemailer_1.transporter.sendMail({

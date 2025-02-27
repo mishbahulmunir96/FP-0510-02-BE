@@ -84,9 +84,8 @@ const confirmCheckInService = (paymentId, tenantId) => __awaiter(void 0, void 0,
         if (!payment) {
             throw new Error("Payment not found or not eligible for check-in");
         }
-        // Cek apakah sudah waktunya check-in (14:00 WIB)
         const checkInTime = new Date(payment.reservation[0].startDate);
-        checkInTime.setUTCHours(7, 0, 0, 0); // 14:00 WIB = 07:00 UTC
+        checkInTime.setUTCHours(7, 0, 0, 0);
         const now = new Date();
         if (now < checkInTime) {
             throw new Error("Check-in time has not started yet (starts at 14:00 WIB)");
@@ -97,7 +96,6 @@ const confirmCheckInService = (paymentId, tenantId) => __awaiter(void 0, void 0,
                 status: client_1.StatusPayment.CHECKED_IN,
             },
         });
-        // Kirim email konfirmasi check-in
         const templatePath = path.join(__dirname, "../../templates/check-in-confirmed.hbs");
         const template = fs.readFileSync(templatePath, "utf8");
         const compiledTemplate = hbs.compile(template);

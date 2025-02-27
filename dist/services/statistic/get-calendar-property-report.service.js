@@ -17,8 +17,7 @@ const client_1 = require("../../../prisma/generated/client");
 const prisma_1 = __importDefault(require("../../lib/prisma"));
 const getPropertyCalendarReportService = (query) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { propertyId, tenantId, startDate, endDate, roomType } = query;
-        // Verify property belongs to tenant
+        const { propertyId, tenantId, startDate, endDate, roomId } = query;
         const property = yield prisma_1.default.property.findFirst({
             where: {
                 id: propertyId,
@@ -29,7 +28,7 @@ const getPropertyCalendarReportService = (query) => __awaiter(void 0, void 0, vo
                 id: true,
                 title: true,
                 room: {
-                    where: Object.assign({ isDeleted: false }, (roomType && { type: roomType })),
+                    where: Object.assign({ isDeleted: false }, (roomId && { id: roomId })),
                     select: {
                         id: true,
                         name: true,
@@ -53,7 +52,7 @@ const getPropertyCalendarReportService = (query) => __awaiter(void 0, void 0, vo
         // Get all reservations in date range
         const reservations = yield prisma_1.default.reservation.findMany({
             where: {
-                room: Object.assign({ propertyId, isDeleted: false }, (roomType && { type: roomType })),
+                room: Object.assign({ propertyId, isDeleted: false }, (roomId && { id: roomId })),
                 startDate: { lte: endDate },
                 endDate: { gte: startDate },
                 payment: {
@@ -76,7 +75,7 @@ const getPropertyCalendarReportService = (query) => __awaiter(void 0, void 0, vo
         // Get non-availability periods
         const nonAvailabilityPeriods = yield prisma_1.default.roomNonAvailability.findMany({
             where: {
-                room: Object.assign({ propertyId, isDeleted: false }, (roomType && { type: roomType })),
+                room: Object.assign({ propertyId, isDeleted: false }, (roomId && { id: roomId })),
                 isDeleted: false,
                 startDate: { lte: endDate },
                 endDate: { gte: startDate },
@@ -90,7 +89,7 @@ const getPropertyCalendarReportService = (query) => __awaiter(void 0, void 0, vo
         // Get peak season rates
         const peakSeasonRates = yield prisma_1.default.peakSeasonRate.findMany({
             where: {
-                room: Object.assign({ propertyId, isDeleted: false }, (roomType && { type: roomType })),
+                room: Object.assign({ propertyId, isDeleted: false }, (roomId && { id: roomId })),
                 isDeleted: false,
                 startDate: { lte: endDate },
                 endDate: { gte: startDate },
@@ -132,8 +131,18 @@ const getPropertyCalendarReportService = (query) => __awaiter(void 0, void 0, vo
                     price: (peakRate === null || peakRate === void 0 ? void 0 : peakRate.price) || room.price,
                 };
             });
+            const totalRooms = roomsStatus.reduce((sum, room) => sum + room.totalRooms, 0);
+            const totalBookedRooms = roomsStatus.reduce((sum, room) => sum + room.bookedRooms, 0);
+            const totalAvailableRooms = roomsStatus.reduce((sum, room) => sum + room.availableRooms, 0);
+            const occupancyRate = totalRooms > 0
+                ? parseFloat(((totalBookedRooms / totalRooms) * 100).toFixed(1))
+                : 0;
             return {
                 date: date.toISOString().split("T")[0],
+                totalRooms,
+                totalBookedRooms,
+                totalAvailableRooms,
+                occupancyRate,
                 rooms: roomsStatus,
             };
         });

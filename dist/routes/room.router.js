@@ -9,7 +9,7 @@ const roomRouter = (0, express_1.Router)();
 roomRouter.get("/", room_controller_1.getRoomsController);
 roomRouter.get("/tenant", jwt_1.verifyToken, isTenant_1.isTenant, room_controller_1.getRoomsTenantController);
 roomRouter.post("/create-room", jwt_1.verifyToken, isTenant_1.isTenant, (0, multer_1.uploader)().single("imageUrl"), room_controller_1.createRoomController);
-roomRouter.patch("/delete-room/:id", jwt_1.verifyToken, isTenant_1.isTenant, room_controller_1.deleteRoomController);
+roomRouter.delete("/delete-room/:id", jwt_1.verifyToken, isTenant_1.isTenant, room_controller_1.deleteRoomController);
 roomRouter.get("/:id", room_controller_1.getRoomController);
 roomRouter.patch("/update-room/:id", jwt_1.verifyToken, isTenant_1.isTenant, (0, multer_1.uploader)().single("imageUrl"), room_controller_1.updateRoomController);
 exports.default = roomRouter;
