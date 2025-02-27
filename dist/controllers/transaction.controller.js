@@ -236,11 +236,7 @@ const confirmCheckInController = (req, res, next) => __awaiter(void 0, void 0, v
         }
         const paymentId = parseInt(req.params.id);
         const result = yield (0, confirm_check_in_service_1.confirmCheckInService)(paymentId, tenant.id);
-        res.status(200).json({
-            status: "success",
-            message: "Check-in confirmed successfully",
-            data: result,
-        });
+        res.status(200).json(result);
     }
     catch (error) {
         next(error);
@@ -264,11 +260,7 @@ const confirmCheckOutController = (req, res, next) => __awaiter(void 0, void 0, 
         }
         const paymentId = parseInt(req.params.id);
         const result = yield (0, confirm_check_out_service_1.confirmCheckOutService)(paymentId, tenant.id);
-        res.status(200).json({
-            status: "success",
-            message: "Check-out confirmed successfully",
-            data: result,
-        });
+        res.status(200).json(result);
     }
     catch (error) {
         next(error);

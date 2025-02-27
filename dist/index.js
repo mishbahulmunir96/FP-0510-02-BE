@@ -19,8 +19,12 @@ const roomNonAvailability_router_1 = __importDefault(require("./routes/roomNonAv
 const peakSeasonRate_router_1 = __importDefault(require("./routes/peakSeasonRate.router"));
 const statistic_router_1 = __importDefault(require("./routes/statistic.router"));
 const checkInReminder_1 = require("./script/checkInReminder");
+const calendar_router_1 = __importDefault(require("./routes/calendar.router"));
 const app = (0, express_1.default)();
-app.use((0, cors_1.default)());
+app.use((0, cors_1.default)({
+    credentials: true,
+    origin: [/http:\/\/localhost/, "https://ratehaven.my.id"],
+}));
 app.use(express_1.default.json());
 app.use("/samples", sample_router_1.default);
 app.use("/transactions", transaction_router_1.default);
@@ -34,6 +38,7 @@ app.use("/rooms", room_router_1.default);
 app.use("/peak-season-rates", peakSeasonRate_router_1.default);
 app.use("/room-non-availabilities", roomNonAvailability_router_1.default);
 app.use("/statistics", statistic_router_1.default);
+app.use("/calendar", calendar_router_1.default);
 app.use((err, req, res, next) => {
     res.status(400).send(err.message);
 });

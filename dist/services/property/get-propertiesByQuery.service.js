@@ -17,52 +17,48 @@ const prisma_1 = __importDefault(require("../../lib/prisma"));
 const getPropertiesServiceByQuery = (query) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { take, page, sortBy, sortOrder, search, guest, title, startDate, endDate, name, price, } = query;
+        // Build the room conditions separately to handle both guest and price filters
+        const roomConditions = Object.assign(Object.assign({ stock: { gt: 0 } }, (guest ? { guest: { gte: guest } } : {})), (price ? { price: { lte: price } } : {}));
+        // Add date availability condition if dates are provided
+        if (startDate && endDate) {
+            roomConditions.roomNonAvailability = {
+                none: {
+                    AND: [
+                        {
+                            startDate: { lte: endDate },
+                            endDate: { gte: startDate },
+                        },
+                    ],
+                },
+            };
+        }
+        // Build the main where clause
         const whereClause = {
             isDeleted: false,
-            // Fixed property category filter
-            propertyCategory: name
-                ? { name: { equals: name, mode: "insensitive" } }
-                : undefined,
+            status: "PUBLISHED", // Ensure only published properties are returned
             room: {
-                some: Object.assign(Object.assign({ stock: { gt: 0 } }, (guest ? { guest: { gte: guest } } : {})), { roomNonAvailability: startDate && endDate
-                        ? {
-                            none: {
-                                AND: [
-                                    {
-                                        startDate: { lte: endDate },
-                                        endDate: { gte: startDate },
-                                    },
-                                ],
-                            },
-                        }
-                        : undefined }),
+                some: roomConditions,
             },
         };
+        // Add property category filter if name is provided
+        if (name) {
+            whereClause.propertyCategory = {
+                name: { equals: name, mode: "insensitive" },
+            };
+        }
+        // Add title filter if provided
         if (title) {
             whereClause.title = { contains: title, mode: "insensitive" };
         }
+        // Add search filter if provided
         if (search) {
             whereClause.OR = [
                 { title: { contains: search, mode: "insensitive" } },
                 { description: { contains: search, mode: "insensitive" } },
+                { location: { contains: search, mode: "insensitive" } }, // Added location search
             ];
         }
-        if (price) {
-            whereClause.room = {
-                some: Object.assign(Object.assign({ price: { lte: price }, stock: { gt: 0 } }, (guest ? { guest: { gte: guest } } : {})), { roomNonAvailability: startDate && endDate
-                        ? {
-                            none: {
-                                AND: [
-                                    {
-                                        startDate: { lte: endDate },
-                                        endDate: { gte: startDate },
-                                    },
-                                ],
-                            },
-                        }
-                        : undefined }),
-            };
-        }
+        // Fetch properties with pagination and sorting
         const propertiesByQuery = yield prisma_1.default.property.findMany({
             where: whereClause,
             skip: Math.max(0, (page - 1) * take),
@@ -73,28 +69,41 @@ const getPropertiesServiceByQuery = (query) => __awaiter(void 0, void 0, void 0,
             include: {
                 propertyImage: {
                     select: { imageUrl: true },
+                    where: { isDeleted: false },
                 },
                 review: {
                     select: { rating: true },
                 },
                 tenant: {
-                    select: { name: true },
+                    select: { name: true, imageUrl: true },
                 },
-                room: true,
+                room: {
+                    where: { isDeleted: false },
+                    include: {
+                        roomImage: {
+                            select: { imageUrl: true },
+                            where: { isDeleted: false },
+                        },
+                        roomFacility: {
+                            where: { isDeleted: false },
+                        },
+                    },
+                },
                 propertyCategory: true,
-                propertyFacility: true,
+                propertyFacility: {
+                    where: { isDeleted: false },
+                },
             },
         });
+        // Get total count for pagination
         const count = yield prisma_1.default.property.count({ where: whereClause });
-        return {
-            data: propertiesByQuery,
-            meta: {
+        // Return data with pagination metadata
+        return Object.assign({ data: propertiesByQuery, meta: {
                 page,
                 take,
                 total: count,
-            },
-            whereClause: process.env.NODE_ENV !== "production" ? whereClause : undefined,
-        };
+                totalPages: Math.ceil(count / take),
+            } }, (process.env.NODE_ENV !== "production" ? { whereClause } : {}));
     }
     catch (error) {
         throw error;

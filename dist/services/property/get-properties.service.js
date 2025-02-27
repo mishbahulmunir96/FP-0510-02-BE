@@ -15,8 +15,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getPropertiesService = void 0;
 const prisma_1 = __importDefault(require("../../lib/prisma"));
 const getPropertiesService = (query) => __awaiter(void 0, void 0, void 0, function* () {
-    const { take = 1, // Nilai default untuk jumlah item per halaman
-    page = 1, sortBy = "createdAt", sortOrder = "asc", location, category, search, startDate, endDate, guest, } = query;
+    const { take = 8, // Nilai default untuk jumlah item per halaman
+    page = 1, sortBy = "createdAt", sortOrder = "desc", location, category, search, startDate, endDate, guest, priceMin, priceMax, } = query;
     // Validasi tanggal: jika salah satu tanggal diberikan, kedua tanggal harus ada dan valid
     if ((startDate && !endDate) || (!startDate && endDate)) {
         throw new Error("Both startDate and endDate are required for filtering");
@@ -32,11 +32,16 @@ const getPropertiesService = (query) => __awaiter(void 0, void 0, void 0, functi
         }
     }
     // Membangun whereClause untuk filter properti
-    const whereClause = Object.assign(Object.assign(Object.assign(Object.assign(Object.assign({ isDeleted: false, status: "PUBLISHED" }, (location && { location: { contains: location, mode: "insensitive" } })), (category && {
-        // Filter berdasarkan relasi PropertyCategory
-        PropertyCategory: {
-            some: {
-                name: { contains: category, mode: "insensitive" },
+    const whereClause = Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign({ isDeleted: false, status: "PUBLISHED" }, (location && {
+        location: {
+            contains: location,
+            mode: "insensitive",
+        },
+    })), (category && {
+        propertyCategory: {
+            name: {
+                contains: category,
+                mode: "insensitive",
             },
         },
     })), (search && {
@@ -51,12 +56,22 @@ const getPropertiesService = (query) => __awaiter(void 0, void 0, void 0, functi
                 isDeleted: false,
             },
         },
+    })), (priceMin && {
+        room: {
+            some: {
+                price: { gte: priceMin },
+                isDeleted: false,
+            },
+        },
+    })), (priceMax && {
+        room: {
+            some: {
+                price: { lte: priceMax },
+                isDeleted: false,
+            },
+        },
     })), (startDate &&
         endDate && {
-        // Filter properti berdasarkan tanggal pembuatan (misalnya, sebelum endDate)
-        createdAt: {
-            lte: new Date(endDate),
-        },
         room: {
             some: Object.assign(Object.assign({ isDeleted: false }, (guest && { guest: { gte: guest } })), { 
                 // Pastikan tidak ada reservasi yang tumpang tindih dengan periode yang dipilih
@@ -66,7 +81,11 @@ const getPropertiesService = (query) => __awaiter(void 0, void 0, void 0, functi
                             {
                                 payment: {
                                     status: {
-                                        in: ["WAITING_FOR_PAYMENT_CONFIRMATION", "PROCESSED"],
+                                        in: [
+                                            "WAITING_FOR_PAYMENT_CONFIRMATION",
+                                            "PROCESSED",
+                                            "CHECKED_IN",
+                                        ],
                                     },
                                 },
                             },
@@ -103,15 +122,26 @@ const getPropertiesService = (query) => __awaiter(void 0, void 0, void 0, functi
             take,
             orderBy: orderByClause,
             include: {
-                propertyCategory: true, // Tambahkan ini
-                propertyImage: true,
-                propertyFacility: true,
+                propertyCategory: true,
+                propertyImage: {
+                    where: { isDeleted: false },
+                },
+                propertyFacility: {
+                    where: { isDeleted: false },
+                },
                 tenant: true,
                 room: {
+                    where: { isDeleted: false },
                     include: {
-                        roomImage: true,
-                        roomFacility: true,
-                        peakSeasonRate: true,
+                        roomImage: {
+                            where: { isDeleted: false },
+                        },
+                        roomFacility: {
+                            where: { isDeleted: false },
+                        },
+                        peakSeasonRate: {
+                            where: { isDeleted: false },
+                        },
                         reservation: {
                             include: {
                                 payment: true,
