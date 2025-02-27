@@ -21,7 +21,8 @@ const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 const handlebars_1 = __importDefault(require("handlebars"));
 const registerService = (data, file) => __awaiter(void 0, void 0, void 0, function* () {
-    const { email, role, name } = data;
+    const { email } = data;
+    const role = data.role || "USER"; // Default to USER if role is not provided
     // Cek apakah email sudah terdaftar
     const existingUser = yield prisma_1.default.user.findUnique({
         where: { email },
@@ -29,9 +30,9 @@ const registerService = (data, file) => __awaiter(void 0, void 0, void 0, functi
     if (existingUser) {
         throw new Error("Email already registered");
     }
-    // Upload gambar jika ada
+    // Upload gambar jika ada (hanya untuk tenant)
     let imageUrl = "";
-    if (file) {
+    if (file && role === "TENANT") {
         try {
             const result = yield (0, cloudinary_1.cloudinaryUpload)(file);
             imageUrl = result.secure_url;
@@ -40,6 +41,8 @@ const registerService = (data, file) => __awaiter(void 0, void 0, void 0, functi
             throw new Error("Image upload failed");
         }
     }
+    // Generate name from email for USER role
+    const defaultName = email.split("@")[0];
     // Buat token verifikasi email dengan expiry 1 jam
     const verificationToken = jsonwebtoken_1.default.sign({
         email,
@@ -52,15 +55,18 @@ const registerService = (data, file) => __awaiter(void 0, void 0, void 0, functi
         const user = yield prisma_1.default.$transaction((prisma) => __awaiter(void 0, void 0, void 0, function* () {
             const newUser = yield prisma.user.create({
                 data: {
-                    name: data.name,
-                    email: data.email,
+                    name: role === "USER" ? defaultName : data.name,
+                    email: email,
                     token: verificationToken,
                     role: role,
-                    isVerified: false, // Memastikan user belum terverifikasi
+                    isVerified: false,
                 },
             });
             if (role === "TENANT") {
-                if (!data.phoneNumber || !data.bankName || !data.bankNumber) {
+                if (!data.name ||
+                    !data.phoneNumber ||
+                    !data.bankName ||
+                    !data.bankNumber) {
                     throw new Error("Tenant data incomplete");
                 }
                 yield prisma.tenant.create({
@@ -94,7 +100,7 @@ const registerService = (data, file) => __awaiter(void 0, void 0, void 0, functi
         const mainTemplate = handlebars_1.default.compile(mainTemplateSource);
         // Data untuk template
         const replacements = {
-            name: data.name,
+            name: role === "USER" ? defaultName : data.name,
             verificationLink: `${process.env.BASE_URL_FE}/verify?token=${verificationToken}`,
             logoUrl: "https://res.cloudinary.com/andikalp/image/upload/v1738209868/qdx0l3jzw4fsqoag71dl.png",
             appName: "RateHaven",
