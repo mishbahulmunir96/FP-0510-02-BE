@@ -47,19 +47,15 @@ exports.deletePeakSeasonRate = deletePeakSeasonRate;
 const getPeakSeasons = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const query = {
-            take: Number(req.query.take) || 10,
-            page: Number(req.query.page) || 1,
-            sortBy: String(req.query.sortBy) || "createdAt",
-            sortOrder: String(req.query.sortOrder) || "desc",
-            search: String(req.query.search) || "",
-            price: Number(req.query.price) || undefined,
-            roomId: Number(req.query.roomId) || undefined,
-            startDate: req.query.startDate
-                ? new Date(String(req.query.startDate))
-                : undefined,
-            endDate: req.query.endDate
-                ? new Date(String(req.query.endDate))
-                : undefined,
+            take: parseInt(req.query.take) || 10,
+            page: parseInt(req.query.page) || 1,
+            sortBy: req.query.sortBy || 'createdAt',
+            sortOrder: req.query.sortOrder || 'asc',
+            search: req.query.search || '',
+            price: Number(req.query.search) || 0,
+            roomId: Number(req.query.search) || 0,
+            startDate: new Date(req.query.search) || undefined,
+            endDate: new Date(req.query.search) || undefined,
         };
         const result = yield (0, get_peak_season_service_1.getPeakSeasonsService)(query, Number(res.locals.user.id));
         res.status(200).send(result);

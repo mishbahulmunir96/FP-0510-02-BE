@@ -1,11 +1,13 @@
 import { Router } from "express";
-import { verifyToken } from "../lib/jwt";
-import { isTenant } from "../lib/isTenant";
 import {
+  // getCalendarReportController,
+  getPropertyCalendarReportController,
   getPropertyReportController,
   getTransactionReportController,
   getUserReportController,
 } from "../controllers/statistic.controller";
+import { isTenant } from "../lib/isTenant";
+import { verifyToken } from "../lib/jwt";
 
 const router = Router();
 
@@ -17,5 +19,11 @@ router.get(
   getTransactionReportController
 );
 router.get("/user", verifyToken, isTenant, getUserReportController);
+router.get(
+  "/calendar-report",
+  verifyToken,
+  isTenant,
+  getPropertyCalendarReportController
+);
 
 export default router;

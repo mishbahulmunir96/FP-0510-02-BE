@@ -1,6 +1,8 @@
+// services/statistic/get-user-report.service.ts
 import { Payment, Reservation } from "../../../prisma/generated/client";
 import prisma from "../../lib/prisma";
 import { UserReport } from "../../types/report";
+import { normalizeToUTC } from "../../utils/date.utils";
 
 interface GetUserReportParams {
   tenantId: number;
@@ -31,15 +33,18 @@ export const getUserReportService = async ({
   tenantId,
   startDate,
   endDate,
-  limit = 10, // Default limit for top users
+  limit = 10,
 }: GetUserReportParams): Promise<UserReport> => {
   try {
+    const utcStartDate = normalizeToUTC(startDate);
+    const utcEndDate = normalizeToUTC(endDate);
+
     // Get all payments for tenant's properties with user data
     const payments = (await prisma.payment.findMany({
       where: {
         createdAt: {
-          gte: startDate,
-          lte: endDate,
+          gte: utcStartDate,
+          lte: utcEndDate,
         },
         reservation: {
           some: {
@@ -59,8 +64,8 @@ export const getUserReportService = async ({
             review: {
               where: {
                 createdAt: {
-                  gte: startDate,
-                  lte: endDate,
+                  gte: utcStartDate,
+                  lte: utcEndDate,
                 },
               },
               select: {
@@ -92,17 +97,17 @@ export const getUserReportService = async ({
       return acc;
     }, {} as Record<number, UserBookingDetails>);
 
-    // Calculate repeat customers
     const repeatCustomers = Object.values(userBookings)
-      .filter((user: UserBookingDetails) => user.bookings.length > 1)
-      .map((user: UserBookingDetails) => ({
+      .filter((user) => user.bookings.length > 1)
+      .map((user) => ({
         userId: user.userId,
         name: user.name,
         totalBookings: user.bookings.length,
       }));
+
     // Calculate top spenders
     const topSpenders = Object.values(userBookings)
-      .map((user: UserBookingDetails) => ({
+      .map((user) => ({
         userId: user.userId,
         name: user.name,
         totalSpent: user.totalSpent,
@@ -113,68 +118,59 @@ export const getUserReportService = async ({
       }))
       .sort((a, b) => b.totalSpent - a.totalSpent)
       .slice(0, limit);
-    // Calculate booking patterns
-    const bookingPatterns = Object.values(userBookings).map(
-      (user: UserBookingDetails) => {
-        const userPayments = user.bookings;
-        const totalBookings = userPayments.length;
 
-        // Calculate average stay duration
-        const stayDurations = userPayments.flatMap(
-          (payment: PaymentWithDetails) =>
-            payment.reservation.map((res: Reservation) => {
-              const start = new Date(res.startDate);
-              const end = new Date(res.endDate);
-              return Math.ceil(
-                (end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)
-              );
-            })
-        );
-        const averageStayDuration =
-          stayDurations.length > 0
-            ? Number(
-                (
-                  stayDurations.reduce(
-                    (sum: number, duration: number) => sum + duration,
-                    0
-                  ) / stayDurations.length
-                ).toFixed(2)
-              )
-            : 0;
+    const bookingPatterns = Object.values(userBookings).map((user) => {
+      const userPayments = user.bookings;
+      const totalBookings = userPayments.length;
 
-        // Calculate preferred payment method
-        const paymentMethods = userPayments.reduce(
-          (acc: Record<string, number>, payment: Payment) => {
-            acc[payment.paymentMethode] =
-              (acc[payment.paymentMethode] || 0) + 1;
-            return acc;
-          },
-          {} as Record<string, number>
-        );
+      const stayDurations = userPayments.flatMap((payment) =>
+        payment.reservation.map((res) => {
+          const start = normalizeToUTC(new Date(res.startDate));
+          const end = normalizeToUTC(new Date(res.endDate));
+          return Math.ceil(
+            (end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)
+          );
+        })
+      );
 
-        const preferredPaymentMethod = Object.entries(paymentMethods).sort(
-          (a, b) => b[1] - a[1]
-        )[0][0];
+      const averageStayDuration =
+        stayDurations.length > 0
+          ? Number(
+              (
+                stayDurations.reduce((sum, duration) => sum + duration, 0) /
+                stayDurations.length
+              ).toFixed(2)
+            )
+          : 0;
 
-        // Calculate cancellations
-        const totalCancellations = userPayments.filter(
-          (payment: Payment) => payment.status === "CANCELLED"
-        ).length;
+      const paymentMethods = userPayments.reduce(
+        (acc: Record<string, number>, payment) => {
+          acc[payment.paymentMethode] = (acc[payment.paymentMethode] || 0) + 1;
+          return acc;
+        },
+        {}
+      );
 
-        return {
-          userId: user.userId,
-          name: user.name,
-          bookings: {
-            totalBookings,
-            averageStayDuration,
-            preferredPaymentMethod,
-            totalCancellations,
-          },
-        };
-      }
-    );
+      const preferredPaymentMethod = Object.entries(paymentMethods).sort(
+        (a, b) => b[1] - a[1]
+      )[0][0];
 
-    // Calculate average spending per user
+      const totalCancellations = userPayments.filter(
+        (payment) => payment.status === "CANCELLED"
+      ).length;
+
+      return {
+        userId: user.userId,
+        name: user.name,
+        bookings: {
+          totalBookings,
+          averageStayDuration,
+          preferredPaymentMethod,
+          totalCancellations,
+        },
+      };
+    });
+
     const totalSpending = payments.reduce(
       (sum, payment) => sum + payment.totalPrice,
       0
@@ -184,7 +180,6 @@ export const getUserReportService = async ({
         ? Number((totalSpending / totalUniqueUsers).toFixed(2))
         : 0;
 
-    // Calculate rating distribution
     const allRatings = payments.flatMap((p) =>
       p.user.review.map((r) => r.rating)
     );
@@ -197,7 +192,10 @@ export const getUserReportService = async ({
       ([rating, count]) => ({
         rating: Number(rating),
         count,
-        percentage: Number(((count / allRatings.length) * 100).toFixed(2)),
+        percentage:
+          allRatings.length > 0
+            ? Number(((count / allRatings.length) * 100).toFixed(2))
+            : 0,
       })
     );
 
@@ -205,9 +203,12 @@ export const getUserReportService = async ({
       totalUniqueUsers,
       repeatCustomers: {
         count: repeatCustomers.length,
-        percentage: Number(
-          ((repeatCustomers.length / totalUniqueUsers) * 100).toFixed(2)
-        ),
+        percentage:
+          totalUniqueUsers > 0
+            ? Number(
+                ((repeatCustomers.length / totalUniqueUsers) * 100).toFixed(2)
+              )
+            : 0,
         users: repeatCustomers,
       },
       topSpenders,
@@ -216,6 +217,7 @@ export const getUserReportService = async ({
       ratingDistribution,
     };
   } catch (error) {
+    console.error("Error in getUserReportService:", error);
     throw error;
   }
 };

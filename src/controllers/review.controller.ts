@@ -74,10 +74,7 @@ export const getReviewByTransactionController = async (
     const result = await getReviewByTransactionService(paymentId, userId);
 
     if (!result) {
-      res.status(404).send({
-        message: "Review not found",
-      });
-      return;
+      throw new Error("Review not found");
     }
 
     res.status(200).send(result);
@@ -119,8 +116,7 @@ export const getReviewByTenantController = async (
     const result = await getReviewByTenantService(paymentId);
 
     if (!result) {
-      res.status(404).send({ message: "Review not found" });
-      return;
+      throw new Error("Review not found");
     }
 
     res.status(200).send(result);

@@ -19,7 +19,7 @@ const checkRoomAvailability = (roomId, startDate, endDate) => __awaiter(void 0, 
     const activeReservations = yield prisma_1.default.reservation.findMany({
         where: {
             roomId,
-            OR: [
+            AND: [
                 {
                     startDate: { lt: endDate },
                     endDate: { gt: startDate },

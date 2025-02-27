@@ -45,6 +45,12 @@ const getTransactionsByUserService = (userId, query) => __awaiter(void 0, void 0
                                         },
                                     },
                                 },
+                                roomImage: {
+                                    where: { isDeleted: false },
+                                    select: {
+                                        imageUrl: true,
+                                    },
+                                },
                             },
                         },
                     },
@@ -82,6 +88,7 @@ const getTransactionsByUserService = (userId, query) => __awaiter(void 0, void 0
                         roomType: reserv.room.type,
                         propertyTitle: reserv.room.property.title,
                         propertyLocation: reserv.room.property.location,
+                        roomImages: reserv.room.roomImage,
                         tenant: tenant
                             ? {
                                 id: tenant.id,
