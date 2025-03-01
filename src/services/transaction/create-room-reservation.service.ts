@@ -106,8 +106,8 @@ export const createRoomReservationService = async (
           currency: "IDR",
           shouldSendEmail: true,
           reminderTime: 1,
-          successRedirectUrl: `https://${BASE_URL_FE}/user/dashboard/transactions/${payment.id}`,
-          failureRedirectUrl: `https://${BASE_URL_FE}/user/dashboard/transactions/${payment.id}`,
+          successRedirectUrl: `${BASE_URL_FE}/user/dashboard/transactions/${payment.id}`,
+          failureRedirectUrl: `${BASE_URL_FE}/user/dashboard/transactions/${payment.id}`,
           customerNotificationPreference: {
             invoiceCreated: ["email"],
             invoiceReminder: ["email"],
