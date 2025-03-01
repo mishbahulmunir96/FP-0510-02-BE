@@ -22,13 +22,13 @@ const router = Router();
 
 router.get("/", verifyToken, getTransactionsByUserController);
 router.get("/tenant", verifyToken, isTenant, getTransactionsByTenantController);
-router.get("/:id", verifyToken, getTransactionByUserController);
 router.get(
   "/tenant/:id",
   verifyToken,
   isTenant,
   getTransactionByTenantController
 );
+router.get("/:id", verifyToken, getTransactionByUserController);
 router.post(
   "/",
   verifyToken,
@@ -44,16 +44,16 @@ router.patch(
 );
 router.patch("/cancel/:id", verifyToken, cancelTransactionByUserController);
 router.patch(
-  "/tenant/:id",
-  verifyToken,
-  isTenant,
-  approveTransactionByTenantController
-);
-router.patch(
   "/tenant/cancel/:id",
   verifyToken,
   isTenant,
   cancelTransactionByTenantController
+);
+router.patch(
+  "/tenant/:id",
+  verifyToken,
+  isTenant,
+  approveTransactionByTenantController
 );
 router.patch("/check-in/:id", verifyToken, isTenant, confirmCheckInController);
 router.patch(

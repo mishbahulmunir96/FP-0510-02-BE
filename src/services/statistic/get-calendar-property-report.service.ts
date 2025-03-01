@@ -1,4 +1,4 @@
-import { StatusPayment, Type } from "../../../prisma/generated/client";
+import { StatusPayment } from "../../../prisma/generated/client";
 import prisma from "../../lib/prisma";
 
 interface CalendarReportQuery {
@@ -6,16 +6,15 @@ interface CalendarReportQuery {
   tenantId: number;
   startDate: Date;
   endDate: Date;
-  roomType?: Type;
+  roomId?: number;
 }
 
 export const getPropertyCalendarReportService = async (
   query: CalendarReportQuery
 ) => {
   try {
-    const { propertyId, tenantId, startDate, endDate, roomType } = query;
+    const { propertyId, tenantId, startDate, endDate, roomId } = query;
 
-    // Verify property belongs to tenant
     const property = await prisma.property.findFirst({
       where: {
         id: propertyId,
@@ -28,7 +27,7 @@ export const getPropertyCalendarReportService = async (
         room: {
           where: {
             isDeleted: false,
-            ...(roomType && { type: roomType }),
+            ...(roomId && { id: roomId }),
           },
           select: {
             id: true,
@@ -59,7 +58,7 @@ export const getPropertyCalendarReportService = async (
         room: {
           propertyId,
           isDeleted: false,
-          ...(roomType && { type: roomType }),
+          ...(roomId && { id: roomId }),
         },
         startDate: { lte: endDate },
         endDate: { gte: startDate },
@@ -87,7 +86,7 @@ export const getPropertyCalendarReportService = async (
         room: {
           propertyId,
           isDeleted: false,
-          ...(roomType && { type: roomType }),
+          ...(roomId && { id: roomId }),
         },
         isDeleted: false,
         startDate: { lte: endDate },
@@ -106,7 +105,7 @@ export const getPropertyCalendarReportService = async (
         room: {
           propertyId,
           isDeleted: false,
-          ...(roomType && { type: roomType }),
+          ...(roomId && { id: roomId }),
         },
         isDeleted: false,
         startDate: { lte: endDate },
@@ -164,8 +163,29 @@ export const getPropertyCalendarReportService = async (
         };
       });
 
+      const totalRooms = roomsStatus.reduce(
+        (sum, room) => sum + room.totalRooms,
+        0
+      );
+      const totalBookedRooms = roomsStatus.reduce(
+        (sum, room) => sum + room.bookedRooms,
+        0
+      );
+      const totalAvailableRooms = roomsStatus.reduce(
+        (sum, room) => sum + room.availableRooms,
+        0
+      );
+      const occupancyRate =
+        totalRooms > 0
+          ? parseFloat(((totalBookedRooms / totalRooms) * 100).toFixed(1))
+          : 0;
+
       return {
         date: date.toISOString().split("T")[0],
+        totalRooms,
+        totalBookedRooms,
+        totalAvailableRooms,
+        occupancyRate,
         rooms: roomsStatus,
       };
     });
