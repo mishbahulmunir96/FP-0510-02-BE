@@ -18,7 +18,12 @@ import calendarRouter from "./routes/calendar.router";
 
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    credentials: true,
+    origin: [/http:\/\/localhost/, "https://ratehaven.my.id"],
+  })
+);
 app.use(express.json());
 
 app.use("/samples", sampleRouter);

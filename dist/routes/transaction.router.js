@@ -10,13 +10,13 @@ const transaction_validators_1 = require("../validators/transaction.validators")
 const router = (0, express_1.Router)();
 router.get("/", jwt_1.verifyToken, transaction_controller_1.getTransactionsByUserController);
 router.get("/tenant", jwt_1.verifyToken, isTenant_1.isTenant, transaction_controller_1.getTransactionsByTenantController);
-router.get("/:id", jwt_1.verifyToken, transaction_controller_1.getTransactionByUserController);
 router.get("/tenant/:id", jwt_1.verifyToken, isTenant_1.isTenant, transaction_controller_1.getTransactionByTenantController);
+router.get("/:id", jwt_1.verifyToken, transaction_controller_1.getTransactionByUserController);
 router.post("/", jwt_1.verifyToken, transaction_validators_1.validateCreateReservation, transaction_controller_1.createRoomReservationController);
 router.patch("/:id", jwt_1.verifyToken, fileFilter_1.fileFilter, (0, multer_1.uploader)().single("paymentProof"), transaction_controller_1.uploadPaymentProofController);
 router.patch("/cancel/:id", jwt_1.verifyToken, transaction_controller_1.cancelTransactionByUserController);
-router.patch("/tenant/:id", jwt_1.verifyToken, isTenant_1.isTenant, transaction_controller_1.approveTransactionByTenantController);
 router.patch("/tenant/cancel/:id", jwt_1.verifyToken, isTenant_1.isTenant, transaction_controller_1.cancelTransactionByTenantController);
+router.patch("/tenant/:id", jwt_1.verifyToken, isTenant_1.isTenant, transaction_controller_1.approveTransactionByTenantController);
 router.patch("/check-in/:id", jwt_1.verifyToken, isTenant_1.isTenant, transaction_controller_1.confirmCheckInController);
 router.patch("/check-out/:id", jwt_1.verifyToken, isTenant_1.isTenant, transaction_controller_1.confirmCheckOutController);
 exports.default = router;
