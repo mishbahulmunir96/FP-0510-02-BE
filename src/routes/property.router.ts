@@ -31,13 +31,13 @@ router.post(
   createPropertyController
 );
 router.patch(
-  "/update-property/:id",
+  "/:id",
   verifyToken,
   isTenant,
   uploader().array("imageUrl", 10),
   updatePropertyController
 );
 
-router.delete("/delete/:id", verifyToken, isTenant, deletePropertyController);
+router.delete("/:id", verifyToken, isTenant, deletePropertyController);
 
 export default router;
