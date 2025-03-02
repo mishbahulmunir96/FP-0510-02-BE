@@ -27,14 +27,14 @@ router.post(
   "/create-property",
   verifyToken,
   isTenant,
-  uploader().single("imageUrl"),
+  uploader().array("imageUrl", 10), // Changed from single to array with max 10 images
   createPropertyController
 );
 router.patch(
   "/update-property/:id",
   verifyToken,
   isTenant,
-  uploader().single("imageUrl"),
+  uploader().array("imageUrl", 10),
   updatePropertyController
 );
 

@@ -91,13 +91,8 @@ const createRoomReservationService = (body) => __awaiter(void 0, void 0, void 0,
                     currency: "IDR",
                     shouldSendEmail: true,
                     reminderTime: 1,
-<<<<<<< HEAD
-                    successRedirectUrl: `https://${config_1.BASE_URL_FE}/user/dashboard/transactions/${payment.id}`,
-                    failureRedirectUrl: `https://${config_1.BASE_URL_FE}/user/dashboard/transactions/${payment.id}`,
-=======
                     successRedirectUrl: `${config_1.BASE_URL_FE}/user/dashboard/transactions/${payment.id}`,
                     failureRedirectUrl: `${config_1.BASE_URL_FE}/user/dashboard/transactions/${payment.id}`,
->>>>>>> fddae4311966ca9c4ec118f7cc6a13e6d288c173
                     customerNotificationPreference: {
                         invoiceCreated: ["email"],
                         invoiceReminder: ["email"],

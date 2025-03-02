@@ -23,7 +23,7 @@ interface CreatePropertyResponse {
 
 export const createPropertyService = async (
   body: CreatePropertyBody,
-  file: Express.Multer.File,
+  files: Express.Multer.File[],
   userId: number
 ): Promise<CreatePropertyResponse> => {
   try {
@@ -85,10 +85,13 @@ export const createPropertyService = async (
       throw new Error("Property category not found");
     }
 
-    // Upload image if provided
-    const imageResult = file ? await cloudinaryUpload(file) : null;
+    // Upload images if provided
+    const imageResults =
+      files && files.length > 0
+        ? await Promise.all(files.map((file) => cloudinaryUpload(file)))
+        : [];
 
-    // Create property and image in a transaction
+    // Create property and images in a transaction
     const result = await prisma.$transaction(async (tx) => {
       const newProperty = await tx.property.create({
         data: {
@@ -110,14 +113,21 @@ export const createPropertyService = async (
         },
       });
 
-      if (imageResult?.secure_url) {
-        await tx.propertyImage.create({
-          data: {
-            imageUrl: imageResult.secure_url,
-            propertyId: newProperty.id,
-            isDeleted: false,
-          },
-        });
+      // Create property images
+      if (imageResults.length > 0) {
+        await Promise.all(
+          imageResults
+            .filter((result) => result?.secure_url)
+            .map((result) =>
+              tx.propertyImage.create({
+                data: {
+                  imageUrl: result.secure_url,
+                  propertyId: newProperty.id,
+                  isDeleted: false,
+                },
+              })
+            )
+        );
       }
 
       return newProperty;
