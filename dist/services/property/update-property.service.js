@@ -16,7 +16,7 @@ exports.updatePropertyService = void 0;
 const client_1 = require("../../../prisma/generated/client");
 const cloudinary_1 = require("../../lib/cloudinary");
 const prisma_1 = __importDefault(require("../../lib/prisma"));
-const updatePropertyService = (userId, propertyId, body, file) => __awaiter(void 0, void 0, void 0, function* () {
+const updatePropertyService = (userId, propertyId, body, files) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         // 1. Validasi user
         const user = yield prisma_1.default.user.findUnique({
@@ -56,17 +56,16 @@ const updatePropertyService = (userId, propertyId, body, file) => __awaiter(void
         if (!currentProperty) {
             throw { code: "PROPERTY_NOT_FOUND", message: "Property not found" };
         }
-        // 4. Upload image jika ada
-        let secureUrl;
-        if (file) {
+        // 4. Upload images if provided
+        let imageResults = [];
+        if (files && files.length > 0) {
             try {
-                const { secure_url } = yield (0, cloudinary_1.cloudinaryUpload)(file);
-                secureUrl = secure_url;
+                imageResults = yield Promise.all(files.map((file) => (0, cloudinary_1.cloudinaryUpload)(file)));
             }
             catch (error) {
                 throw {
                     code: "IMAGE_UPLOAD_FAILED",
-                    message: "Failed to upload image",
+                    message: "Failed to upload images",
                 };
             }
         }
@@ -97,27 +96,24 @@ const updatePropertyService = (userId, propertyId, body, file) => __awaiter(void
                     },
                 },
             });
-            // Handle image update
-            if (file && secureUrl) {
+            // Handle image updates if new images provided
+            if (files && files.length > 0 && imageResults.length > 0) {
+                // If we're replacing all images, first delete existing ones
                 if (currentProperty.propertyImage.length > 0) {
-                    // Update existing image
-                    yield tx.propertyImage.update({
-                        where: { id: currentProperty.propertyImage[0].id },
-                        data: {
-                            imageUrl: secureUrl,
-                            updatedAt: new Date(),
-                        },
+                    yield tx.propertyImage.deleteMany({
+                        where: { propertyId: propertyId },
                     });
                 }
-                else {
-                    // Create new image
-                    yield tx.propertyImage.create({
-                        data: {
-                            imageUrl: secureUrl,
-                            propertyId: updatedProperty.id,
-                        },
-                    });
-                }
+                // Create new image records for each uploaded image
+                yield Promise.all(imageResults
+                    .filter((result) => result === null || result === void 0 ? void 0 : result.secure_url)
+                    .map((result) => tx.propertyImage.create({
+                    data: {
+                        imageUrl: result.secure_url,
+                        propertyId: updatedProperty.id,
+                        isDeleted: false,
+                    },
+                })));
             }
             // Get fresh data after all updates
             const finalProperty = yield tx.property.findUnique({

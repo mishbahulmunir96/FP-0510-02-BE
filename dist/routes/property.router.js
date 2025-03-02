@@ -14,7 +14,8 @@ router.get("/:slug", property_controller_1.getPropertyController);
 router.get("/search", property_controller_1.getPropertiesByQueryController);
 router.get("/tenant", jwt_1.verifyToken, isTenant_1.isTenant, property_controller_1.getTenantPropertiesController);
 router.get("/tenant/:id", property_controller_1.getPropertyTenantController);
-router.post("/create-property", jwt_1.verifyToken, isTenant_1.isTenant, (0, multer_1.uploader)().single("imageUrl"), property_controller_1.createPropertyController);
-router.patch("/update-property/:id", jwt_1.verifyToken, isTenant_1.isTenant, (0, multer_1.uploader)().single("imageUrl"), property_controller_1.updatePropertyController);
-router.delete("/delete/:id", jwt_1.verifyToken, isTenant_1.isTenant, property_controller_1.deletePropertyController);
+router.post("/create-property", jwt_1.verifyToken, isTenant_1.isTenant, (0, multer_1.uploader)().array("imageUrl", 10), // Changed from single to array with max 10 images
+property_controller_1.createPropertyController);
+router.patch("/:id", jwt_1.verifyToken, isTenant_1.isTenant, (0, multer_1.uploader)().array("imageUrl", 10), property_controller_1.updatePropertyController);
+router.delete("/:id", jwt_1.verifyToken, isTenant_1.isTenant, property_controller_1.deletePropertyController);
 exports.default = router;
