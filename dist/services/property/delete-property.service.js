@@ -20,7 +20,7 @@ const deletePropertyService = (id, userId) => __awaiter(void 0, void 0, void 0, 
         const user = yield prisma_1.default.user.findFirst({
             where: {
                 id: userId,
-                NOT: { isDeleted: true }
+                NOT: { isDeleted: true },
             },
         });
         if (!user) {
@@ -33,7 +33,7 @@ const deletePropertyService = (id, userId) => __awaiter(void 0, void 0, void 0, 
         const tenant = yield prisma_1.default.tenant.findFirst({
             where: {
                 userId: user.id,
-                NOT: { isDeleted: true }
+                NOT: { isDeleted: true },
             },
         });
         if (!tenant) {
@@ -43,7 +43,7 @@ const deletePropertyService = (id, userId) => __awaiter(void 0, void 0, void 0, 
         const property = yield prisma_1.default.property.findFirst({
             where: {
                 id,
-                NOT: { isDeleted: true }
+                NOT: { isDeleted: true },
             },
         });
         if (!property) {
@@ -64,7 +64,7 @@ const deletePropertyService = (id, userId) => __awaiter(void 0, void 0, void 0, 
                 },
                 data: {
                     isDeleted: true,
-                    updatedAt: currentDate
+                    updatedAt: currentDate,
                 },
             });
             // 2. Soft delete all room images
@@ -76,7 +76,7 @@ const deletePropertyService = (id, userId) => __awaiter(void 0, void 0, void 0, 
                 },
                 data: {
                     isDeleted: true,
-                    updatedAt: currentDate
+                    updatedAt: currentDate,
                 },
             });
             // 3. Soft delete all room non-availabilities
@@ -88,7 +88,7 @@ const deletePropertyService = (id, userId) => __awaiter(void 0, void 0, void 0, 
                 },
                 data: {
                     isDeleted: true,
-                    updatedAt: currentDate
+                    updatedAt: currentDate,
                 },
             });
             // 4. Soft delete all peak season rates
@@ -100,7 +100,7 @@ const deletePropertyService = (id, userId) => __awaiter(void 0, void 0, void 0, 
                 },
                 data: {
                     isDeleted: true,
-                    updatedAt: currentDate
+                    updatedAt: currentDate,
                 },
             });
             // 5. Soft delete all rooms
@@ -108,7 +108,7 @@ const deletePropertyService = (id, userId) => __awaiter(void 0, void 0, void 0, 
                 where: { propertyId: id },
                 data: {
                     isDeleted: true,
-                    updatedAt: currentDate
+                    updatedAt: currentDate,
                 },
             });
             // 6. Soft delete property facilities
@@ -116,7 +116,7 @@ const deletePropertyService = (id, userId) => __awaiter(void 0, void 0, void 0, 
                 where: { propertyId: id },
                 data: {
                     isDeleted: true,
-                    updatedAt: currentDate
+                    updatedAt: currentDate,
                 },
             });
             // 7. Soft delete property images
@@ -124,7 +124,7 @@ const deletePropertyService = (id, userId) => __awaiter(void 0, void 0, void 0, 
                 where: { propertyId: id },
                 data: {
                     isDeleted: true,
-                    updatedAt: currentDate
+                    updatedAt: currentDate,
                 },
             });
             // 8. Mark property reviews as deleted
@@ -132,7 +132,7 @@ const deletePropertyService = (id, userId) => __awaiter(void 0, void 0, void 0, 
             yield tx.review.updateMany({
                 where: { propertyId: id },
                 data: {
-                    updatedAt: currentDate
+                    updatedAt: currentDate,
                 },
             });
             // 9. Finally soft delete the property
@@ -140,19 +140,19 @@ const deletePropertyService = (id, userId) => __awaiter(void 0, void 0, void 0, 
                 where: { id },
                 data: {
                     isDeleted: true,
-                    updatedAt: currentDate
+                    updatedAt: currentDate,
                 },
                 include: {
                     propertyImage: {
                         where: {
-                            NOT: { isDeleted: true }
-                        }
+                            NOT: { isDeleted: true },
+                        },
                     },
                     propertyCategory: true,
                     room: {
                         where: {
-                            NOT: { isDeleted: true }
-                        }
+                            NOT: { isDeleted: true },
+                        },
                     },
                 },
             });
@@ -177,7 +177,7 @@ const restorePropertyService = (id, userId) => __awaiter(void 0, void 0, void 0,
         const user = yield prisma_1.default.user.findFirst({
             where: {
                 id: userId,
-                NOT: { isDeleted: true }
+                NOT: { isDeleted: true },
             },
         });
         if (!user) {
@@ -189,7 +189,7 @@ const restorePropertyService = (id, userId) => __awaiter(void 0, void 0, void 0,
         const tenant = yield prisma_1.default.tenant.findFirst({
             where: {
                 userId: user.id,
-                NOT: { isDeleted: true }
+                NOT: { isDeleted: true },
             },
         });
         if (!tenant) {
@@ -198,7 +198,7 @@ const restorePropertyService = (id, userId) => __awaiter(void 0, void 0, void 0,
         const property = yield prisma_1.default.property.findFirst({
             where: {
                 id,
-                isDeleted: true
+                isDeleted: true,
             },
         });
         if (!property) {
@@ -246,7 +246,7 @@ const restorePropertyService = (id, userId) => __awaiter(void 0, void 0, void 0,
                 where: { id },
                 data: {
                     isDeleted: false,
-                    updatedAt: currentDate
+                    updatedAt: currentDate,
                 },
                 include: {
                     propertyImage: true,
