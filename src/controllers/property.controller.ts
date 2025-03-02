@@ -138,7 +138,7 @@ export const createPropertyController = async (
   try {
     const result = await createPropertyService(
       req.body,
-      req.file!,
+      req.files as Express.Multer.File[], // Changed from req.file! to req.files
       Number(res.locals.user.id)
     );
     res.status(200).send(result);
@@ -157,7 +157,7 @@ export async function updatePropertyController(
       Number(res.locals.user.id),
       Number(req.params.id),
       req.body,
-      req.file!
+      req.files as Express.Multer.File[]
     );
     res.status(200).send(result);
   } catch (error) {

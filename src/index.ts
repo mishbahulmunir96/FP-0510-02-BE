@@ -15,6 +15,7 @@ import peakSeasonRateRouter from "./routes/peakSeasonRate.router";
 import statisticRouter from "./routes/statistic.router";
 import { initializeCheckInReminder } from "./script/checkInReminder";
 import calendarRouter from "./routes/calendar.router";
+import propertyImagesRouter from "./routes/propertyImage.router";
 
 const app = express();
 
@@ -28,7 +29,7 @@ app.use(express.json());
 
 app.use("/samples", sampleRouter);
 app.use("/transactions", transactionRouter);
-app.use("/property", propertyRouter);
+app.use("/properties", propertyRouter);
 app.use("/auth", authRouter);
 app.use("/account", accountRouter);
 app.use("/xendit", xenditRouter);
@@ -39,6 +40,7 @@ app.use("/peak-season-rates", peakSeasonRateRouter);
 app.use("/room-non-availabilities", roomNonAvailabilityRouter);
 app.use("/statistics", statisticRouter);
 app.use("/calendar", calendarRouter);
+app.use("/property-images", propertyImagesRouter);
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   res.status(400).send(err.message);

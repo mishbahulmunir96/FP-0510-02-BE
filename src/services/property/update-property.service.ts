@@ -22,7 +22,7 @@ export const updatePropertyService = async (
   userId: number,
   propertyId: number,
   body: Partial<UpdatePropertyBody>,
-  file?: Express.Multer.File
+  files?: Express.Multer.File[]
 ) => {
   try {
     // 1. Validasi user
@@ -70,16 +70,17 @@ export const updatePropertyService = async (
       throw { code: "PROPERTY_NOT_FOUND", message: "Property not found" };
     }
 
-    // 4. Upload image jika ada
-    let secureUrl: string | undefined;
-    if (file) {
+    // 4. Upload images if provided
+    let imageResults: { secure_url: string }[] = [];
+    if (files && files.length > 0) {
       try {
-        const { secure_url } = await cloudinaryUpload(file);
-        secureUrl = secure_url;
+        imageResults = await Promise.all(
+          files.map((file) => cloudinaryUpload(file))
+        );
       } catch (error) {
         throw {
           code: "IMAGE_UPLOAD_FAILED",
-          message: "Failed to upload image",
+          message: "Failed to upload images",
         };
       }
     }
@@ -122,26 +123,29 @@ export const updatePropertyService = async (
         },
       });
 
-      // Handle image update
-      if (file && secureUrl) {
+      // Handle image updates if new images provided
+      if (files && files.length > 0 && imageResults.length > 0) {
+        // If we're replacing all images, first delete existing ones
         if (currentProperty.propertyImage.length > 0) {
-          // Update existing image
-          await tx.propertyImage.update({
-            where: { id: currentProperty.propertyImage[0].id },
-            data: {
-              imageUrl: secureUrl,
-              updatedAt: new Date(),
-            },
-          });
-        } else {
-          // Create new image
-          await tx.propertyImage.create({
-            data: {
-              imageUrl: secureUrl,
-              propertyId: updatedProperty.id,
-            },
+          await tx.propertyImage.deleteMany({
+            where: { propertyId: propertyId },
           });
         }
+
+        // Create new image records for each uploaded image
+        await Promise.all(
+          imageResults
+            .filter((result) => result?.secure_url)
+            .map((result) =>
+              tx.propertyImage.create({
+                data: {
+                  imageUrl: result.secure_url,
+                  propertyId: updatedProperty.id,
+                  isDeleted: false,
+                },
+              })
+            )
+        );
       }
 
       // Get fresh data after all updates

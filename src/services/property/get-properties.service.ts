@@ -6,23 +6,27 @@ interface GetPropertyQuery extends PaginationQueryParams {
   location?: string;
   startDate?: string;
   endDate?: string;
-  category?: string; // Filter berdasarkan nama kategori (melalui relasi PropertyCategory)
+  category?: string; // Filter berdasarkan nama kategori
   search?: string;
   guest?: number;
+  priceMin?: number;
+  priceMax?: number;
 }
 
 export const getPropertiesService = async (query: GetPropertyQuery) => {
   const {
-    take = 1, // Nilai default untuk jumlah item per halaman
+    take = 8, // Nilai default untuk jumlah item per halaman
     page = 1,
     sortBy = "createdAt",
-    sortOrder = "asc",
+    sortOrder = "desc",
     location,
     category,
     search,
     startDate,
     endDate,
     guest,
+    priceMin,
+    priceMax,
   } = query;
 
   // Validasi tanggal: jika salah satu tanggal diberikan, kedua tanggal harus ada dan valid
@@ -45,21 +49,34 @@ export const getPropertiesService = async (query: GetPropertyQuery) => {
   const whereClause: Prisma.PropertyWhereInput = {
     isDeleted: false,
     status: "PUBLISHED",
-    ...(location && { location: { contains: location, mode: "insensitive" } }),
+
+    // Filter lokasi (insensitif terhadap kapitalisasi)
+    ...(location && {
+      location: {
+        contains: location,
+        mode: "insensitive",
+      },
+    }),
+
+    // Filter berdasarkan kategori (perbaikan)
     ...(category && {
-      // Filter berdasarkan relasi PropertyCategory
-      PropertyCategory: {
-        some: {
-          name: { contains: category, mode: "insensitive" },
+      propertyCategory: {
+        name: {
+          contains: category,
+          mode: "insensitive",
         },
       },
     }),
+
+    // Filter berdasarkan kata kunci pencarian (judul atau deskripsi)
     ...(search && {
       OR: [
         { title: { contains: search, mode: "insensitive" } },
         { description: { contains: search, mode: "insensitive" } },
       ],
     }),
+
+    // Filter berdasarkan jumlah tamu (hanya kamar yang dapat menampung jumlah tamu yang diinginkan)
     ...(guest && {
       room: {
         some: {
@@ -68,12 +85,28 @@ export const getPropertiesService = async (query: GetPropertyQuery) => {
         },
       },
     }),
+
+    // Filter berdasarkan rentang harga
+    ...(priceMin && {
+      room: {
+        some: {
+          price: { gte: priceMin },
+          isDeleted: false,
+        },
+      },
+    }),
+    ...(priceMax && {
+      room: {
+        some: {
+          price: { lte: priceMax },
+          isDeleted: false,
+        },
+      },
+    }),
+
+    // Filter berdasarkan ketersediaan dalam rentang tanggal yang ditentukan
     ...(startDate &&
       endDate && {
-        // Filter properti berdasarkan tanggal pembuatan (misalnya, sebelum endDate)
-        createdAt: {
-          lte: new Date(endDate),
-        },
         room: {
           some: {
             isDeleted: false,
@@ -85,7 +118,11 @@ export const getPropertiesService = async (query: GetPropertyQuery) => {
                   {
                     payment: {
                       status: {
-                        in: ["WAITING_FOR_PAYMENT_CONFIRMATION", "PROCESSED"],
+                        in: [
+                          "WAITING_FOR_PAYMENT_CONFIRMATION",
+                          "PROCESSED",
+                          "CHECKED_IN",
+                        ],
                       },
                     },
                   },
@@ -113,11 +150,13 @@ export const getPropertiesService = async (query: GetPropertyQuery) => {
   const allowedSortByFields: Array<
     keyof Prisma.PropertyOrderByWithRelationInput
   > = ["createdAt", "updatedAt", "title", "location"];
+
   const sortField = allowedSortByFields.includes(
     sortBy as keyof Prisma.PropertyOrderByWithRelationInput
   )
     ? sortBy
     : "createdAt";
+
   const orderByClause: Prisma.PropertyOrderByWithRelationInput = {
     [sortField]: sortOrder,
   };
@@ -131,15 +170,26 @@ export const getPropertiesService = async (query: GetPropertyQuery) => {
       take,
       orderBy: orderByClause,
       include: {
-        propertyCategory: true, // Tambahkan ini
-        propertyImage: true,
-        propertyFacility: true,
+        propertyCategory: true,
+        propertyImage: {
+          where: { isDeleted: false },
+        },
+        propertyFacility: {
+          where: { isDeleted: false },
+        },
         tenant: true,
         room: {
+          where: { isDeleted: false },
           include: {
-            roomImage: true,
-            roomFacility: true,
-            peakSeasonRate: true,
+            roomImage: {
+              where: { isDeleted: false },
+            },
+            roomFacility: {
+              where: { isDeleted: false },
+            },
+            peakSeasonRate: {
+              where: { isDeleted: false },
+            },
             reservation: {
               include: {
                 payment: true,

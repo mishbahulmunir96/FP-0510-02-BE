@@ -6,7 +6,7 @@ export const deletePropertyService = async (id: number, userId: number) => {
     const user = await prisma.user.findFirst({
       where: {
         id: userId,
-        NOT: { isDeleted: true }
+        NOT: { isDeleted: true },
       },
     });
     if (!user) {
@@ -20,7 +20,7 @@ export const deletePropertyService = async (id: number, userId: number) => {
     const tenant = await prisma.tenant.findFirst({
       where: {
         userId: user.id,
-        NOT: { isDeleted: true }
+        NOT: { isDeleted: true },
       },
     });
     if (!tenant) {
@@ -31,7 +31,7 @@ export const deletePropertyService = async (id: number, userId: number) => {
     const property = await prisma.property.findFirst({
       where: {
         id,
-        NOT: { isDeleted: true }
+        NOT: { isDeleted: true },
       },
     });
     if (!property) {
@@ -54,7 +54,7 @@ export const deletePropertyService = async (id: number, userId: number) => {
         },
         data: {
           isDeleted: true,
-          updatedAt: currentDate
+          updatedAt: currentDate,
         },
       });
 
@@ -67,7 +67,7 @@ export const deletePropertyService = async (id: number, userId: number) => {
         },
         data: {
           isDeleted: true,
-          updatedAt: currentDate
+          updatedAt: currentDate,
         },
       });
 
@@ -80,7 +80,7 @@ export const deletePropertyService = async (id: number, userId: number) => {
         },
         data: {
           isDeleted: true,
-          updatedAt: currentDate
+          updatedAt: currentDate,
         },
       });
 
@@ -93,7 +93,7 @@ export const deletePropertyService = async (id: number, userId: number) => {
         },
         data: {
           isDeleted: true,
-          updatedAt: currentDate
+          updatedAt: currentDate,
         },
       });
 
@@ -102,7 +102,7 @@ export const deletePropertyService = async (id: number, userId: number) => {
         where: { propertyId: id },
         data: {
           isDeleted: true,
-          updatedAt: currentDate
+          updatedAt: currentDate,
         },
       });
 
@@ -111,7 +111,7 @@ export const deletePropertyService = async (id: number, userId: number) => {
         where: { propertyId: id },
         data: {
           isDeleted: true,
-          updatedAt: currentDate
+          updatedAt: currentDate,
         },
       });
 
@@ -120,7 +120,7 @@ export const deletePropertyService = async (id: number, userId: number) => {
         where: { propertyId: id },
         data: {
           isDeleted: true,
-          updatedAt: currentDate
+          updatedAt: currentDate,
         },
       });
 
@@ -129,7 +129,7 @@ export const deletePropertyService = async (id: number, userId: number) => {
       await tx.review.updateMany({
         where: { propertyId: id },
         data: {
-          updatedAt: currentDate
+          updatedAt: currentDate,
         },
       });
 
@@ -138,19 +138,19 @@ export const deletePropertyService = async (id: number, userId: number) => {
         where: { id },
         data: {
           isDeleted: true,
-          updatedAt: currentDate
+          updatedAt: currentDate,
         },
         include: {
           propertyImage: {
             where: {
-              NOT: { isDeleted: true }
-            }
+              NOT: { isDeleted: true },
+            },
           },
           propertyCategory: true,
           room: {
             where: {
-              NOT: { isDeleted: true }
-            }
+              NOT: { isDeleted: true },
+            },
           },
         },
       });
@@ -175,7 +175,7 @@ export const restorePropertyService = async (id: number, userId: number) => {
     const user = await prisma.user.findFirst({
       where: {
         id: userId,
-        NOT: { isDeleted: true }
+        NOT: { isDeleted: true },
       },
     });
     if (!user) {
@@ -188,7 +188,7 @@ export const restorePropertyService = async (id: number, userId: number) => {
     const tenant = await prisma.tenant.findFirst({
       where: {
         userId: user.id,
-        NOT: { isDeleted: true }
+        NOT: { isDeleted: true },
       },
     });
     if (!tenant) {
@@ -198,7 +198,7 @@ export const restorePropertyService = async (id: number, userId: number) => {
     const property = await prisma.property.findFirst({
       where: {
         id,
-        isDeleted: true
+        isDeleted: true,
       },
     });
     if (!property) {
@@ -249,7 +249,7 @@ export const restorePropertyService = async (id: number, userId: number) => {
         where: { id },
         data: {
           isDeleted: false,
-          updatedAt: currentDate
+          updatedAt: currentDate,
         },
         include: {
           propertyImage: true,
