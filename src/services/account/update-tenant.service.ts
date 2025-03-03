@@ -8,12 +8,14 @@ interface UpdateTenantBody {
   bankNumber?: string;
   // Tambahkan field lain yang perlu di-update
 }
+
 export const updateTenantProfileService = async (
   body: UpdateTenantBody,
   imageFile: Express.Multer.File | undefined,
   tenantId: number
 ) => {
   try {
+    // 1. Cari tenant yang aktif
     const tenant = await prisma.tenant.findUnique({
       where: {
         id: tenantId,
