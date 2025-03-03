@@ -4,7 +4,7 @@ import { getReviewByTransactionService } from "../services/review/get-review-by-
 import { getReviewsByPropertyService } from "../services/review/get-reviews-by-property.service";
 import { replyReviewService } from "../services/review/create-review-reply.service";
 import { getReviewByTenantService } from "../services/review/get-review-by-tenant.service";
-import { getReviewsByRoomService } from "../services/review/get-review-by-room.service";
+import { getReviewsByRoomService } from "../services/review/get-reviews-by-room.service";
 
 export const createReviewController = async (
   req: Request,
