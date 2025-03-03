@@ -29,7 +29,7 @@ router.post("/change-email", verifyToken, changeEmailController);
 
 // Move parameter route last
 router.patch(
-  "/:tenantId",
+  "/tenant",
   verifyToken,
   uploader(1).single("imageFile"),
   fileFilterProfile,
