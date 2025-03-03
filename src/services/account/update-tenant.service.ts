@@ -8,6 +8,7 @@ interface UpdateTenantBody {
   bankNumber?: string;
   // Tambahkan field lain yang perlu di-update
 }
+
 export const updateTenantProfileService = async (
   body: UpdateTenantBody,
   imageFile: Express.Multer.File | undefined,
@@ -15,12 +16,15 @@ export const updateTenantProfileService = async (
 ) => {
   try {
     // 1. Cari tenant yang aktif
-    const tenant = await prisma.tenant.findFirst({
+    const tenant = await prisma.tenant.findUnique({
       where: {
         id: tenantId,
-        isDeleted: false,
       },
     });
+
+    if (!tenant || tenant.isDeleted) {
+      throw new Error("Tenant not found or already deleted");
+    }
 
     if (!tenant) {
       throw new Error("Tenant not found or already deleted");
