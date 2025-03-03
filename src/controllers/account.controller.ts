@@ -60,18 +60,13 @@ export const updateTenantProfileController = async (
   next: NextFunction
 ) => {
   try {
-    const userId = Number(res.locals.user.id);
-
-    // Dapatkan tenant berdasarkan userId
-    const tenant = await getTenantService(userId);
-
-    // body data
-    const body = req.body;
-    // file dari Multer
-    const file = req.file;
-
-    const result = await updateTenantProfileService(body, file, tenant.id);
-    res.status(200).json(result);
+    const files = req.files as { [fieldName: string]: Express.Multer.File[] };
+    const result = await updateTenantProfileService(
+      req.body,
+      files.imageFile?.[0],
+      res.locals.user.id
+    );
+    res.status(200).send(result);
   } catch (error) {
     next(error);
   }
