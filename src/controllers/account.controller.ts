@@ -62,14 +62,17 @@ export const updateTenantProfileController = async (
   next: NextFunction
 ) => {
   try {
-    // tenantId bisa didapat dari params
-    const tenantId = Number(req.params.tenantId);
+    const userId = Number(res.locals.user.id);
+
+    // Dapatkan tenant berdasarkan userId
+    const tenant = await getTenantService(userId);
+
     // body data
     const body = req.body;
     // file dari Multer
     const file = req.file;
 
-    const result = await updateTenantProfileService(body, file, tenantId);
+    const result = await updateTenantProfileService(body, file, tenant.id);
     res.status(200).json(result);
   } catch (error) {
     next(error);
