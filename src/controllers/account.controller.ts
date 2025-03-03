@@ -15,8 +15,6 @@ export const getProfileController = async (
 ) => {
   try {
     const userId = Number(res.locals.user.id);
-    // const id = Number(req.params.id);
-
     const result = await getProfileService(userId);
     res.status(200).send(result);
   } catch (error) {
