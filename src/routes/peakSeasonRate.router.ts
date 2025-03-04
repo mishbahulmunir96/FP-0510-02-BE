@@ -11,8 +11,8 @@ import { isTenant } from "../lib/isTenant";
 const router = Router();
 
 router.get("/", verifyToken, isTenant, getPeakSeasons);
-router.post("/create", verifyToken, isTenant, createPeakSeasonRate);
-router.patch("/update/:id", verifyToken, isTenant, updatePeakSeasonRate);
-router.delete("/delete/:id", verifyToken, isTenant, deletePeakSeasonRate);
+router.post("/", verifyToken, isTenant, createPeakSeasonRate);
+router.patch("/:id", verifyToken, isTenant, updatePeakSeasonRate);
+router.delete("/:id", verifyToken, isTenant, deletePeakSeasonRate);
 
 export default router;

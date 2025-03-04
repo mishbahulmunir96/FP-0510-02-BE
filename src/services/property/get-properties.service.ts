@@ -15,7 +15,7 @@ interface GetPropertyQuery extends PaginationQueryParams {
 
 export const getPropertiesService = async (query: GetPropertyQuery) => {
   const {
-    take = 8, 
+    take = 8,
     page = 1,
     sortBy = "createdAt",
     sortOrder = "desc",
