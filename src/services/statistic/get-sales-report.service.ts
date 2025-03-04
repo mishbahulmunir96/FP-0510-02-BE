@@ -225,8 +225,11 @@ export const getSalesReportService = async ({
 
         const occupancyRate =
           totalPossibleRoomDays > 0
-            ? Number(
-                ((occupiedRoomDays / totalPossibleRoomDays) * 100).toFixed(2)
+            ? Math.max(
+                0,
+                Number(
+                  ((occupiedRoomDays / totalPossibleRoomDays) * 100).toFixed(2)
+                )
               )
             : 0;
 

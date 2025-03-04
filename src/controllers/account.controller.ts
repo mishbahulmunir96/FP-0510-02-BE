@@ -60,6 +60,7 @@ export const updateTenantProfileController = async (
   next: NextFunction
 ) => {
   try {
+
     const files = req.files as { [fieldName: string]: Express.Multer.File[] };
     const result = await updateTenantProfileService(
       req.body,
