@@ -6,7 +6,7 @@ const peakSeasonRate_controller_1 = require("../controllers/peakSeasonRate.contr
 const isTenant_1 = require("../lib/isTenant");
 const router = (0, express_1.Router)();
 router.get("/", jwt_1.verifyToken, isTenant_1.isTenant, peakSeasonRate_controller_1.getPeakSeasons);
-router.post("/create", jwt_1.verifyToken, isTenant_1.isTenant, peakSeasonRate_controller_1.createPeakSeasonRate);
-router.patch("/update/:id", jwt_1.verifyToken, isTenant_1.isTenant, peakSeasonRate_controller_1.updatePeakSeasonRate);
-router.delete("/delete/:id", jwt_1.verifyToken, isTenant_1.isTenant, peakSeasonRate_controller_1.deletePeakSeasonRate);
+router.post("/", jwt_1.verifyToken, isTenant_1.isTenant, peakSeasonRate_controller_1.createPeakSeasonRate);
+router.patch("/:id", jwt_1.verifyToken, isTenant_1.isTenant, peakSeasonRate_controller_1.updatePeakSeasonRate);
+router.delete("/:id", jwt_1.verifyToken, isTenant_1.isTenant, peakSeasonRate_controller_1.deletePeakSeasonRate);
 exports.default = router;

@@ -116,7 +116,7 @@ const getSalesReportService = (_a) => __awaiter(void 0, [_a], void 0, function* 
                 return total + stayDuration;
             }, 0);
             const occupancyRate = totalPossibleRoomDays > 0
-                ? Number(((occupiedRoomDays / totalPossibleRoomDays) * 100).toFixed(2))
+                ? Math.max(0, Number(((occupiedRoomDays / totalPossibleRoomDays) * 100).toFixed(2)))
                 : 0;
             const averageRating = property.review.length > 0
                 ? Number((property.review.reduce((sum, review) => sum + review.rating, 0) / property.review.length).toFixed(2))
