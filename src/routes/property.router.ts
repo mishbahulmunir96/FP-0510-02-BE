@@ -24,7 +24,7 @@ router.get("/search", getPropertiesByQueryController);
 router.get("/tenant", verifyToken, isTenant, getTenantPropertiesController);
 router.get("/tenant/:id", getPropertyTenantController);
 router.post(
-  "/create-property",
+  "/",
   verifyToken,
   isTenant,
   uploader().array("imageUrl", 10), // Changed from single to array with max 10 images
