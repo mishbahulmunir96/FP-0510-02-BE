@@ -17,7 +17,6 @@ const cloudinary_1 = require("../../lib/cloudinary");
 const prisma_1 = __importDefault(require("../../lib/prisma"));
 const updateTenantProfileService = (body, imageFile, tenantId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        // 1. Cari tenant yang aktif
         const tenant = yield prisma_1.default.tenant.findUnique({
             where: {
                 id: tenantId,
