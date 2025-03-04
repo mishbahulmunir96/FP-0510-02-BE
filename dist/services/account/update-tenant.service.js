@@ -17,14 +17,12 @@ const cloudinary_1 = require("../../lib/cloudinary");
 const prisma_1 = __importDefault(require("../../lib/prisma"));
 const updateTenantProfileService = (body, imageFile, tenantId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const tenant = yield prisma_1.default.tenant.findUnique({
+        const tenant = yield prisma_1.default.tenant.findFirst({
             where: {
                 id: tenantId,
+                isDeleted: false,
             },
         });
-        if (!tenant || tenant.isDeleted) {
-            throw new Error("Tenant not found or already deleted");
-        }
         if (!tenant) {
             throw new Error("Tenant not found or already deleted");
         }

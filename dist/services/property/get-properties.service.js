@@ -15,8 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getPropertiesService = void 0;
 const prisma_1 = __importDefault(require("../../lib/prisma"));
 const getPropertiesService = (query) => __awaiter(void 0, void 0, void 0, function* () {
-    const { take = 8, // Nilai default untuk jumlah item per halaman
-    page = 1, sortBy = "createdAt", sortOrder = "desc", location, category, search, startDate, endDate, guest, priceMin, priceMax, } = query;
+    const { take = 8, page = 1, sortBy = "createdAt", sortOrder = "desc", location, category, search, startDate, endDate, guest, priceMin, priceMax, } = query;
     // Validasi tanggal: jika salah satu tanggal diberikan, kedua tanggal harus ada dan valid
     if ((startDate && !endDate) || (!startDate && endDate)) {
         throw new Error("Both startDate and endDate are required for filtering");
