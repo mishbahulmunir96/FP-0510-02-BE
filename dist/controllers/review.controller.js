@@ -15,7 +15,7 @@ const get_review_by_transaction_service_1 = require("../services/review/get-revi
 const get_reviews_by_property_service_1 = require("../services/review/get-reviews-by-property.service");
 const create_review_reply_service_1 = require("../services/review/create-review-reply.service");
 const get_review_by_tenant_service_1 = require("../services/review/get-review-by-tenant.service");
-const get_review_by_room_service_1 = require("../services/review/get-review-by-room.service");
+const get_reviews_by_room_service_1 = require("../services/review/get-reviews-by-room.service");
 const createReviewController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const userId = res.locals.user.id;
@@ -115,7 +115,7 @@ const getReviewsByRoomController = (req, res, next) => __awaiter(void 0, void 0,
         if (isNaN(roomId)) {
             throw new Error("Invalid room ID");
         }
-        const result = yield (0, get_review_by_room_service_1.getReviewsByRoomService)(roomId, {
+        const result = yield (0, get_reviews_by_room_service_1.getReviewsByRoomService)(roomId, {
             page,
             take,
             sortBy,

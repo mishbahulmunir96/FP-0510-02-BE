@@ -20,7 +20,6 @@ const update_tenant_service_1 = require("../services/account/update-tenant.servi
 const getProfileController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const userId = Number(res.locals.user.id);
-        // const id = Number(req.params.id);
         const result = yield (0, get_profile_service_1.getProfileService)(userId);
         res.status(200).send(result);
     }
@@ -54,13 +53,14 @@ const updateProfileController = (req, res, next) => __awaiter(void 0, void 0, vo
 exports.updateProfileController = updateProfileController;
 const updateTenantProfileController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        // tenantId bisa didapat dari params
-        const tenantId = Number(req.params.tenantId);
+        const userId = Number(res.locals.user.id);
+        // Dapatkan tenant berdasarkan userId
+        const tenant = yield (0, get_tenant_service_1.getTenantService)(userId);
         // body data
         const body = req.body;
         // file dari Multer
         const file = req.file;
-        const result = yield (0, update_tenant_service_1.updateTenantProfileService)(body, file, tenantId);
+        const result = yield (0, update_tenant_service_1.updateTenantProfileService)(body, file, tenant.id);
         res.status(200).json(result);
     }
     catch (error) {
