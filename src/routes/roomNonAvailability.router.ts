@@ -18,21 +18,21 @@ roomNonAvailabilityRouter.get(
 );
 
 roomNonAvailabilityRouter.post(
-  "/create",
+  "/room-non-availability",
   verifyToken,
   isTenant,
   createRoomNonAvailabilityController
 );
 
 roomNonAvailabilityRouter.patch(
-  "/update/:id",
+  "/room-non-availability/:id",
   verifyToken,
   isTenant,
   updateRoomNonAvailabilitiyController
 );
 
 roomNonAvailabilityRouter.delete(
-  "/:id",
+  "/room-non-availability/:id",
   verifyToken,
   isTenant,
   deleteRoomNonAvailabilityController
