@@ -15,7 +15,7 @@ interface GetPropertyQuery extends PaginationQueryParams {
 
 export const getPropertiesService = async (query: GetPropertyQuery) => {
   const {
-    take = 8, // Nilai default untuk jumlah item per halaman
+    take = 6, // Nilai default untuk jumlah item per halaman
     page = 1,
     sortBy = "createdAt",
     sortOrder = "desc",
