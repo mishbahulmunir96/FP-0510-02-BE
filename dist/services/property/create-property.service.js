@@ -16,7 +16,7 @@ exports.createPropertyService = void 0;
 const client_1 = require("../../../prisma/generated/client");
 const cloudinary_1 = require("../../lib/cloudinary");
 const prisma_1 = __importDefault(require("../../lib/prisma"));
-const createPropertyService = (body, file, userId) => __awaiter(void 0, void 0, void 0, function* () {
+const createPropertyService = (body, files, userId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { description, latitude, longitude, slug, title, propertyCategoryId, location, } = body;
         // Convert propertyCategoryId to number
@@ -61,9 +61,11 @@ const createPropertyService = (body, file, userId) => __awaiter(void 0, void 0, 
         if (!categoryExists) {
             throw new Error("Property category not found");
         }
-        // Upload image if provided
-        const imageResult = file ? yield (0, cloudinary_1.cloudinaryUpload)(file) : null;
-        // Create property and image in a transaction
+        // Upload images if provided
+        const imageResults = files && files.length > 0
+            ? yield Promise.all(files.map((file) => (0, cloudinary_1.cloudinaryUpload)(file)))
+            : [];
+        // Create property and images in a transaction
         const result = yield prisma_1.default.$transaction((tx) => __awaiter(void 0, void 0, void 0, function* () {
             const newProperty = yield tx.property.create({
                 data: {
@@ -84,14 +86,17 @@ const createPropertyService = (body, file, userId) => __awaiter(void 0, void 0, 
                     tenant: true,
                 },
             });
-            if (imageResult === null || imageResult === void 0 ? void 0 : imageResult.secure_url) {
-                yield tx.propertyImage.create({
+            // Create property images
+            if (imageResults.length > 0) {
+                yield Promise.all(imageResults
+                    .filter((result) => result === null || result === void 0 ? void 0 : result.secure_url)
+                    .map((result) => tx.propertyImage.create({
                     data: {
-                        imageUrl: imageResult.secure_url,
+                        imageUrl: result.secure_url,
                         propertyId: newProperty.id,
                         isDeleted: false,
                     },
-                });
+                })));
             }
             return newProperty;
         }));

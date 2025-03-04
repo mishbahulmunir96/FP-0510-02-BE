@@ -15,8 +15,6 @@ export const getProfileController = async (
 ) => {
   try {
     const userId = Number(res.locals.user.id);
-    // const id = Number(req.params.id);
-
     const result = await getProfileService(userId);
     res.status(200).send(result);
   } catch (error) {
@@ -62,15 +60,14 @@ export const updateTenantProfileController = async (
   next: NextFunction
 ) => {
   try {
-    // tenantId bisa didapat dari params
-    const tenantId = Number(req.params.tenantId);
-    // body data
-    const body = req.body;
-    // file dari Multer
-    const file = req.file;
 
-    const result = await updateTenantProfileService(body, file, tenantId);
-    res.status(200).json(result);
+    const files = req.files as { [fieldName: string]: Express.Multer.File[] };
+    const result = await updateTenantProfileService(
+      req.body,
+      files.imageFile?.[0],
+      res.locals.user.id
+    );
+    res.status(200).send(result);
   } catch (error) {
     next(error);
   }

@@ -13,5 +13,5 @@ router.patch("/change-password", jwt_1.verifyToken, account_controller_1.changeP
 router.post("/verify-change-email", account_controller_1.verifyChangeEmailController);
 router.post("/change-email", jwt_1.verifyToken, account_controller_1.changeEmailController);
 // Move parameter route last
-router.patch("/:tenantId", jwt_1.verifyToken, (0, multer_1.uploader)(1).single("imageFile"), profilePictureFilter_1.fileFilterProfile, account_controller_1.updateTenantProfileController);
+router.patch("/tenant", jwt_1.verifyToken, (0, multer_1.uploader)(1).single("imageFile"), profilePictureFilter_1.fileFilterProfile, account_controller_1.updateTenantProfileController);
 exports.default = router;

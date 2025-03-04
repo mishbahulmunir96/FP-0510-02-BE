@@ -8,46 +8,57 @@ interface UpdateTenantBody {
   bankNumber?: string;
   // Tambahkan field lain yang perlu di-update
 }
-
 export const updateTenantProfileService = async (
   body: UpdateTenantBody,
   imageFile: Express.Multer.File | undefined,
   tenantId: number
 ) => {
-  // 1. Cari tenant yang aktif (isDeleted = false)
-  const tenant = await prisma.tenant.findFirst({
-    where: {
-      id: tenantId,
-      isDeleted: false,
-    },
-  });
-  if (!tenant) {
-    throw new Error("Tenant not found or already deleted");
-  }
+  try {
+    // 1. Cari tenant yang aktif
+    const tenant = await prisma.tenant.findFirst({
+      where: {
+        id: tenantId,
+        isDeleted: false,
+      },
+    });
 
-  // 2. Jika ada file gambar, hapus gambar lama dari Cloudinary, lalu upload baru
-  let secureUrl: string | undefined;
-  if (imageFile) {
-    if (tenant.imageUrl) {
-      await cloudinaryRemove(tenant.imageUrl);
+    if (!tenant) {
+      throw new Error("Tenant not found or already deleted");
     }
-    const { secure_url } = await cloudinaryUpload(imageFile);
-    secureUrl = secure_url;
-  }
 
-  // 3. Update data tenant
-  await prisma.tenant.update({
-    where: { id: tenantId },
-    data: secureUrl
-      ? {
-          ...body,
-          imageUrl: secureUrl,
+    // 2. Proses gambar jika ada
+    let secureUrl: string | undefined;
+    if (imageFile) {
+      try {
+        if (tenant.imageUrl) {
+          await cloudinaryRemove(tenant.imageUrl);
         }
-      : body,
-  });
+        const { secure_url } = await cloudinaryUpload(imageFile);
+        secureUrl = secure_url;
+      } catch (error) {
+        throw new Error("Error processing image: " + (error as Error).message);
+      }
+    }
 
-  return {
-    status: 200,
-    message: "Tenant profile updated successfully",
-  };
+    // 3. Update data tenant
+    const updatedTenant = await prisma.tenant.update({
+      where: { id: tenantId },
+      data: secureUrl
+        ? {
+            ...body,
+            imageUrl: secureUrl,
+          }
+        : body,
+    });
+
+    return {
+      status: 200,
+      message: "Tenant profile updated successfully",
+      data: updatedTenant,
+    };
+  } catch (error) {
+    throw new Error(
+      "Failed to update tenant profile: " + (error as Error).message
+    );
+  }
 };

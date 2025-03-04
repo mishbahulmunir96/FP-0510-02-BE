@@ -128,7 +128,8 @@ function getPropertyTenantController(req, res, next) {
 }
 const createPropertyController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const result = yield (0, create_property_service_1.createPropertyService)(req.body, req.file, Number(res.locals.user.id));
+        const result = yield (0, create_property_service_1.createPropertyService)(req.body, req.files, // Changed from req.file! to req.files
+        Number(res.locals.user.id));
         res.status(200).send(result);
     }
     catch (error) {
@@ -139,7 +140,7 @@ exports.createPropertyController = createPropertyController;
 function updatePropertyController(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const result = yield (0, update_property_service_1.updatePropertyService)(Number(res.locals.user.id), Number(req.params.id), req.body, req.file);
+            const result = yield (0, update_property_service_1.updatePropertyService)(Number(res.locals.user.id), Number(req.params.id), req.body, req.files);
             res.status(200).send(result);
         }
         catch (error) {
