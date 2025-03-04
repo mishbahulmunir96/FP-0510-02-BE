@@ -1,3 +1,6 @@
+import { format } from "date-fns";
+import { StatisticQueryParams } from "../types/statisticQueryParams";
+
 export const normalizeToUTC = (date: Date): Date => {
   return new Date(
     Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0)
@@ -67,4 +70,78 @@ export const getDateRangeFromFilter = (
     default:
       return getDefaultDateRange();
   }
+};
+
+export const processDateFilters = (query: StatisticQueryParams) => {
+  const filterType = query.filterType || "date-range";
+  const month = query.month ? parseInt(query.month) : undefined;
+  const year = query.year ? parseInt(query.year) : undefined;
+
+  const { startDate, endDate } = getDateRangeFromFilter(filterType, {
+    startDate: query.startDate,
+    endDate: query.endDate,
+    month,
+    year,
+  });
+
+  validateDateRange(startDate, endDate);
+
+  return { startDate, endDate };
+};
+
+export const groupDataByPeriod = (
+  payments: any[],
+  startDate: Date,
+  endDate: Date
+): { date: string; totalBookings: number; totalRevenue: number }[] => {
+  const diffInDays = Math.ceil(
+    (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
+  );
+
+  let groupingFunction: (date: Date) => string;
+
+  if (diffInDays <= 7) {
+    groupingFunction = (date) => format(normalizeToUTC(date), "yyyy-MM-dd");
+  } else if (diffInDays <= 31) {
+    groupingFunction = (date) => {
+      const weekNumber = Math.ceil(date.getDate() / 7);
+      return `${format(normalizeToUTC(date), "yyyy-MM")}-W${weekNumber}`;
+    };
+  } else {
+    groupingFunction = (date) => format(normalizeToUTC(date), "yyyy-MM");
+  }
+
+  const groupedData = payments.reduce(
+    (
+      acc: {
+        [key: string]: {
+          date: string;
+          totalBookings: number;
+          totalRevenue: number;
+        };
+      },
+      payment
+    ) => {
+      const date = new Date(payment.createdAt);
+      const key = groupingFunction(date);
+
+      if (!acc[key]) {
+        acc[key] = {
+          date: key,
+          totalBookings: 0,
+          totalRevenue: 0,
+        };
+      }
+
+      acc[key].totalBookings += 1;
+      acc[key].totalRevenue += payment.totalPrice;
+
+      return acc;
+    },
+    {}
+  );
+
+  return Object.values(groupedData).sort((a, b) =>
+    a.date.localeCompare(b.date)
+  );
 };
