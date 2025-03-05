@@ -18,24 +18,19 @@ roomRouter.get("/", getRoomsController);
 roomRouter.get("/tenant", verifyToken, isTenant, getRoomsTenantController);
 
 roomRouter.post(
-  "/create-room",
+  "/room",
   verifyToken,
   isTenant,
   uploader().single("imageUrl"),
   createRoomController
 );
 
-roomRouter.delete(
-  "/delete-room/:id",
-  verifyToken,
-  isTenant,
-  deleteRoomController
-);
+roomRouter.delete("/room/:id", verifyToken, isTenant, deleteRoomController);
 
 roomRouter.get("/:id", getRoomController);
 
 roomRouter.patch(
-  "/update-room/:id",
+  "/room/:id",
   verifyToken,
   isTenant,
   uploader().single("imageUrl"),
