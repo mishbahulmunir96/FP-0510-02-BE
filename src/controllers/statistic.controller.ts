@@ -2,34 +2,8 @@ import { NextFunction, Request, Response } from "express";
 import prisma from "../lib/prisma";
 import { getPropertyCalendarReportService } from "../services/statistic/get-calendar-property-report.service";
 import { getSalesReportService } from "../services/statistic/get-sales-report.service";
-import { getDateRangeFromFilter, validateDateRange } from "../utils/date.utils";
-
-interface StatisticQueryParams {
-  filterType?: "date-range" | "month-year" | "year-only";
-  startDate?: string;
-  endDate?: string;
-  month?: string;
-  year?: string;
-  propertyId?: string;
-  limit?: string;
-}
-
-const processDateFilters = (query: StatisticQueryParams) => {
-  const filterType = query.filterType || "date-range";
-  const month = query.month ? parseInt(query.month) : undefined;
-  const year = query.year ? parseInt(query.year) : undefined;
-
-  const { startDate, endDate } = getDateRangeFromFilter(filterType, {
-    startDate: query.startDate,
-    endDate: query.endDate,
-    month,
-    year,
-  });
-
-  validateDateRange(startDate, endDate);
-
-  return { startDate, endDate };
-};
+import { processDateFilters } from "../utils/dateUtils";
+import { StatisticQueryParams } from "../types/statisticQueryParams";
 
 export const getSalesReportController = async (
   req: Request,
