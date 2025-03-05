@@ -1,7 +1,5 @@
 import { PropertyCategory } from "../../../prisma/generated/client";
 import prisma from "../../lib/prisma";
-
-// src/services/category/create-category.service.ts
 export const createCategoryService = async (
   body: PropertyCategory,
   userId: number
@@ -32,8 +30,6 @@ export const createCategoryService = async (
     if (!tenant) {
       throw new Error("Tenant not found");
     }
-
-    // Cek apakah kategori dengan nama yang sama sudah ada tapi dihapus
     const deletedCategory = await prisma.propertyCategory.findFirst({
       where: {
         name,
@@ -43,7 +39,6 @@ export const createCategoryService = async (
     });
 
     if (deletedCategory) {
-      // Kembalikan kategori yang dihapus
       const restoredCategory = await prisma.propertyCategory.update({
         where: { id: deletedCategory.id },
         data: { isDeleted: false },
@@ -54,8 +49,6 @@ export const createCategoryService = async (
         data: restoredCategory,
       };
     }
-
-    // Jika tidak ada kategori yang dihapus, cek kategori aktif dengan nama yang sama
     const existingCategory = await prisma.propertyCategory.findFirst({
       where: {
         name,

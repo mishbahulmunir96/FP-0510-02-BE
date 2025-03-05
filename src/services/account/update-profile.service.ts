@@ -27,7 +27,6 @@ export const updateProfileService = async (
   userId: number
 ): Promise<UpdateProfileResponse> => {
   try {
-    // Validate user exists
     const user = await prisma.user.findFirst({
       where: {
         id: userId,
@@ -40,8 +39,6 @@ export const updateProfileService = async (
     }
 
     let secureUrl: string | undefined;
-
-    // Handle image upload if provided
     if (imageFile) {
       try {
         // Remove old image if exists
@@ -56,7 +53,6 @@ export const updateProfileService = async (
       }
     }
 
-    // Update user data
     const updatedUser = await prisma.user.update({
       where: { id: userId },
       data: {
@@ -83,13 +79,10 @@ export const updateProfileService = async (
       data: updatedUser,
     };
   } catch (error) {
-    // Rollback image upload if db update fails
     if (imageFile && error instanceof Error) {
       try {
         await cloudinaryRemove(imageFile.path);
-      } catch {
-        // Silent fail on rollback
-      }
+      } catch {}
     }
 
     if (error instanceof Error) {

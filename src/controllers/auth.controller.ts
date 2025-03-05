@@ -1,4 +1,3 @@
-// controllers/auth.controller.ts
 import { NextFunction, Request, Response } from "express";
 import { registerService } from "../services/auth/register.service";
 import { verifyService } from "../services/auth/verify.service";

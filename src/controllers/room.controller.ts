@@ -115,7 +115,6 @@ export async function updateRoomController(
   next: NextFunction
 ) {
   try {
-    // Parse facilities from the request body if they come as a string
     if (req.body.facilities && typeof req.body.facilities === "string") {
       try {
         req.body.facilities = JSON.parse(req.body.facilities);
@@ -123,8 +122,6 @@ export async function updateRoomController(
         throw new Error("Invalid facilities format. Expected a JSON array.");
       }
     }
-
-    // If facilities is present, ensure it's an array
     if (
       req.body.facilities !== undefined &&
       !Array.isArray(req.body.facilities)

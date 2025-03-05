@@ -10,22 +10,19 @@ interface VerifyInput {
 
 export const verifyService = async ({ token, password, name }: VerifyInput) => {
   try {
-    // Verify token dan cek expiry
     const decoded = jwt.verify(token, process.env.JWT_SECRET!) as {
       email: string;
       createdAt: string;
     };
 
-    // Cek apakah token sudah expired (1 jam)
     const tokenCreationTime = new Date(decoded.createdAt).getTime();
     const currentTime = new Date().getTime();
-    const oneHour = 60 * 60 * 1000; // 1 jam dalam milliseconds
+    const oneHour = 60 * 60 * 1000;
 
     if (currentTime - tokenCreationTime > oneHour) {
       throw new Error("Verification link has expired");
     }
 
-    // Cari user berdasarkan token
     const user = await prisma.user.findFirst({
       where: {
         token,
@@ -41,7 +38,6 @@ export const verifyService = async ({ token, password, name }: VerifyInput) => {
       throw new Error("Email already verified");
     }
 
-    // Validasi input
     if (!password || password.length < 8) {
       throw new Error("Password must be at least 8 characters long");
     }
@@ -51,14 +47,12 @@ export const verifyService = async ({ token, password, name }: VerifyInput) => {
     }
 
     const hashedPassword = await hashPassword(password);
-
-    // Update user data
     const updatedUser = await prisma.user.update({
       where: { id: user.id },
       data: {
         password: hashedPassword,
         isVerified: true,
-        token: null, // Reset token setelah verifikasi
+        token: null,
         name: name.trim(),
       },
     });
@@ -92,7 +86,6 @@ export const resendVerificationEmail = async (email: string) => {
     throw new Error("Email already verified");
   }
 
-  // Buat token verifikasi baru
   const newVerificationToken = jwt.sign(
     {
       email,
@@ -104,14 +97,10 @@ export const resendVerificationEmail = async (email: string) => {
     }
   );
 
-  // Update token user
   await prisma.user.update({
     where: { id: user.id },
     data: { token: newVerificationToken },
   });
-
-  // Kirim email verifikasi baru
-  // ... (implementasi pengiriman email sama seperti di registerService)
 
   return { message: "Verification email resent successfully" };
 };

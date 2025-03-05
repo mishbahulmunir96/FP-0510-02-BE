@@ -6,7 +6,7 @@ interface GetPropertyQuery extends PaginationQueryParams {
   location?: string;
   startDate?: string;
   endDate?: string;
-  category?: string; // Filter berdasarkan nama kategori
+  category?: string;
   search?: string;
   guest?: number;
   priceMin?: number;
@@ -28,8 +28,6 @@ export const getPropertiesService = async (query: GetPropertyQuery) => {
     priceMin,
     priceMax,
   } = query;
-
-  // Validasi tanggal: jika salah satu tanggal diberikan, kedua tanggal harus ada dan valid
   if ((startDate && !endDate) || (!startDate && endDate)) {
     throw new Error("Both startDate and endDate are required for filtering");
   }
@@ -44,21 +42,15 @@ export const getPropertiesService = async (query: GetPropertyQuery) => {
       throw new Error("startDate cannot be after endDate");
     }
   }
-
-  // Membangun whereClause untuk filter properti
   const whereClause: Prisma.PropertyWhereInput = {
     isDeleted: false,
     status: "PUBLISHED",
-
-    // Filter lokasi (insensitif terhadap kapitalisasi)
     ...(location && {
       location: {
         contains: location,
         mode: "insensitive",
       },
     }),
-
-    // Filter berdasarkan kategori (perbaikan)
     ...(category && {
       propertyCategory: {
         name: {
@@ -68,15 +60,12 @@ export const getPropertiesService = async (query: GetPropertyQuery) => {
       },
     }),
 
-    // Filter berdasarkan kata kunci pencarian (judul atau deskripsi)
     ...(search && {
       OR: [
         { title: { contains: search, mode: "insensitive" } },
         { description: { contains: search, mode: "insensitive" } },
       ],
     }),
-
-    // Filter berdasarkan jumlah tamu (hanya kamar yang dapat menampung jumlah tamu yang diinginkan)
     ...(guest && {
       room: {
         some: {
@@ -86,7 +75,6 @@ export const getPropertiesService = async (query: GetPropertyQuery) => {
       },
     }),
 
-    // Filter berdasarkan rentang harga
     ...(priceMin && {
       room: {
         some: {
@@ -103,15 +91,12 @@ export const getPropertiesService = async (query: GetPropertyQuery) => {
         },
       },
     }),
-
-    // Filter berdasarkan ketersediaan dalam rentang tanggal yang ditentukan
     ...(startDate &&
       endDate && {
         room: {
           some: {
             isDeleted: false,
             ...(guest && { guest: { gte: guest } }),
-            // Pastikan tidak ada reservasi yang tumpang tindih dengan periode yang dipilih
             reservation: {
               none: {
                 AND: [
@@ -133,7 +118,6 @@ export const getPropertiesService = async (query: GetPropertyQuery) => {
                 ],
               },
             },
-            // Pastikan tidak ada jadwal non-availability room yang tumpang tindih
             roomNonAvailability: {
               none: {
                 isDeleted: false,
@@ -145,8 +129,6 @@ export const getPropertiesService = async (query: GetPropertyQuery) => {
         },
       }),
   };
-
-  // Membatasi field yang diizinkan untuk sorting
   const allowedSortByFields: Array<
     keyof Prisma.PropertyOrderByWithRelationInput
   > = ["createdAt", "updatedAt", "title", "location"];

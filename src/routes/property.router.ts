@@ -18,16 +18,14 @@ const router = Router();
 router.get("/", getPropertiesController);
 router.get("/search", getPropertiesByQueryController);
 router.get("/tenant", verifyToken, isTenant, getTenantPropertiesController);
-router.get("/tenant/:id", getPropertyTenantController);
+router.get("/tenant/:id", verifyToken, isTenant, getPropertyTenantController);
 router.get("/:slug", getPropertyController);
-router.get("/search", getPropertiesByQueryController);
-router.get("/tenant", verifyToken, isTenant, getTenantPropertiesController);
-router.get("/tenant/:id", getPropertyTenantController);
+
 router.post(
   "/",
   verifyToken,
   isTenant,
-  uploader().array("imageUrl", 10), // Changed from single to array with max 10 images
+  uploader().array("imageUrl", 10),
   createPropertyController
 );
 router.patch(

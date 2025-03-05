@@ -1,12 +1,11 @@
 import { NextFunction, Request, Response } from "express";
-import { getProfileService } from "../services/account/get-profile.service";
-import { updateProfileService } from "../services/account/update-profile.service";
-import { changePasswordService } from "../services/account/change-password.service";
 import { changeEmailService } from "../services/account/change-email.service";
-import { verifyChangeEmailService } from "../services/account/verify-change-email.service";
+import { changePasswordService } from "../services/account/change-password.service";
+import { getProfileService } from "../services/account/get-profile.service";
 import { getTenantService } from "../services/account/get-tenant.service";
-import { Tenant } from "../../prisma/generated/client";
+import { updateProfileService } from "../services/account/update-profile.service";
 import { updateTenantProfileService } from "../services/account/update-tenant.service";
+import { verifyChangeEmailService } from "../services/account/verify-change-email.service";
 
 export const getProfileController = async (
   req: Request,
@@ -59,10 +58,9 @@ export const updateTenantProfileController = async (
   next: NextFunction
 ) => {
   try {
-    // Pass the user ID directly to the service, not tenant ID
     const result = await updateTenantProfileService(
       req.body,
-      req.file, // Use req.file since the route is configured with uploader(1).single("imageFile")
+      req.file,
       Number(res.locals.user.id)
     );
 
@@ -80,8 +78,6 @@ export const changePasswordController = async (
   try {
     const userId = Number(res.locals.user.id);
     const { oldPassword, newPassword } = req.body;
-
-    // Panggil service dengan destructuring
     const result = await changePasswordService(userId, {
       password: oldPassword,
       newPassword,

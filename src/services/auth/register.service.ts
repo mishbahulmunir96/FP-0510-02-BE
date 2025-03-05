@@ -8,7 +8,7 @@ import handlebars from "handlebars";
 
 interface RegisterInput {
   email: string;
-  role?: "USER" | "TENANT"; // Make role optional
+  role?: "USER" | "TENANT";
   name?: string;
   phoneNumber?: string;
   bankName?: string;
@@ -20,9 +20,8 @@ export const registerService = async (
   file?: Express.Multer.File
 ) => {
   const { email } = data;
-  const role = data.role || "USER"; // Default to USER if role is not provided
+  const role = data.role || "USER";
 
-  // Cek apakah email sudah terdaftar
   const existingUser = await prisma.user.findUnique({
     where: { email },
   });
@@ -31,7 +30,6 @@ export const registerService = async (
     throw new Error("Email already registered");
   }
 
-  // Upload gambar jika ada (hanya untuk tenant)
   let imageUrl = "";
   if (file && role === "TENANT") {
     try {
@@ -42,10 +40,8 @@ export const registerService = async (
     }
   }
 
-  // Generate name from email for USER role
   const defaultName = email.split("@")[0];
 
-  // Buat token verifikasi email dengan expiry 1 jam
   const verificationToken = jwt.sign(
     {
       email,
@@ -58,7 +54,6 @@ export const registerService = async (
   );
 
   try {
-    // Buat User dan Tenant (jika diperlukan) dalam transaksi
     const user = await prisma.$transaction(async (prisma) => {
       const newUser = await prisma.user.create({
         data: {
@@ -94,8 +89,6 @@ export const registerService = async (
 
       return newUser;
     });
-
-    // Load dan register partials
     const partialsDir = path.join(__dirname, "../../templates/partials");
     const partialFiles = fs.readdirSync(partialsDir);
     partialFiles.forEach((file) => {
@@ -107,15 +100,12 @@ export const registerService = async (
       handlebars.registerPartial(name, source);
     });
 
-    // Load dan compile template utama
     const mainTemplatePath = path.join(
       __dirname,
       "../../templates/verifyEmail.hbs"
     );
     const mainTemplateSource = fs.readFileSync(mainTemplatePath, "utf8");
     const mainTemplate = handlebars.compile(mainTemplateSource);
-
-    // Data untuk template
     const replacements = {
       name: role === "USER" ? defaultName : data.name,
       verificationLink: `${process.env.BASE_URL_FE}/verify?token=${verificationToken}`,
@@ -126,11 +116,8 @@ export const registerService = async (
       appAddress: "RateHaven Address, Yogyakarta, Indonesia",
       expiryTime: "1 hour",
     };
-
-    // Render HTML email
     const emailHtml = mainTemplate(replacements);
 
-    // Kirim email verifikasi
     await transporter.sendMail({
       from: process.env.GMAIL_EMAIL,
       to: email,

@@ -18,7 +18,7 @@ export const getPropertyTenantService = async (id: number) => {
         propertyImage: true,
         propertyFacility: true,
         review: true,
-        propertyCategory: true, // Changed from PropertyCategory to match the schema
+        propertyCategory: true,
       },
     });
 

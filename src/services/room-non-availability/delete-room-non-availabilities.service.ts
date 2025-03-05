@@ -2,7 +2,6 @@ import prisma from "../../lib/prisma";
 
 export const deleteRoomNonAvailabilityService = async (id: number) => {
   try {
-    // Cari record RoomNonAvailability berdasarkan id
     const roomNonAvailability = await prisma.roomNonAvailability.findUnique({
       where: { id },
     });
@@ -11,7 +10,6 @@ export const deleteRoomNonAvailabilityService = async (id: number) => {
       throw new Error("Room Non Availability not found");
     }
 
-    // Hapus record secara permanen
     const deletedRecord = await prisma.roomNonAvailability.delete({
       where: { id },
     });

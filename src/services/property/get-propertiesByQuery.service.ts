@@ -30,14 +30,12 @@ export const getPropertiesServiceByQuery = async (
       price,
     } = query;
 
-    // Build the room conditions separately to handle both guest and price filters
     const roomConditions: Prisma.RoomWhereInput = {
       stock: { gt: 0 },
       ...(guest ? { guest: { gte: guest } } : {}),
       ...(price ? { price: { lte: price } } : {}),
     };
 
-    // Add date availability condition if dates are provided
     if (startDate && endDate) {
       roomConditions.roomNonAvailability = {
         none: {
@@ -51,28 +49,23 @@ export const getPropertiesServiceByQuery = async (
       };
     }
 
-    // Build the main where clause
     const whereClause: Prisma.PropertyWhereInput = {
       isDeleted: false,
-      status: "PUBLISHED", // Ensure only published properties are returned
+      status: "PUBLISHED",
       room: {
         some: roomConditions,
       },
     };
 
-    // Add property category filter if name is provided
     if (name) {
       whereClause.propertyCategory = {
         name: { equals: name, mode: "insensitive" },
       };
     }
 
-    // Add title filter if provided
     if (title) {
       whereClause.title = { contains: title, mode: "insensitive" };
     }
-
-    // Add search filter if provided
     if (search) {
       whereClause.OR = [
         { title: { contains: search, mode: "insensitive" } },
@@ -80,8 +73,6 @@ export const getPropertiesServiceByQuery = async (
         { location: { contains: search, mode: "insensitive" } }, // Added location search
       ];
     }
-
-    // Fetch properties with pagination and sorting
     const propertiesByQuery = await prisma.property.findMany({
       where: whereClause,
       skip: Math.max(0, (page - 1) * take),
@@ -118,11 +109,7 @@ export const getPropertiesServiceByQuery = async (
         },
       },
     });
-
-    // Get total count for pagination
     const count = await prisma.property.count({ where: whereClause });
-
-    // Return data with pagination metadata
     return {
       data: propertiesByQuery,
       meta: {
@@ -131,7 +118,6 @@ export const getPropertiesServiceByQuery = async (
         total: count,
         totalPages: Math.ceil(count / take),
       },
-      // Only include whereClause in development environments
       ...(process.env.NODE_ENV !== "production" ? { whereClause } : {}),
     };
   } catch (error) {

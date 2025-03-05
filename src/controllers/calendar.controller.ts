@@ -1,10 +1,7 @@
-// src/controllers/calendar.controller.ts
 import { Request, Response, NextFunction } from "express";
-import {
-  getMonthlyAvailabilityAndPricingService,
-  compareRoomPricingService,
-  getPropertyMonthlyPriceComparisonService,
-} from "../services/calendar/calendar.service";
+import { getMonthlyAvailabilityAndPricingService } from "../services/calendar/get-monthly-availability-and-pricing.service";
+import { compareRoomPricingService } from "../services/calendar/compare-room-pricing-service";
+import { getPropertyMonthlyPriceComparisonService } from "../services/calendar/get-property-monthly-price-comparison.service";
 
 export const getMonthlyCalendarController = async (
   req: Request,
@@ -14,15 +11,11 @@ export const getMonthlyCalendarController = async (
   try {
     const { roomId } = req.params;
     let { date } = req.query;
-
-    // If no date provided, use current date
     let parsedDate: Date;
     if (!date) {
       parsedDate = new Date();
     } else {
       parsedDate = new Date(date as string);
-
-      // Validate date
       if (isNaN(parsedDate.getTime())) {
         res.status(400).json({
           success: false,
@@ -30,8 +23,6 @@ export const getMonthlyCalendarController = async (
         });
       }
     }
-
-    // Set date to the first day of the month
     parsedDate.setDate(1);
     parsedDate.setHours(0, 0, 0, 0);
 
@@ -56,8 +47,6 @@ export const compareRoomPricingController = async (
 ) => {
   try {
     const { roomIds, startDate, endDate } = req.body;
-
-    // Validate inputs
     if (!roomIds || !Array.isArray(roomIds) || roomIds.length === 0) {
       res.status(400).json({
         success: false,
@@ -71,12 +60,8 @@ export const compareRoomPricingController = async (
         message: "Both startDate and endDate are required",
       });
     }
-
-    // Parse dates
     const parsedStartDate = new Date(startDate);
     const parsedEndDate = new Date(endDate);
-
-    // Validate dates
     if (isNaN(parsedStartDate.getTime()) || isNaN(parsedEndDate.getTime())) {
       res.status(400).json({
         success: false,
@@ -114,15 +99,11 @@ export const getPropertyMonthlyPriceComparisonController = async (
   try {
     const { propertyId } = req.params;
     let { date } = req.query;
-
-    // If no date provided, use current date
     let parsedDate: Date;
     if (!date) {
       parsedDate = new Date();
     } else {
       parsedDate = new Date(date as string);
-
-      // Validate date
       if (isNaN(parsedDate.getTime())) {
         res.status(400).json({
           success: false,

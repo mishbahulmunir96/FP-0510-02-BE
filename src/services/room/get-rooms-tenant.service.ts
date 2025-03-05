@@ -12,8 +12,6 @@ export const getRoomsTenantService = async (
 ) => {
   try {
     const { take, page, sortBy, sortOrder, search } = query;
-
-    // Validasi user
     const user = await prisma.user.findUnique({
       where: { id: userId },
     });
@@ -24,7 +22,6 @@ export const getRoomsTenantService = async (
       throw new Error("User don't have access");
     }
 
-    // Cari tenant yang terkait dengan user
     const tenant = await prisma.tenant.findFirst({
       where: { userId: user.id, isDeleted: false },
     });
@@ -32,14 +29,12 @@ export const getRoomsTenantService = async (
       throw new Error("Tenant not found");
     }
 
-    // Membangun whereClause untuk Room
     const whereClause: Prisma.RoomWhereInput = {
       isDeleted: false,
       property: { tenantId: tenant.id },
     };
 
     if (search) {
-      // Menggunakan filter equals untuk enum 'type'
       const allowedTypes: Array<"Deluxe" | "Standard" | "Suite"> = [
         "Deluxe",
         "Standard",

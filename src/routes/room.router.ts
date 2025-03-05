@@ -14,9 +14,7 @@ import { uploader } from "../lib/multer";
 const roomRouter = Router();
 
 roomRouter.get("/", getRoomsController);
-
 roomRouter.get("/tenant", verifyToken, isTenant, getRoomsTenantController);
-
 roomRouter.post(
   "/room",
   verifyToken,
@@ -24,11 +22,8 @@ roomRouter.post(
   uploader().single("imageUrl"),
   createRoomController
 );
-
 roomRouter.delete("/room/:id", verifyToken, isTenant, deleteRoomController);
-
 roomRouter.get("/:id", getRoomController);
-
 roomRouter.patch(
   "/room/:id",
   verifyToken,

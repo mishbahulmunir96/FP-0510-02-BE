@@ -14,8 +14,6 @@ export const changePasswordService = async (
   if (!user) {
     throw new Error("User not found");
   }
-
-  // Pastikan password di DB tidak null
   if (!user.password) {
     throw new Error("User has no password set");
   }

@@ -14,7 +14,6 @@ export const getPropertiesController = async (
   next: NextFunction
 ) => {
   try {
-    // Parsing query parameter dan menetapkan nilai default
     const query = {
       take: parseInt(req.query.take as string) || 8,
       page: parseInt(req.query.page as string) || 1,
@@ -108,7 +107,7 @@ export const getPropertyController = async (
   next: NextFunction
 ) => {
   try {
-    const { slug } = req.params; // Changed from id to slug
+    const { slug } = req.params;
     const result = await getPropertyService(slug);
     res.status(200).send(result);
   } catch (error) {

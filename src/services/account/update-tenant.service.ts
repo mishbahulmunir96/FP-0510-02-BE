@@ -6,7 +6,6 @@ interface UpdateTenantBody {
   phoneNumber?: string;
   bankName?: string;
   bankNumber?: string;
-  // Add other fields that need to be updated
 }
 
 export const updateTenantProfileService = async (
@@ -15,7 +14,6 @@ export const updateTenantProfileService = async (
   userId: number
 ) => {
   try {
-    // 1. Find the active tenant associated with this user
     const tenant = await prisma.tenant.findFirst({
       where: {
         userId: userId,
@@ -26,8 +24,6 @@ export const updateTenantProfileService = async (
     if (!tenant) {
       throw new Error("Tenant not found or already deleted");
     }
-
-    // 2. Process image if provided
     let secureUrl: string | undefined;
     if (imageFile) {
       try {
@@ -40,10 +36,8 @@ export const updateTenantProfileService = async (
         throw new Error("Error processing image: " + (error as Error).message);
       }
     }
-
-    // 3. Update tenant data
     const updatedTenant = await prisma.tenant.update({
-      where: { id: tenant.id }, // Use tenant.id found from the query
+      where: { id: tenant.id },
       data: secureUrl
         ? {
             ...body,
@@ -58,7 +52,6 @@ export const updateTenantProfileService = async (
       data: updatedTenant,
     };
   } catch (error) {
-    // Handle errors
     if (error instanceof Error) {
       throw new Error("Failed to update tenant profile: " + error.message);
     }

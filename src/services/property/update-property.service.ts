@@ -25,7 +25,6 @@ export const updatePropertyService = async (
   files?: Express.Multer.File[]
 ) => {
   try {
-    // 1. Validasi user
     const user = await prisma.user.findUnique({
       where: {
         id: userId,
@@ -40,8 +39,6 @@ export const updatePropertyService = async (
     if (user.role !== "TENANT") {
       throw { code: "UNAUTHORIZED", message: "User doesn't have access" };
     }
-
-    // 2. Validasi tenant
     const tenant = await prisma.tenant.findFirst({
       where: {
         userId: user.id,
@@ -52,8 +49,6 @@ export const updatePropertyService = async (
     if (!tenant) {
       throw { code: "TENANT_NOT_FOUND", message: "Tenant not found" };
     }
-
-    // 3. Validasi property
     const currentProperty = await prisma.property.findFirst({
       where: {
         id: propertyId,
@@ -69,8 +64,6 @@ export const updatePropertyService = async (
     if (!currentProperty) {
       throw { code: "PROPERTY_NOT_FOUND", message: "Property not found" };
     }
-
-    // 4. Upload images if provided
     let imageResults: { secure_url: string }[] = [];
     if (files && files.length > 0) {
       try {
@@ -84,8 +77,6 @@ export const updatePropertyService = async (
         };
       }
     }
-
-    // 5. Prepare update data
     const updateData: Prisma.PropertyUpdateInput = {
       ...(body.title && { title: body.title }),
       ...(body.slug && { slug: body.slug }),
@@ -102,8 +93,6 @@ export const updatePropertyService = async (
         },
       }),
     };
-
-    // 6. Lakukan transaksi update
     return await prisma.$transaction(async (tx) => {
       // Update property
       const updatedProperty = await tx.property.update({
@@ -122,17 +111,12 @@ export const updatePropertyService = async (
           },
         },
       });
-
-      // Handle image updates if new images provided
       if (files && files.length > 0 && imageResults.length > 0) {
-        // If we're replacing all images, first delete existing ones
         if (currentProperty.propertyImage.length > 0) {
           await tx.propertyImage.deleteMany({
             where: { propertyId: propertyId },
           });
         }
-
-        // Create new image records for each uploaded image
         await Promise.all(
           imageResults
             .filter((result) => result?.secure_url)
@@ -147,8 +131,6 @@ export const updatePropertyService = async (
             )
         );
       }
-
-      // Get fresh data after all updates
       const finalProperty = await tx.property.findUnique({
         where: { id: propertyId },
         include: {
@@ -190,20 +172,15 @@ export const updatePropertyService = async (
       };
     });
   } catch (error) {
-    // Handle specific errors
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       if (error.code === "P2002") {
         throw { code: "DUPLICATE_SLUG", message: "Slug already exists" };
       }
       throw { code: "DATABASE_ERROR", message: error.message };
     }
-
-    // Handle custom errors
     if ((error as ErrorResponse).code) {
       throw error;
     }
-
-    // Handle unexpected errors
     throw { code: "INTERNAL_SERVER_ERROR", message: "Something went wrong" };
   }
 };
