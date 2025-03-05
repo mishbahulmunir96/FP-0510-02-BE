@@ -68,6 +68,20 @@ export async function createRoomController(
   next: NextFunction
 ) {
   try {
+    // Parse facilities from the request body if they come as a string
+    if (req.body.facilities && typeof req.body.facilities === "string") {
+      try {
+        req.body.facilities = JSON.parse(req.body.facilities);
+      } catch (e) {
+        throw new Error("Invalid facilities format. Expected a JSON array.");
+      }
+    }
+
+    // Ensure facilities is an array
+    if (!req.body.facilities || !Array.isArray(req.body.facilities)) {
+      throw new Error("Facilities must be provided as an array");
+    }
+
     const result = await createRoomService(
       req.body,
       req.file!,
@@ -101,6 +115,23 @@ export async function updateRoomController(
   next: NextFunction
 ) {
   try {
+    // Parse facilities from the request body if they come as a string
+    if (req.body.facilities && typeof req.body.facilities === "string") {
+      try {
+        req.body.facilities = JSON.parse(req.body.facilities);
+      } catch (e) {
+        throw new Error("Invalid facilities format. Expected a JSON array.");
+      }
+    }
+
+    // If facilities is present, ensure it's an array
+    if (
+      req.body.facilities !== undefined &&
+      !Array.isArray(req.body.facilities)
+    ) {
+      throw new Error("Facilities must be provided as an array");
+    }
+
     const result = await updateRoomService(
       Number(req.params.id),
       req.body,

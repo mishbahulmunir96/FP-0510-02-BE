@@ -2,6 +2,12 @@ import { Prisma } from "@prisma/client";
 import prisma from "../../lib/prisma";
 import { cloudinaryUpload } from "../../lib/cloudinary";
 
+// Interface for a single facility
+interface RoomFacility {
+  title: string;
+  description: string;
+}
+
 interface CreateRoomBody {
   type: "Deluxe" | "Standard" | "Suite"; // Sesuai dengan enum Type di schema Room
   stock: number;
@@ -9,8 +15,7 @@ interface CreateRoomBody {
   price: number;
   guest: number;
   propertyId: number;
-  facilityTitle: string; // Judul fasilitas ruangan
-  facilityDescription: string; // Deskripsi fasilitas ruangan
+  facilities: RoomFacility[]; // Array of facilities instead of single facility
 }
 
 export const createRoomService = async (
@@ -19,16 +24,7 @@ export const createRoomService = async (
   tenantId: number
 ) => {
   try {
-    const {
-      type,
-      name,
-      stock,
-      price,
-      guest,
-      propertyId,
-      facilityTitle,
-      facilityDescription,
-    } = body;
+    const { type, name, stock, price, guest, propertyId, facilities } = body;
 
     const propertyIdNoNaN = Number(propertyId);
     const stockRoom = Number(stock);
@@ -43,6 +39,11 @@ export const createRoomService = async (
       throw new Error("Property id not found");
     }
 
+    // Validasi array facilities
+    if (!facilities || !Array.isArray(facilities) || facilities.length === 0) {
+      throw new Error("At least one facility must be provided");
+    }
+
     let secureUrl: string | undefined;
     if (file) {
       const uploadResult = await cloudinaryUpload(file);
@@ -54,7 +55,7 @@ export const createRoomService = async (
       // Membuat record room
       const newRoom = await tx.room.create({
         data: {
-          type, // Menggunakan field type dari body (enum)
+          type,
           name,
           stock: stockRoom,
           price: priceRoom,
@@ -75,18 +76,32 @@ export const createRoomService = async (
         });
       }
 
-      // Buat fasilitas room menggunakan facilityTitle dan facilityDescription
-      await tx.roomFacility.create({
-        data: {
-          title: facilityTitle,
-          description: facilityDescription,
-          roomId: newRoom.id,
+      // Buat fasilitas room untuk setiap fasilitas dalam array
+      const facilityPromises = facilities.map((facility) =>
+        tx.roomFacility.create({
+          data: {
+            title: facility.title,
+            description: facility.description,
+            roomId: newRoom.id,
+          },
+        })
+      );
+
+      // Jalankan semua promise pembuatan fasilitas
+      await Promise.all(facilityPromises);
+
+      // Ambil data room yang lengkap dengan semua relasinya
+      const roomWithRelations = await tx.room.findUnique({
+        where: { id: newRoom.id },
+        include: {
+          roomFacility: true,
+          roomImage: true,
         },
       });
 
       return {
         message: "Create Room success",
-        data: newRoom,
+        data: roomWithRelations,
       };
     });
   } catch (error) {
