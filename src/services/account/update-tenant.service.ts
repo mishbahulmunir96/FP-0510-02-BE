@@ -6,18 +6,19 @@ interface UpdateTenantBody {
   phoneNumber?: string;
   bankName?: string;
   bankNumber?: string;
-  // Tambahkan field lain yang perlu di-update
+  // Add other fields that need to be updated
 }
+
 export const updateTenantProfileService = async (
   body: UpdateTenantBody,
   imageFile: Express.Multer.File | undefined,
-  tenantId: number
+  userId: number
 ) => {
   try {
-    // 1. Cari tenant yang aktif
+    // 1. Find the active tenant associated with this user
     const tenant = await prisma.tenant.findFirst({
       where: {
-        id: tenantId,
+        userId: userId,
         isDeleted: false,
       },
     });
@@ -26,7 +27,7 @@ export const updateTenantProfileService = async (
       throw new Error("Tenant not found or already deleted");
     }
 
-    // 2. Proses gambar jika ada
+    // 2. Process image if provided
     let secureUrl: string | undefined;
     if (imageFile) {
       try {
@@ -40,9 +41,9 @@ export const updateTenantProfileService = async (
       }
     }
 
-    // 3. Update data tenant
+    // 3. Update tenant data
     const updatedTenant = await prisma.tenant.update({
-      where: { id: tenantId },
+      where: { id: tenant.id }, // Use tenant.id found from the query
       data: secureUrl
         ? {
             ...body,
@@ -57,8 +58,12 @@ export const updateTenantProfileService = async (
       data: updatedTenant,
     };
   } catch (error) {
+    // Handle errors
+    if (error instanceof Error) {
+      throw new Error("Failed to update tenant profile: " + error.message);
+    }
     throw new Error(
-      "Failed to update tenant profile: " + (error as Error).message
+      "Failed to update tenant profile: An unknown error occurred"
     );
   }
 };

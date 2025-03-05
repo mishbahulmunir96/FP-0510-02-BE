@@ -42,10 +42,9 @@ export const updateProfileController = async (
   next: NextFunction
 ) => {
   try {
-    const files = req.files as { [fieldName: string]: Express.Multer.File[] };
     const result = await updateProfileService(
       req.body,
-      files.imageFile?.[0],
+      req.file,
       res.locals.user.id
     );
     res.status(200).send(result);
@@ -60,13 +59,13 @@ export const updateTenantProfileController = async (
   next: NextFunction
 ) => {
   try {
-
-    const files = req.files as { [fieldName: string]: Express.Multer.File[] };
+    // Pass the user ID directly to the service, not tenant ID
     const result = await updateTenantProfileService(
       req.body,
-      files.imageFile?.[0],
-      res.locals.user.id
+      req.file, // Use req.file since the route is configured with uploader(1).single("imageFile")
+      Number(res.locals.user.id)
     );
+
     res.status(200).send(result);
   } catch (error) {
     next(error);

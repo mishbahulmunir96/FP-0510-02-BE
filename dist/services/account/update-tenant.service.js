@@ -15,18 +15,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateTenantProfileService = void 0;
 const cloudinary_1 = require("../../lib/cloudinary");
 const prisma_1 = __importDefault(require("../../lib/prisma"));
-const updateTenantProfileService = (body, imageFile, tenantId) => __awaiter(void 0, void 0, void 0, function* () {
+const updateTenantProfileService = (body, imageFile, userId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        // 1. Find the active tenant associated with this user
         const tenant = yield prisma_1.default.tenant.findFirst({
             where: {
-                id: tenantId,
+                userId: userId,
                 isDeleted: false,
             },
         });
         if (!tenant) {
             throw new Error("Tenant not found or already deleted");
         }
-        // 2. Proses gambar jika ada
+        // 2. Process image if provided
         let secureUrl;
         if (imageFile) {
             try {
@@ -40,9 +41,9 @@ const updateTenantProfileService = (body, imageFile, tenantId) => __awaiter(void
                 throw new Error("Error processing image: " + error.message);
             }
         }
-        // 3. Update data tenant
+        // 3. Update tenant data
         const updatedTenant = yield prisma_1.default.tenant.update({
-            where: { id: tenantId },
+            where: { id: tenant.id }, // Use tenant.id found from the query
             data: secureUrl
                 ? Object.assign(Object.assign({}, body), { imageUrl: secureUrl }) : body,
         });
@@ -53,7 +54,11 @@ const updateTenantProfileService = (body, imageFile, tenantId) => __awaiter(void
         };
     }
     catch (error) {
-        throw new Error("Failed to update tenant profile: " + error.message);
+        // Handle errors
+        if (error instanceof Error) {
+            throw new Error("Failed to update tenant profile: " + error.message);
+        }
+        throw new Error("Failed to update tenant profile: An unknown error occurred");
     }
 });
 exports.updateTenantProfileService = updateTenantProfileService;

@@ -31,7 +31,6 @@ const sendForgotPasswordEmail = (data) => __awaiter(void 0, void 0, void 0, func
     };
     try {
         yield nodemailer_1.transporter.sendMail(mailOptions);
-        // console.log(`Forgot password email sent to ${email} successfully!`);
     }
     catch (error) {
         console.error("Error sending forgot password email:", error);

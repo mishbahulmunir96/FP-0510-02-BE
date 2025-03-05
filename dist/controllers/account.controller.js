@@ -40,10 +40,8 @@ const getTenantController = (req, res, next) => __awaiter(void 0, void 0, void 0
 });
 exports.getTenantController = getTenantController;
 const updateProfileController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
     try {
-        const files = req.files;
-        const result = yield (0, update_profile_service_1.updateProfileService)(req.body, (_a = files.imageFile) === null || _a === void 0 ? void 0 : _a[0], res.locals.user.id);
+        const result = yield (0, update_profile_service_1.updateProfileService)(req.body, req.file, res.locals.user.id);
         res.status(200).send(result);
     }
     catch (error) {
@@ -54,8 +52,9 @@ exports.updateProfileController = updateProfileController;
 const updateTenantProfileController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     try {
-        const files = req.files;
-        const result = yield (0, update_tenant_service_1.updateTenantProfileService)(req.body, (_a = files.imageFile) === null || _a === void 0 ? void 0 : _a[0], res.locals.user.id);
+        // Pass the user ID directly to the service, not tenant ID
+        const result = yield (0, update_tenant_service_1.updateTenantProfileService)(req.body, req.file, // Use req.file since the route is configured with uploader(1).single("imageFile")
+        Number(res.locals.user.id));
         res.status(200).send(result);
     }
     catch (error) {

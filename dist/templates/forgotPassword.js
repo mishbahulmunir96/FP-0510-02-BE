@@ -64,6 +64,23 @@ exports.forgotPasswordTemplate = `
       .button:hover {
         background-color: #003d82;
       }
+      .copyable-link {
+        text-align: center;
+        margin: 15px 0 30px;
+        padding: 10px;
+        background-color: #f5f5f5;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+        word-break: break-all;
+        font-family: monospace;
+        font-size: 14px;
+      }
+      .link-caption {
+        text-align: center;
+        color: #6c757d;
+        font-size: 14px;
+        margin-bottom: 5px;
+      }
       .footer { 
         margin-top: 40px; 
         padding-top: 20px;
@@ -102,8 +119,10 @@ exports.forgotPasswordTemplate = `
       <p>
         <a href="{{link}}" target="_blank" class="button">Reset My Password</a>
       </p>
+      <p class="link-caption">If the button above doesn't work, copy and paste this link into your browser:</p>
+      <div class="copyable-link">{{link}}</div>
       <p>
-        This link will expire in 24 hours for security reasons. If you didn't request this password reset, please ignore this email or contact our support team if you have any concerns.
+        This link will expire in 15 minutes for security reasons. If you didn't request this password reset, please ignore this email or contact our support team if you have any concerns.
       </p>
       <p>
         Remember, we will never ask for your password via email. Always be cautious and protect your account information.
