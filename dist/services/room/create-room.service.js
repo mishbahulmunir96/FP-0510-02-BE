@@ -17,7 +17,7 @@ const prisma_1 = __importDefault(require("../../lib/prisma"));
 const cloudinary_1 = require("../../lib/cloudinary");
 const createRoomService = (body, file, tenantId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { type, name, stock, price, guest, propertyId, facilityTitle, facilityDescription, } = body;
+        const { type, name, stock, price, guest, propertyId, facilities } = body;
         const propertyIdNoNaN = Number(propertyId);
         const stockRoom = Number(stock);
         const priceRoom = Number(price);
@@ -29,6 +29,10 @@ const createRoomService = (body, file, tenantId) => __awaiter(void 0, void 0, vo
         if (!property) {
             throw new Error("Property id not found");
         }
+        // Validasi array facilities
+        if (!facilities || !Array.isArray(facilities) || facilities.length === 0) {
+            throw new Error("At least one facility must be provided");
+        }
         let secureUrl;
         if (file) {
             const uploadResult = yield (0, cloudinary_1.cloudinaryUpload)(file);
@@ -39,7 +43,7 @@ const createRoomService = (body, file, tenantId) => __awaiter(void 0, void 0, vo
             // Membuat record room
             const newRoom = yield tx.room.create({
                 data: {
-                    type, // Menggunakan field type dari body (enum)
+                    type,
                     name,
                     stock: stockRoom,
                     price: priceRoom,
@@ -58,17 +62,27 @@ const createRoomService = (body, file, tenantId) => __awaiter(void 0, void 0, vo
                     },
                 });
             }
-            // Buat fasilitas room menggunakan facilityTitle dan facilityDescription
-            yield tx.roomFacility.create({
+            // Buat fasilitas room untuk setiap fasilitas dalam array
+            const facilityPromises = facilities.map((facility) => tx.roomFacility.create({
                 data: {
-                    title: facilityTitle,
-                    description: facilityDescription,
+                    title: facility.title,
+                    description: facility.description,
                     roomId: newRoom.id,
+                },
+            }));
+            // Jalankan semua promise pembuatan fasilitas
+            yield Promise.all(facilityPromises);
+            // Ambil data room yang lengkap dengan semua relasinya
+            const roomWithRelations = yield tx.room.findUnique({
+                where: { id: newRoom.id },
+                include: {
+                    roomFacility: true,
+                    roomImage: true,
                 },
             });
             return {
                 message: "Create Room success",
-                data: newRoom,
+                data: roomWithRelations,
             };
         }));
     }
