@@ -27,14 +27,15 @@ exports.updateRoomService = void 0;
 const prisma_1 = __importDefault(require("../../lib/prisma"));
 const cloudinary_1 = require("../../lib/cloudinary");
 const updateRoomService = (id, body, file) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b;
     try {
         // Cari room berdasarkan id beserta relasi roomImage dan roomFacility
         const existingRoom = yield prisma_1.default.room.findUnique({
             where: { id },
             include: {
                 roomImage: true,
-                roomFacility: true
+                roomFacility: {
+                    where: { isDeleted: false },
+                },
             },
         });
         if (!existingRoom) {
@@ -60,33 +61,14 @@ const updateRoomService = (id, body, file) => __awaiter(void 0, void 0, void 0, 
             delete body["propertyId"];
         }
         // Pisahkan data facility dari body
-        const { facilityTitle, facilityDescription } = body, roomData = __rest(body, ["facilityTitle", "facilityDescription"]);
+        const { facilities } = body, roomData = __rest(body, ["facilities"]);
         // Persiapkan data update untuk room
-        const updatedData = Object.assign(Object.assign({}, roomData), (facilityTitle || facilityDescription
-            ? {
-                roomFacility: {
-                    upsert: {
-                        where: {
-                            id: (_b = (_a = existingRoom.roomFacility[0]) === null || _a === void 0 ? void 0 : _a.id) !== null && _b !== void 0 ? _b : -1
-                        },
-                        create: {
-                            title: facilityTitle !== null && facilityTitle !== void 0 ? facilityTitle : "",
-                            description: facilityDescription !== null && facilityDescription !== void 0 ? facilityDescription : ""
-                        },
-                        update: Object.assign(Object.assign({}, (facilityTitle && { title: facilityTitle })), (facilityDescription && { description: facilityDescription }))
-                    }
-                }
-            }
-            : {}));
+        const updatedData = Object.assign({}, roomData);
         return yield prisma_1.default.$transaction((tx) => __awaiter(void 0, void 0, void 0, function* () {
             // Update data room
             const updatedRoom = yield tx.room.update({
                 where: { id },
                 data: updatedData,
-                include: {
-                    roomFacility: true,
-                    roomImage: true
-                }
             });
             // Jika file diunggah, update atau buat record roomImage
             if (file && secureUrl) {
@@ -107,9 +89,59 @@ const updateRoomService = (id, body, file) => __awaiter(void 0, void 0, void 0, 
                     });
                 }
             }
+            // Jika terdapat update fasilitas
+            if (facilities && Array.isArray(facilities)) {
+                // Map existing facility ids untuk referensi cepat
+                const existingFacilityIds = new Set(existingRoom.roomFacility.map((facility) => facility.id));
+                // Proses setiap fasilitas dalam array
+                for (const facility of facilities) {
+                    if (facility.id && existingFacilityIds.has(facility.id)) {
+                        // Update existing facility
+                        if (facility.isDeleted) {
+                            // Soft delete facility jika ditandai
+                            yield tx.roomFacility.update({
+                                where: { id: facility.id },
+                                data: { isDeleted: true },
+                            });
+                        }
+                        else {
+                            // Update facility yang ada
+                            yield tx.roomFacility.update({
+                                where: { id: facility.id },
+                                data: {
+                                    title: facility.title,
+                                    description: facility.description,
+                                },
+                            });
+                        }
+                        // Hapus id dari set untuk melacak mana yang sudah diproses
+                        existingFacilityIds.delete(facility.id);
+                    }
+                    else if (!facility.id) {
+                        // Buat facility baru jika id tidak ada
+                        yield tx.roomFacility.create({
+                            data: {
+                                title: facility.title,
+                                description: facility.description,
+                                roomId: id,
+                            },
+                        });
+                    }
+                }
+            }
+            // Ambil data room yang sudah diupdate dengan semua relasinya
+            const roomWithRelations = yield tx.room.findUnique({
+                where: { id: updatedRoom.id },
+                include: {
+                    roomFacility: {
+                        where: { isDeleted: false },
+                    },
+                    roomImage: true,
+                },
+            });
             return {
                 message: "Update room success",
-                data: updatedRoom,
+                data: roomWithRelations,
             };
         }));
     }
