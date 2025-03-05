@@ -1,40 +1,6 @@
 import prisma from "../../lib/prisma";
+import { PropertyMetric, PropertyMetricsParams } from "../../types/report";
 import { normalizeToUTC } from "../../utils/dateUtils";
-
-export interface PropertyMetricsParams {
-  tenantId: number;
-  startDate: Date;
-  endDate: Date;
-  propertyId?: number;
-}
-
-export interface RoomDetail {
-  roomId: number;
-  roomType: string;
-  totalBookings: number;
-  totalRevenue: number;
-  averageStayDuration: number;
-  stock: number;
-}
-
-export interface BestPerformingRoom {
-  roomId: number;
-  roomType: string;
-  totalBookings: number;
-  stock: number;
-}
-
-export interface PropertyMetric {
-  propertyId: number;
-  propertyName: string;
-  totalRevenue: number;
-  totalTransactions: number;
-  occupancyRate: number;
-  averageRating: number;
-  roomDetails: RoomDetail[];
-  bestPerformingRooms: BestPerformingRoom[];
-  totalRooms: number;
-}
 
 export const getPropertyMetricsService = async ({
   tenantId,

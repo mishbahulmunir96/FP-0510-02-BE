@@ -212,7 +212,6 @@ const cancelTransactionByTenantController = (req, res, next) => __awaiter(void 0
         const tenantId = tenant === null || tenant === void 0 ? void 0 : tenant.id;
         const paymentId = parseInt(req.params.id);
         const result = yield (0, cancel_transaction_by_tenant_service_1.cancelTransactionByTenantService)(paymentId, tenantId);
-        console.log("Cancel transaction called with ID:", req.params.id);
         res.status(200).json(result);
     }
     catch (error) {

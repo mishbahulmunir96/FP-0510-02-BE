@@ -1,42 +1,9 @@
 import prisma from "../../lib/prisma";
+import {
+  TransactionMetric,
+  TransactionMetricsParams,
+} from "../../types/report";
 import { normalizeToUTC, groupDataByPeriod } from "../../utils/dateUtils";
-
-export interface TransactionMetricsParams {
-  propertyIds: number[];
-  startDate: Date;
-  endDate: Date;
-}
-
-export interface PaymentMethodDistribution {
-  MANUAL: { count: number; percentage: number };
-  OTOMATIS: { count: number; percentage: number };
-}
-
-export interface PaymentStatusBreakdown {
-  successRate: number;
-  cancellationRate: number;
-  pendingRate: number;
-  totalSuccessful: number;
-  totalCancelled: number;
-  totalPending: number;
-}
-
-export interface PeakBookingPeriod {
-  date: string;
-  totalBookings: number;
-  totalRevenue: number;
-}
-
-export interface TransactionMetric {
-  totalTransactions: number;
-  totalRevenue: number;
-  averageTransactionValue: number;
-  paymentMethodDistribution: PaymentMethodDistribution;
-  paymentStatusBreakdown: PaymentStatusBreakdown;
-  peakBookingPeriods: PeakBookingPeriod[];
-  averageBookingDuration: number;
-  averageBookingLeadTime: number;
-}
 
 export const getTransactionMetricsService = async ({
   propertyIds,
@@ -73,7 +40,6 @@ export const getTransactionMetricsService = async ({
     },
   });
 
-  // Calculate basic transaction metrics
   const totalTransactions = payments.length;
   const totalRevenue = payments.reduce(
     (sum, payment) => sum + payment.totalPrice,
@@ -84,7 +50,6 @@ export const getTransactionMetricsService = async ({
       ? Number((totalRevenue / totalTransactions).toFixed(2))
       : 0;
 
-  // Calculate payment method distribution
   const paymentMethods = payments.reduce(
     (acc, payment) => {
       acc[payment.paymentMethode].count += 1;
@@ -105,7 +70,6 @@ export const getTransactionMetricsService = async ({
     );
   }
 
-  // Calculate payment status breakdown
   const successfulPayments = payments.filter((p) =>
     ["CHECKED_IN", "PROCESSED", "CHECKED_OUT"].includes(p.status)
   ).length;
@@ -136,14 +100,12 @@ export const getTransactionMetricsService = async ({
     totalPending: pendingPayments,
   };
 
-  // Calculate peak booking periods
   const peakBookingPeriods = groupDataByPeriod(
     payments,
     utcStartDate,
     utcEndDate
   );
 
-  // Calculate average booking duration and lead time
   const allReservations = payments.flatMap((p) => p.reservation);
 
   const durations = allReservations.map((reservation) => {
