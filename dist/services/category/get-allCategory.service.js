@@ -17,7 +17,9 @@ const prisma_1 = __importDefault(require("../../lib/prisma"));
 const getAllCategoriesService = (query) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { take, page, sortBy, sortOrder, search } = query;
-        const whereClause = {};
+        const whereClause = {
+            isDeleted: false, // Added this line to filter out deleted categories
+        };
         if (search) {
             whereClause.name = { contains: search };
         }

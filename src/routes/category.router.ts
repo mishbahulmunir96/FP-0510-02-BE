@@ -16,7 +16,7 @@ router.get("/list", getAllCategoryListController);
 
 router.post("/:id", verifyToken, isTenant, createCategoryController);
 
-router.delete("/delete-category/:id", deleteCategoryController);
-router.patch("/update-category/:id", updateCategoryController);
+router.delete("/category-property/:id", deleteCategoryController);
+router.patch("/category/:id", updateCategoryController);
 
 export default router;
