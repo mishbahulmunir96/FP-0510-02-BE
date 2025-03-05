@@ -1,3 +1,4 @@
+// src/services/category/update-category.service.ts
 import { PropertyCategory } from "../../../prisma/generated/client";
 import prisma from "../../lib/prisma";
 
@@ -8,48 +9,71 @@ export const updateCategoryService = async (
   try {
     const { name } = body;
 
-    // Ambil data kategori yang akan diupdate beserta data tenantnya
-    const propertyCategory = await prisma.propertyCategory.findUnique({
-      where: { id },
+    // Cari kategori yang akan diupdate, pastikan tidak dihapus
+    const propertyCategory = await prisma.propertyCategory.findFirst({
+      where: {
+        id,
+        isDeleted: false,
+      },
       include: {
-        tenant: true
-      }
+        tenant: true,
+      },
     });
 
     if (!propertyCategory) {
       throw new Error("Category not found");
     }
 
-    // Cek jika nama berbeda dengan yang sebelumnya
+    // Jika nama berbeda dari nama saat ini
     if (name !== propertyCategory.name) {
-      // Cek nama yang sama dalam lingkup tenant yang sama
-      const existingPropertyCategory = await prisma.propertyCategory.findFirst({
-        where: { 
+      // Cek untuk kategori aktif yang memiliki nama yang sama
+      const existingActiveCategory = await prisma.propertyCategory.findFirst({
+        where: {
           name,
-          tenantId: propertyCategory.tenantId, // Tambahkan pengecekan tenantId
-          id: { not: id } 
+          tenantId: propertyCategory.tenantId,
+          isDeleted: false,
+          id: { not: id },
         },
       });
 
-      if (existingPropertyCategory) {
+      if (existingActiveCategory) {
         throw new Error("Category name already exists for this tenant");
+      }
+
+      // Cek juga untuk kategori yang dihapus dengan nama yang sama
+      const existingDeletedCategory = await prisma.propertyCategory.findFirst({
+        where: {
+          name,
+          tenantId: propertyCategory.tenantId,
+          isDeleted: true,
+        },
+      });
+
+      if (existingDeletedCategory) {
+        // Opsi 1: Kembalikan error
+        // throw new Error("A deleted category with this name exists. Please choose a different name or restore the deleted category.");
+
+        // Opsi 2: Hapus kategori yang dihapus sebelumnya untuk mengizinkan nama ini
+        await prisma.propertyCategory.delete({
+          where: { id: existingDeletedCategory.id },
+        });
       }
     }
 
     // Update kategori
-    const updatePropertyCategory = await prisma.propertyCategory.update({
+    const updatedCategory = await prisma.propertyCategory.update({
       where: { id },
       data: { name },
     });
 
     return {
       message: "Update property category success",
-      data: updatePropertyCategory,
+      data: updatedCategory,
     };
   } catch (error) {
-    // Handle specific error cases
+    // Tangani kasus error spesifik
     if (error instanceof Error) {
-      if (error.message.includes('Unique constraint failed')) {
+      if (error.message.includes("Unique constraint failed")) {
         throw new Error("Category name already exists for this tenant");
       }
       throw error;

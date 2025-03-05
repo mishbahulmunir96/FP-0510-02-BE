@@ -6724,6 +6724,7 @@ export namespace Prisma {
     id: number | null
     name: string | null
     tenantId: number | null
+    isDeleted: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -6732,6 +6733,7 @@ export namespace Prisma {
     id: number | null
     name: string | null
     tenantId: number | null
+    isDeleted: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -6740,6 +6742,7 @@ export namespace Prisma {
     id: number
     name: number
     tenantId: number
+    isDeleted: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -6760,6 +6763,7 @@ export namespace Prisma {
     id?: true
     name?: true
     tenantId?: true
+    isDeleted?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -6768,6 +6772,7 @@ export namespace Prisma {
     id?: true
     name?: true
     tenantId?: true
+    isDeleted?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -6776,6 +6781,7 @@ export namespace Prisma {
     id?: true
     name?: true
     tenantId?: true
+    isDeleted?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -6871,6 +6877,7 @@ export namespace Prisma {
     id: number
     name: string
     tenantId: number
+    isDeleted: boolean
     createdAt: Date
     updatedAt: Date
     _count: PropertyCategoryCountAggregateOutputType | null
@@ -6898,6 +6905,7 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     tenantId?: boolean
+    isDeleted?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     properties?: boolean | PropertyCategory$propertiesArgs<ExtArgs>
@@ -6909,6 +6917,7 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     tenantId?: boolean
+    isDeleted?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     tenant?: boolean | TenantDefaultArgs<ExtArgs>
@@ -6918,6 +6927,7 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     tenantId?: boolean
+    isDeleted?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
@@ -6941,6 +6951,7 @@ export namespace Prisma {
       id: number
       name: string
       tenantId: number
+      isDeleted: boolean
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["propertyCategory"]>
@@ -7341,6 +7352,7 @@ export namespace Prisma {
     readonly id: FieldRef<"PropertyCategory", 'Int'>
     readonly name: FieldRef<"PropertyCategory", 'String'>
     readonly tenantId: FieldRef<"PropertyCategory", 'Int'>
+    readonly isDeleted: FieldRef<"PropertyCategory", 'Boolean'>
     readonly createdAt: FieldRef<"PropertyCategory", 'DateTime'>
     readonly updatedAt: FieldRef<"PropertyCategory", 'DateTime'>
   }
@@ -18117,6 +18129,7 @@ export namespace Prisma {
     id: 'id',
     name: 'name',
     tenantId: 'tenantId',
+    isDeleted: 'isDeleted',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -18805,6 +18818,7 @@ export namespace Prisma {
     id?: IntFilter<"PropertyCategory"> | number
     name?: StringFilter<"PropertyCategory"> | string
     tenantId?: IntFilter<"PropertyCategory"> | number
+    isDeleted?: BoolFilter<"PropertyCategory"> | boolean
     createdAt?: DateTimeFilter<"PropertyCategory"> | Date | string
     updatedAt?: DateTimeFilter<"PropertyCategory"> | Date | string
     properties?: PropertyListRelationFilter
@@ -18815,6 +18829,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     tenantId?: SortOrder
+    isDeleted?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     properties?: PropertyOrderByRelationAggregateInput
@@ -18823,22 +18838,24 @@ export namespace Prisma {
 
   export type PropertyCategoryWhereUniqueInput = Prisma.AtLeast<{
     id?: number
-    name_tenantId?: PropertyCategoryNameTenantIdCompoundUniqueInput
+    unique_active_category_per_tenant?: PropertyCategoryUnique_active_category_per_tenantCompoundUniqueInput
     AND?: PropertyCategoryWhereInput | PropertyCategoryWhereInput[]
     OR?: PropertyCategoryWhereInput[]
     NOT?: PropertyCategoryWhereInput | PropertyCategoryWhereInput[]
     name?: StringFilter<"PropertyCategory"> | string
     tenantId?: IntFilter<"PropertyCategory"> | number
+    isDeleted?: BoolFilter<"PropertyCategory"> | boolean
     createdAt?: DateTimeFilter<"PropertyCategory"> | Date | string
     updatedAt?: DateTimeFilter<"PropertyCategory"> | Date | string
     properties?: PropertyListRelationFilter
     tenant?: XOR<TenantScalarRelationFilter, TenantWhereInput>
-  }, "id" | "name_tenantId">
+  }, "id" | "unique_active_category_per_tenant">
 
   export type PropertyCategoryOrderByWithAggregationInput = {
     id?: SortOrder
     name?: SortOrder
     tenantId?: SortOrder
+    isDeleted?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: PropertyCategoryCountOrderByAggregateInput
@@ -18855,6 +18872,7 @@ export namespace Prisma {
     id?: IntWithAggregatesFilter<"PropertyCategory"> | number
     name?: StringWithAggregatesFilter<"PropertyCategory"> | string
     tenantId?: IntWithAggregatesFilter<"PropertyCategory"> | number
+    isDeleted?: BoolWithAggregatesFilter<"PropertyCategory"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"PropertyCategory"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"PropertyCategory"> | Date | string
   }
@@ -20011,6 +20029,7 @@ export namespace Prisma {
 
   export type PropertyCategoryCreateInput = {
     name: string
+    isDeleted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     properties?: PropertyCreateNestedManyWithoutPropertyCategoryInput
@@ -20021,6 +20040,7 @@ export namespace Prisma {
     id?: number
     name: string
     tenantId: number
+    isDeleted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     properties?: PropertyUncheckedCreateNestedManyWithoutPropertyCategoryInput
@@ -20028,6 +20048,7 @@ export namespace Prisma {
 
   export type PropertyCategoryUpdateInput = {
     name?: StringFieldUpdateOperationsInput | string
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     properties?: PropertyUpdateManyWithoutPropertyCategoryNestedInput
@@ -20038,6 +20059,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     tenantId?: IntFieldUpdateOperationsInput | number
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     properties?: PropertyUncheckedUpdateManyWithoutPropertyCategoryNestedInput
@@ -20047,12 +20069,14 @@ export namespace Prisma {
     id?: number
     name: string
     tenantId: number
+    isDeleted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type PropertyCategoryUpdateManyMutationInput = {
     name?: StringFieldUpdateOperationsInput | string
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -20061,6 +20085,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     tenantId?: IntFieldUpdateOperationsInput | number
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -21319,7 +21344,7 @@ export namespace Prisma {
     _max?: NestedEnumStatusPropertyFilter<$PrismaModel>
   }
 
-  export type PropertyCategoryNameTenantIdCompoundUniqueInput = {
+  export type PropertyCategoryUnique_active_category_per_tenantCompoundUniqueInput = {
     name: string
     tenantId: number
   }
@@ -21328,6 +21353,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     tenantId?: SortOrder
+    isDeleted?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -21341,6 +21367,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     tenantId?: SortOrder
+    isDeleted?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -21349,6 +21376,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     tenantId?: SortOrder
+    isDeleted?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -23539,6 +23567,7 @@ export namespace Prisma {
 
   export type PropertyCategoryCreateWithoutTenantInput = {
     name: string
+    isDeleted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     properties?: PropertyCreateNestedManyWithoutPropertyCategoryInput
@@ -23547,6 +23576,7 @@ export namespace Prisma {
   export type PropertyCategoryUncheckedCreateWithoutTenantInput = {
     id?: number
     name: string
+    isDeleted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     properties?: PropertyUncheckedCreateNestedManyWithoutPropertyCategoryInput
@@ -23664,6 +23694,7 @@ export namespace Prisma {
     id?: IntFilter<"PropertyCategory"> | number
     name?: StringFilter<"PropertyCategory"> | string
     tenantId?: IntFilter<"PropertyCategory"> | number
+    isDeleted?: BoolFilter<"PropertyCategory"> | boolean
     createdAt?: DateTimeFilter<"PropertyCategory"> | Date | string
     updatedAt?: DateTimeFilter<"PropertyCategory"> | Date | string
   }
@@ -23832,6 +23863,7 @@ export namespace Prisma {
 
   export type PropertyCategoryCreateWithoutPropertiesInput = {
     name: string
+    isDeleted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     tenant: TenantCreateNestedOneWithoutPropertyCategoryInput
@@ -23841,6 +23873,7 @@ export namespace Prisma {
     id?: number
     name: string
     tenantId: number
+    isDeleted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -24008,6 +24041,7 @@ export namespace Prisma {
 
   export type PropertyCategoryUpdateWithoutPropertiesInput = {
     name?: StringFieldUpdateOperationsInput | string
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tenant?: TenantUpdateOneRequiredWithoutPropertyCategoryNestedInput
@@ -24017,6 +24051,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     tenantId?: IntFieldUpdateOperationsInput | number
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -25812,6 +25847,7 @@ export namespace Prisma {
   export type PropertyCategoryCreateManyTenantInput = {
     id?: number
     name: string
+    isDeleted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -25870,6 +25906,7 @@ export namespace Prisma {
 
   export type PropertyCategoryUpdateWithoutTenantInput = {
     name?: StringFieldUpdateOperationsInput | string
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     properties?: PropertyUpdateManyWithoutPropertyCategoryNestedInput
@@ -25878,6 +25915,7 @@ export namespace Prisma {
   export type PropertyCategoryUncheckedUpdateWithoutTenantInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     properties?: PropertyUncheckedUpdateManyWithoutPropertyCategoryNestedInput
@@ -25886,6 +25924,7 @@ export namespace Prisma {
   export type PropertyCategoryUncheckedUpdateManyWithoutTenantInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

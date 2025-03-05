@@ -17,14 +17,29 @@ const prisma_1 = __importDefault(require("../../lib/prisma"));
 const deleteCategoryService = (id) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const category = yield prisma_1.default.propertyCategory.findFirst({
-            where: { id },
+            where: { id, isDeleted: false },
+            include: {
+                properties: {
+                    where: { isDeleted: false },
+                },
+            },
         });
         if (!category) {
-            throw new Error("Category id not found");
+            throw new Error("Category not found");
         }
-        yield prisma_1.default.propertyCategory.delete({
+        // Optional: Check if category has active properties before soft deleting
+        if (category.properties.length > 0) {
+            throw new Error("Cannot delete category with associated properties");
+        }
+        // Perform soft delete by updating isDeleted field
+        const deletedCategory = yield prisma_1.default.propertyCategory.update({
             where: { id },
+            data: { isDeleted: true },
         });
+        return {
+            message: "Category deleted successfully",
+            data: deletedCategory,
+        };
     }
     catch (error) {
         throw error;

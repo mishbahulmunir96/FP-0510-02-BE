@@ -173,6 +173,7 @@ exports.Prisma.PropertyCategoryScalarFieldEnum = {
   id: 'id',
   name: 'name',
   tenantId: 'tenantId',
+  isDeleted: 'isDeleted',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };

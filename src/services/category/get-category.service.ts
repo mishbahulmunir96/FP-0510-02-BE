@@ -19,6 +19,7 @@ export const getCategoriesService = async (
 
     const whereClause: Prisma.PropertyCategoryWhereInput = {
       tenant: { userId },
+      isDeleted: false,
     };
 
     if (search) {

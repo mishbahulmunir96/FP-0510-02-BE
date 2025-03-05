@@ -19,6 +19,7 @@ const getCategoriesService = (query, userId) => __awaiter(void 0, void 0, void 0
         const { take, page, sortBy, sortOrder, search } = query;
         const whereClause = {
             tenant: { userId },
+            isDeleted: false,
         };
         if (search) {
             whereClause.name = { contains: search };
