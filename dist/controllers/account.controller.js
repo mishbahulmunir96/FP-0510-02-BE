@@ -50,6 +50,7 @@ const updateProfileController = (req, res, next) => __awaiter(void 0, void 0, vo
 });
 exports.updateProfileController = updateProfileController;
 const updateTenantProfileController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     try {
         // Pass the user ID directly to the service, not tenant ID
         const result = yield (0, update_tenant_service_1.updateTenantProfileService)(req.body, req.file, // Use req.file since the route is configured with uploader(1).single("imageFile")

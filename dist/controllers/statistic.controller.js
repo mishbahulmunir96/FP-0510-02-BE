@@ -16,20 +16,7 @@ exports.getPropertyCalendarReportController = exports.getSalesReportController =
 const prisma_1 = __importDefault(require("../lib/prisma"));
 const get_calendar_property_report_service_1 = require("../services/statistic/get-calendar-property-report.service");
 const get_sales_report_service_1 = require("../services/statistic/get-sales-report.service");
-const date_utils_1 = require("../utils/date.utils");
-const processDateFilters = (query) => {
-    const filterType = query.filterType || "date-range";
-    const month = query.month ? parseInt(query.month) : undefined;
-    const year = query.year ? parseInt(query.year) : undefined;
-    const { startDate, endDate } = (0, date_utils_1.getDateRangeFromFilter)(filterType, {
-        startDate: query.startDate,
-        endDate: query.endDate,
-        month,
-        year,
-    });
-    (0, date_utils_1.validateDateRange)(startDate, endDate);
-    return { startDate, endDate };
-};
+const dateUtils_1 = require("../utils/dateUtils");
 const getSalesReportController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const user = res.locals.user;
@@ -40,7 +27,7 @@ const getSalesReportController = (req, res, next) => __awaiter(void 0, void 0, v
         if (!tenant) {
             throw new Error("Tenant not found");
         }
-        const { startDate, endDate } = processDateFilters(query);
+        const { startDate, endDate } = (0, dateUtils_1.processDateFilters)(query);
         const propertyId = query.propertyId ? Number(query.propertyId) : undefined;
         if (propertyId) {
             const propertyExists = yield prisma_1.default.property.findFirst({
