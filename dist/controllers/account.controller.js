@@ -52,16 +52,11 @@ const updateProfileController = (req, res, next) => __awaiter(void 0, void 0, vo
 });
 exports.updateProfileController = updateProfileController;
 const updateTenantProfileController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     try {
-        const userId = Number(res.locals.user.id);
-        // Dapatkan tenant berdasarkan userId
-        const tenant = yield (0, get_tenant_service_1.getTenantService)(userId);
-        // body data
-        const body = req.body;
-        // file dari Multer
-        const file = req.file;
-        const result = yield (0, update_tenant_service_1.updateTenantProfileService)(body, file, tenant.id);
-        res.status(200).json(result);
+        const files = req.files;
+        const result = yield (0, update_tenant_service_1.updateTenantProfileService)(req.body, (_a = files.imageFile) === null || _a === void 0 ? void 0 : _a[0], res.locals.user.id);
+        res.status(200).send(result);
     }
     catch (error) {
         next(error);

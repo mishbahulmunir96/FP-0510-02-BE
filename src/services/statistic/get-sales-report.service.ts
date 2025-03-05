@@ -16,7 +16,6 @@ export const getSalesReportService = async ({
   propertyId,
 }: GetSalesReportParams): Promise<SalesReport> => {
   try {
-    // Get property metrics
     const propertyMetrics = await getPropertyMetricsService({
       tenantId,
       startDate,
@@ -24,17 +23,14 @@ export const getSalesReportService = async ({
       propertyId,
     });
 
-    // Extract property IDs for transaction metrics
     const propertyIds = propertyMetrics.map((p) => p.propertyId);
 
-    // Get transaction metrics
     const transactionMetrics = await getTransactionMetricsService({
       propertyIds,
       startDate,
       endDate,
     });
 
-    // Combine metrics into final report
     return {
       propertyMetrics,
       transactionMetrics,
