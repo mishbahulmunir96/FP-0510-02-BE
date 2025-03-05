@@ -44,7 +44,6 @@ export const getPropertyCalendarReportService = async (
       throw new Error("Property not found");
     }
 
-    // Get all dates in range
     const dates: Date[] = [];
     let currentDate = new Date(startDate);
     while (currentDate <= endDate) {
@@ -52,7 +51,6 @@ export const getPropertyCalendarReportService = async (
       currentDate.setDate(currentDate.getDate() + 1);
     }
 
-    // Get all reservations in date range
     const reservations = await prisma.reservation.findMany({
       where: {
         room: {
@@ -80,7 +78,6 @@ export const getPropertyCalendarReportService = async (
       },
     });
 
-    // Get non-availability periods
     const nonAvailabilityPeriods = await prisma.roomNonAvailability.findMany({
       where: {
         room: {
@@ -99,7 +96,6 @@ export const getPropertyCalendarReportService = async (
       },
     });
 
-    // Get peak season rates
     const peakSeasonRates = await prisma.peakSeasonRate.findMany({
       where: {
         room: {
@@ -119,10 +115,8 @@ export const getPropertyCalendarReportService = async (
       },
     });
 
-    // Process calendar data
     const calendarData = dates.map((date) => {
       const roomsStatus = property.room.map((room) => {
-        // Check bookings for this date and room
         const bookedRooms = reservations.filter(
           (reservation) =>
             reservation.roomId === room.id &&
@@ -130,7 +124,6 @@ export const getPropertyCalendarReportService = async (
             date <= reservation.endDate
         ).length;
 
-        // Check if room is non-available
         const isNonAvailable = nonAvailabilityPeriods.some(
           (period) =>
             period.roomId === room.id &&
@@ -138,7 +131,6 @@ export const getPropertyCalendarReportService = async (
             date <= period.endDate
         );
 
-        // Check if peak season
         const peakRate = peakSeasonRates.find(
           (rate) =>
             rate.roomId === room.id &&
