@@ -1,9 +1,8 @@
 import { sign } from "jsonwebtoken";
-import { BASE_URL_FE, JWT_SECRET_FORGOT_PASSWORD } from "../../config";
-import { transporter } from "../../lib/nodemailer";
-import prisma from "../../lib/prisma";
-import { sendForgotPasswordEmail } from "../../lib/handlebars";
 import { User } from "../../../prisma/generated/client";
+import { BASE_URL_FE, JWT_SECRET_FORGOT_PASSWORD } from "../../config";
+import { sendForgotPasswordEmail } from "../../lib/handlebars";
+import prisma from "../../lib/prisma";
 
 export const forgotPasswordService = async (body: Pick<User, "email">) => {
   try {

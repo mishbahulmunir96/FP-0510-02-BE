@@ -43,8 +43,6 @@ export const loginService = async (body: Body) => {
       JWT_SECRET!,
       { expiresIn: "2h" }
     );
-
-    // Update user token in database
     await prisma.user.update({
       where: { id: user.id },
       data: { token },

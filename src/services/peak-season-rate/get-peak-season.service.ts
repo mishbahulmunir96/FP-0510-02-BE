@@ -1,8 +1,6 @@
-
-import { Prisma } from '../../../prisma/generated/client';
-import prisma from '../../lib/prisma';
-import { PaginationQueryParams } from '../../types/pagination';
-
+import { Prisma } from "../../../prisma/generated/client";
+import prisma from "../../lib/prisma";
+import { PaginationQueryParams } from "../../types/pagination";
 
 interface GetPeakSeasonsQuery extends PaginationQueryParams {
   search: string;
@@ -14,30 +12,20 @@ interface GetPeakSeasonsQuery extends PaginationQueryParams {
 
 export const getPeakSeasonsService = async (
   query: GetPeakSeasonsQuery,
-  userId: number,
+  userId: number
 ) => {
   try {
-    const {
-      take,
-      page,
-      sortBy,
-      sortOrder,
-      search,
-      price,
-      startDate,
-      endDate,
-      roomId,
-    } = query;
+    const { take, page, sortBy, sortOrder } = query;
 
     const user = await prisma.user.findUnique({
       where: { id: userId },
     });
 
     if (!user) {
-      throw new Error('User not found');
+      throw new Error("User not found");
     }
 
-    if (user.role !== 'TENANT') {
+    if (user.role !== "TENANT") {
       throw new Error("User don't have access");
     }
 
@@ -46,7 +34,7 @@ export const getPeakSeasonsService = async (
     });
 
     if (!tenant) {
-      throw new Error('Tenant not found');
+      throw new Error("Tenant not found");
     }
 
     const whereClause: Prisma.PeakSeasonRateWhereInput = {
@@ -58,7 +46,7 @@ export const getPeakSeasonsService = async (
       where: whereClause,
       skip: (page - 1) * take,
       take: take,
-      orderBy: { [sortBy]: sortOrder || 'asc' },
+      orderBy: { [sortBy]: sortOrder || "asc" },
       include: {
         room: true,
       },

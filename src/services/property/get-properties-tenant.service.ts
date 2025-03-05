@@ -23,22 +23,16 @@ export const getTenantPropertiesService = async (
     if (user.role !== "TENANT") {
       throw new Error("User don't have access");
     }
-
-    // Cari tenant yang terkait dengan user
     const tenant = await prisma.tenant.findFirst({
       where: { userId: user.id, isDeleted: false },
     });
     if (!tenant) {
       throw new Error("Tenant not found");
     }
-
-    // Membangun whereClause untuk properti
     const whereClause: Prisma.PropertyWhereInput = {
       isDeleted: false,
       tenantId: tenant.id,
     };
-
-    // Tambahkan filter pencarian jika search tersedia
     if (search) {
       whereClause.OR = [
         { title: { contains: search, mode: "insensitive" } },

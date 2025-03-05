@@ -16,7 +16,6 @@ export const createRoomNonAvailabilityService = async (
   try {
     const { reason, startDate, endDate, roomId } = body;
 
-    // Validasi user
     const user = await prisma.user.findFirst({
       where: { id: userId },
     });
@@ -24,7 +23,6 @@ export const createRoomNonAvailabilityService = async (
       throw new Error("User not found");
     }
 
-    // Validasi adanya non-availability yang tumpang tindih
     const existingNonAvailabilities = await prisma.roomNonAvailability.findMany(
       {
         where: { roomId },
@@ -48,7 +46,6 @@ export const createRoomNonAvailabilityService = async (
       }
     });
 
-    // Validasi room
     const room = await prisma.room.findFirst({
       where: { id: roomId },
     });
@@ -56,7 +53,6 @@ export const createRoomNonAvailabilityService = async (
       throw new Error("Room not found");
     }
 
-    // Buat record RoomNonAvailability dalam transaksi
     return await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       const newRoomNonAvailability = await tx.roomNonAvailability.create({
         data: {

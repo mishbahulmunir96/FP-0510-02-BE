@@ -7,7 +7,6 @@ import {
   updatePeakSeasonRate,
 } from "../controllers/peakSeasonRate.controller";
 import { isTenant } from "../lib/isTenant";
-
 const router = Router();
 
 router.get("/", verifyToken, isTenant, getPeakSeasons);

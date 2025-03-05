@@ -9,14 +9,11 @@ interface GetRoomsQuery extends PaginationQueryParams {
 export const getRoomsService = async (query: GetRoomsQuery) => {
   try {
     const { take, page, sortBy, sortOrder, search } = query;
-
-    // Membangun whereClause untuk Room
     const whereClause: Prisma.RoomWhereInput = {
       isDeleted: false,
     };
 
     if (search) {
-      // Karena field "type" adalah enum, kita lakukan pencarian exact match
       const allowedTypes: Array<"Deluxe" | "Standard" | "Suite"> = [
         "Deluxe",
         "Standard",
@@ -27,7 +24,6 @@ export const getRoomsService = async (query: GetRoomsQuery) => {
           equals: search as "Deluxe" | "Standard" | "Suite",
         };
       }
-      // Jika ingin pencarian partial pada field lain (misalnya, properti terkait), tambahkan filter tambahan di sini.
     }
 
     const rooms = await prisma.room.findMany({

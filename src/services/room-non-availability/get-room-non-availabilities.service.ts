@@ -27,7 +27,6 @@ export const getRoomNonAvailabilitiesService = async (
       roomId,
     } = query;
 
-    // Validasi user dan tenant
     const user = await prisma.user.findUnique({
       where: { id: userId },
     });
@@ -43,8 +42,6 @@ export const getRoomNonAvailabilitiesService = async (
     if (!tenant) {
       throw new Error("Tenant not found");
     }
-
-    // Membangun whereClause untuk RoomNonAvailability
     const whereClause: Prisma.RoomNonAvailabilityWhereInput = {
       isDeleted: false,
       room: { property: { tenantId: tenant.id } },

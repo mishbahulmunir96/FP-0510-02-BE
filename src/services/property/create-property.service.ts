@@ -12,7 +12,7 @@ interface CreatePropertyBody {
   description: string;
   latitude: string;
   longitude: string;
-  propertyCategoryId: string | number; // Allow both string and number
+  propertyCategoryId: string | number;
   location: string;
 }
 
@@ -36,24 +36,16 @@ export const createPropertyService = async (
       propertyCategoryId,
       location,
     } = body;
-
-    // Convert propertyCategoryId to number
     const categoryId = Number(propertyCategoryId);
-
-    // Validate if conversion was successful
     if (isNaN(categoryId)) {
       throw new Error("Invalid property category ID");
     }
-
-    // Check if slug exists
     const existingProperty = await prisma.property.findUnique({
       where: { slug },
     });
     if (existingProperty) {
       throw new Error("Slug already exists");
     }
-
-    // Validate user and tenant
     const user = await prisma.user.findUnique({
       where: {
         id: userId,
@@ -76,8 +68,6 @@ export const createPropertyService = async (
     if (!tenant) {
       throw new Error("Tenant profile not found");
     }
-
-    // Validate property category exists (using the converted number)
     const categoryExists = await prisma.propertyCategory.findUnique({
       where: { id: categoryId },
     });
@@ -85,13 +75,11 @@ export const createPropertyService = async (
       throw new Error("Property category not found");
     }
 
-    // Upload images if provided
     const imageResults =
       files && files.length > 0
         ? await Promise.all(files.map((file) => cloudinaryUpload(file)))
         : [];
 
-    // Create property and images in a transaction
     const result = await prisma.$transaction(async (tx) => {
       const newProperty = await tx.property.create({
         data: {
@@ -100,7 +88,7 @@ export const createPropertyService = async (
           longitude,
           slug,
           title,
-          propertyCategoryId: categoryId, // Use the converted number
+          propertyCategoryId: categoryId,
           location,
           status: StatusProperty.PUBLISHED,
           tenantId: tenant.id,
@@ -113,7 +101,6 @@ export const createPropertyService = async (
         },
       });
 
-      // Create property images
       if (imageResults.length > 0) {
         await Promise.all(
           imageResults

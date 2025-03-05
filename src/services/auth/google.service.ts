@@ -18,7 +18,7 @@ export const loginWithGoogleService = async (accessToken: string) => {
     const user = await prisma.user.findFirst({
       where: {
         email: userInfo.email,
-        isDeleted: false, // Sesuai schema yang memiliki field isDeleted
+        isDeleted: false, 
       },
     });
 
@@ -34,8 +34,8 @@ export const loginWithGoogleService = async (accessToken: string) => {
           name: userInfo.name,
           isVerified: true,
           provider: "GOOGLE",
-          role: "USER", // Sesuai enum Role dalam schema
-          imageUrl: userInfo.picture, // Jika ada dari Google
+          role: "USER", 
+          imageUrl: userInfo.picture, 
           isDeleted: false,
         },
       });
@@ -65,7 +65,6 @@ export const loginWithGoogleService = async (accessToken: string) => {
       expiresIn: "2h",
     });
 
-    // Update token di database
     await prisma.user.update({
       where: { id: userId },
       data: { token },

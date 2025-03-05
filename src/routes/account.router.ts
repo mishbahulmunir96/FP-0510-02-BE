@@ -16,7 +16,6 @@ const router = Router();
 
 router.get("/profile", verifyToken, getProfileController);
 router.get("/tenant", verifyToken, getTenantController);
-// In account.router.ts for the user profile endpoint
 router.patch(
   "/",
   verifyToken,
@@ -27,8 +26,6 @@ router.patch(
 router.patch("/change-password", verifyToken, changePasswordController);
 router.post("/verify-change-email", verifyChangeEmailController);
 router.post("/change-email", verifyToken, changeEmailController);
-
-// In account.router.ts
 router.patch(
   "/tenant",
   verifyToken,

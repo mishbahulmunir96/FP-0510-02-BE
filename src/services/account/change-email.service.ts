@@ -36,7 +36,6 @@ export const changeEmailService = async (userId: number, newEmail: string) => {
   );
 
   try {
-    // Load templates & partials
     const partialsDir = path.join(__dirname, "../../templates/partials");
     const partialFiles = fs.readdirSync(partialsDir);
     partialFiles.forEach((file) => {

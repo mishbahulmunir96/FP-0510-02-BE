@@ -1,21 +1,19 @@
 import { Prisma } from "@prisma/client";
 import prisma from "../../lib/prisma";
 import { cloudinaryUpload } from "../../lib/cloudinary";
-
-// Interface for a single facility
 interface RoomFacility {
   title: string;
   description: string;
 }
 
 interface CreateRoomBody {
-  type: "Deluxe" | "Standard" | "Suite"; // Sesuai dengan enum Type di schema Room
+  type: "Deluxe" | "Standard" | "Suite";
   stock: number;
   name?: string;
   price: number;
   guest: number;
   propertyId: number;
-  facilities: RoomFacility[]; // Array of facilities instead of single facility
+  facilities: RoomFacility[];
 }
 
 export const createRoomService = async (
@@ -31,7 +29,6 @@ export const createRoomService = async (
     const priceRoom = Number(price);
     const guestRoom = Number(guest);
 
-    // Validasi keberadaan property
     const property = await prisma.property.findFirst({
       where: { id: propertyIdNoNaN },
     });
@@ -39,7 +36,6 @@ export const createRoomService = async (
       throw new Error("Property id not found");
     }
 
-    // Validasi array facilities
     if (!facilities || !Array.isArray(facilities) || facilities.length === 0) {
       throw new Error("At least one facility must be provided");
     }
@@ -50,9 +46,7 @@ export const createRoomService = async (
       secureUrl = uploadResult.secure_url;
     }
 
-    // Buat room dan fasilitasnya dalam sebuah transaksi
     return await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
-      // Membuat record room
       const newRoom = await tx.room.create({
         data: {
           type,
@@ -66,7 +60,6 @@ export const createRoomService = async (
         },
       });
 
-      // Jika file diunggah, buat record gambar untuk room
       if (file && secureUrl) {
         await tx.roomImage.create({
           data: {
@@ -75,8 +68,6 @@ export const createRoomService = async (
           },
         });
       }
-
-      // Buat fasilitas room untuk setiap fasilitas dalam array
       const facilityPromises = facilities.map((facility) =>
         tx.roomFacility.create({
           data: {
@@ -86,11 +77,8 @@ export const createRoomService = async (
           },
         })
       );
-
-      // Jalankan semua promise pembuatan fasilitas
       await Promise.all(facilityPromises);
 
-      // Ambil data room yang lengkap dengan semua relasinya
       const roomWithRelations = await tx.room.findUnique({
         where: { id: newRoom.id },
         include: {

@@ -8,24 +8,16 @@ export const fileFilterProfile = async (
 ) => {
   try {
     const files = req.files as { [fieldName: string]: Express.Multer.File[] };
-    const allowedTypes = [
-      "image/jpeg",
-      "image/png",
-      "image/jpg",
-      "image/gif", // Menambahkan gif sesuai permintaan
-    ];
+    const allowedTypes = ["image/jpeg", "image/png", "image/jpg", "image/gif"];
 
-    const MAX_FILE_SIZE = 1 * 1024 * 1024; // 1MB dalam bytes
+    const MAX_FILE_SIZE = 1 * 1024 * 1024;
 
     for (const fieldName in files) {
       const fileArray = files[fieldName];
       for (const file of fileArray) {
-        // Validasi ukuran file
         if (file.size > MAX_FILE_SIZE) {
           throw new Error(`File size exceeds 1MB limit`);
         }
-
-        // Validasi tipe file
         const type = await fromBuffer(file.buffer);
         if (!type || !allowedTypes.includes(type?.mime)) {
           throw new Error(

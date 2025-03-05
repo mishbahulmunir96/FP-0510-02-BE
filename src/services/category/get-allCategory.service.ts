@@ -1,4 +1,3 @@
-// src/services/category/get-allCategory.service.ts
 import { Prisma } from "../../../prisma/generated/client";
 import prisma from "../../lib/prisma";
 
@@ -15,7 +14,7 @@ export const getAllCategoriesService = async (query: getCategoriesService) => {
     const { take, page, sortBy, sortOrder, search } = query;
 
     const whereClause: Prisma.PropertyCategoryWhereInput = {
-      isDeleted: false, // Added this line to filter out deleted categories
+      isDeleted: false,
     };
 
     if (search) {
