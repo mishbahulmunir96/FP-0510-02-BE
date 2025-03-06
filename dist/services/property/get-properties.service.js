@@ -16,10 +16,6 @@ exports.getPropertiesService = void 0;
 const prisma_1 = __importDefault(require("../../lib/prisma"));
 const getPropertiesService = (query) => __awaiter(void 0, void 0, void 0, function* () {
     const { take = 8, page = 1, sortBy = "createdAt", sortOrder = "desc", location, category, search, startDate, endDate, guest, priceMin, priceMax, } = query;
-<<<<<<< HEAD
-=======
-
->>>>>>> 005ef401df3cf0d2b38b7821131c1a005e9001f8
     if ((startDate && !endDate) || (!startDate && endDate)) {
         throw new Error("Both startDate and endDate are required for filtering");
     }

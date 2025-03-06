@@ -80,29 +80,17 @@ const updateRoomService = (id, body, file) => __awaiter(void 0, void 0, void 0, 
                     });
                 }
             }
-<<<<<<< HEAD
-=======
-
->>>>>>> 005ef401df3cf0d2b38b7821131c1a005e9001f8
             if (facilities && Array.isArray(facilities)) {
                 const existingFacilityIds = new Set(existingRoom.roomFacility.map((facility) => facility.id));
                 for (const facility of facilities) {
                     if (facility.id && existingFacilityIds.has(facility.id)) {
                         if (facility.isDeleted) {
-<<<<<<< HEAD
-=======
-
->>>>>>> 005ef401df3cf0d2b38b7821131c1a005e9001f8
                             yield tx.roomFacility.update({
                                 where: { id: facility.id },
                                 data: { isDeleted: true },
                             });
                         }
                         else {
-<<<<<<< HEAD
-=======
-
->>>>>>> 005ef401df3cf0d2b38b7821131c1a005e9001f8
                             yield tx.roomFacility.update({
                                 where: { id: facility.id },
                                 data: {
@@ -111,17 +99,9 @@ const updateRoomService = (id, body, file) => __awaiter(void 0, void 0, void 0, 
                                 },
                             });
                         }
-<<<<<<< HEAD
                         existingFacilityIds.delete(facility.id);
                     }
                     else if (!facility.id) {
-=======
-
-                        existingFacilityIds.delete(facility.id);
-                    }
-                    else if (!facility.id) {
-
->>>>>>> 005ef401df3cf0d2b38b7821131c1a005e9001f8
                         yield tx.roomFacility.create({
                             data: {
                                 title: facility.title,
@@ -132,10 +112,6 @@ const updateRoomService = (id, body, file) => __awaiter(void 0, void 0, void 0, 
                     }
                 }
             }
-<<<<<<< HEAD
-=======
-
->>>>>>> 005ef401df3cf0d2b38b7821131c1a005e9001f8
             const roomWithRelations = yield tx.room.findUnique({
                 where: { id: updatedRoom.id },
                 include: {

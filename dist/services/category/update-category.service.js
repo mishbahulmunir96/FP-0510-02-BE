@@ -17,10 +17,6 @@ const prisma_1 = __importDefault(require("../../lib/prisma"));
 const updateCategoryService = (id, body) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { name } = body;
-<<<<<<< HEAD
-=======
-
->>>>>>> 005ef401df3cf0d2b38b7821131c1a005e9001f8
         const propertyCategory = yield prisma_1.default.propertyCategory.findFirst({
             where: {
                 id,
@@ -33,13 +29,7 @@ const updateCategoryService = (id, body) => __awaiter(void 0, void 0, void 0, fu
         if (!propertyCategory) {
             throw new Error("Category not found");
         }
-<<<<<<< HEAD
         if (name !== propertyCategory.name) {
-=======
-
-        if (name !== propertyCategory.name) {
-
->>>>>>> 005ef401df3cf0d2b38b7821131c1a005e9001f8
             const existingActiveCategory = yield prisma_1.default.propertyCategory.findFirst({
                 where: {
                     name,
@@ -51,10 +41,6 @@ const updateCategoryService = (id, body) => __awaiter(void 0, void 0, void 0, fu
             if (existingActiveCategory) {
                 throw new Error("Category name already exists for this tenant");
             }
-<<<<<<< HEAD
-=======
-
->>>>>>> 005ef401df3cf0d2b38b7821131c1a005e9001f8
             const existingDeletedCategory = yield prisma_1.default.propertyCategory.findFirst({
                 where: {
                     name,
@@ -63,19 +49,11 @@ const updateCategoryService = (id, body) => __awaiter(void 0, void 0, void 0, fu
                 },
             });
             if (existingDeletedCategory) {
-<<<<<<< HEAD
-=======
-
->>>>>>> 005ef401df3cf0d2b38b7821131c1a005e9001f8
                 yield prisma_1.default.propertyCategory.delete({
                     where: { id: existingDeletedCategory.id },
                 });
             }
         }
-<<<<<<< HEAD
-=======
-
->>>>>>> 005ef401df3cf0d2b38b7821131c1a005e9001f8
         const updatedCategory = yield prisma_1.default.propertyCategory.update({
             where: { id },
             data: { name },
@@ -86,10 +64,6 @@ const updateCategoryService = (id, body) => __awaiter(void 0, void 0, void 0, fu
         };
     }
     catch (error) {
-<<<<<<< HEAD
-=======
-
->>>>>>> 005ef401df3cf0d2b38b7821131c1a005e9001f8
         if (error instanceof Error) {
             if (error.message.includes("Unique constraint failed")) {
                 throw new Error("Category name already exists for this tenant");
