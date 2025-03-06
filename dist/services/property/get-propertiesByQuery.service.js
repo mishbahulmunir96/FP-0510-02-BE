@@ -49,7 +49,7 @@ const getPropertiesServiceByQuery = (query) => __awaiter(void 0, void 0, void 0,
             whereClause.OR = [
                 { title: { contains: search, mode: "insensitive" } },
                 { description: { contains: search, mode: "insensitive" } },
-                { location: { contains: search, mode: "insensitive" } }, // Added location search
+                { location: { contains: search, mode: "insensitive" } },
             ];
         }
         const propertiesByQuery = yield prisma_1.default.property.findMany({

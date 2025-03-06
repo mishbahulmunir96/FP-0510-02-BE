@@ -27,7 +27,7 @@ const forgotPasswordService = (body) => __awaiter(void 0, void 0, void 0, functi
             throw new Error("Invalid email address");
         }
         const token = (0, jsonwebtoken_1.sign)({ id: user.id }, config_1.JWT_SECRET_FORGOT_PASSWORD, {
-            expiresIn: "15m",
+            expiresIn: "1h",
         });
         const link = `${config_1.BASE_URL_FE}/reset-password/${token}`;
         yield (0, handlebars_1.sendForgotPasswordEmail)({ email, link });
