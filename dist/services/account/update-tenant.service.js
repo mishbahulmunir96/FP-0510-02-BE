@@ -41,6 +41,7 @@ const updateTenantProfileService = (body, imageFile, userId) => __awaiter(void 0
         }
         const updatedTenant = yield prisma_1.default.tenant.update({
             where: { id: tenant.id },
+
             data: secureUrl
                 ? Object.assign(Object.assign({}, body), { imageUrl: secureUrl }) : body,
         });
@@ -51,6 +52,7 @@ const updateTenantProfileService = (body, imageFile, userId) => __awaiter(void 0
         };
     }
     catch (error) {
+
         if (error instanceof Error) {
             throw new Error("Failed to update tenant profile: " + error.message);
         }

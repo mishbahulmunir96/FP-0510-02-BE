@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createCategoryService = void 0;
 const prisma_1 = __importDefault(require("../../lib/prisma"));
+// src/services/category/create-category.service.ts
 const createCategoryService = (body, userId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { name } = body;
@@ -35,6 +36,7 @@ const createCategoryService = (body, userId) => __awaiter(void 0, void 0, void 0
         if (!tenant) {
             throw new Error("Tenant not found");
         }
+
         const deletedCategory = yield prisma_1.default.propertyCategory.findFirst({
             where: {
                 name,
@@ -43,6 +45,7 @@ const createCategoryService = (body, userId) => __awaiter(void 0, void 0, void 0
             },
         });
         if (deletedCategory) {
+
             const restoredCategory = yield prisma_1.default.propertyCategory.update({
                 where: { id: deletedCategory.id },
                 data: { isDeleted: false },
@@ -52,6 +55,7 @@ const createCategoryService = (body, userId) => __awaiter(void 0, void 0, void 0
                 data: restoredCategory,
             };
         }
+
         const existingCategory = yield prisma_1.default.propertyCategory.findFirst({
             where: {
                 name,

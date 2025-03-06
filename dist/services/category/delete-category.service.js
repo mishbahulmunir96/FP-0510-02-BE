@@ -27,9 +27,11 @@ const deleteCategoryService = (id) => __awaiter(void 0, void 0, void 0, function
         if (!category) {
             throw new Error("Category not found");
         }
+
         if (category.properties.length > 0) {
             throw new Error("Cannot delete category with associated properties");
         }
+
         const deletedCategory = yield prisma_1.default.propertyCategory.update({
             where: { id },
             data: { isDeleted: true },

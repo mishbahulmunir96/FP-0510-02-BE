@@ -57,7 +57,9 @@ const updateRoomService = (id, body, file) => __awaiter(void 0, void 0, void 0, 
         if ("propertyId" in body) {
             delete body["propertyId"];
         }
+
         const { facilities } = body, roomData = __rest(body, ["facilities"]);
+
         const updatedData = Object.assign({}, roomData);
         return yield prisma_1.default.$transaction((tx) => __awaiter(void 0, void 0, void 0, function* () {
             const updatedRoom = yield tx.room.update({
@@ -80,17 +82,20 @@ const updateRoomService = (id, body, file) => __awaiter(void 0, void 0, void 0, 
                     });
                 }
             }
+
             if (facilities && Array.isArray(facilities)) {
                 const existingFacilityIds = new Set(existingRoom.roomFacility.map((facility) => facility.id));
                 for (const facility of facilities) {
                     if (facility.id && existingFacilityIds.has(facility.id)) {
                         if (facility.isDeleted) {
+
                             yield tx.roomFacility.update({
                                 where: { id: facility.id },
                                 data: { isDeleted: true },
                             });
                         }
                         else {
+
                             yield tx.roomFacility.update({
                                 where: { id: facility.id },
                                 data: {
@@ -99,9 +104,11 @@ const updateRoomService = (id, body, file) => __awaiter(void 0, void 0, void 0, 
                                 },
                             });
                         }
+
                         existingFacilityIds.delete(facility.id);
                     }
                     else if (!facility.id) {
+
                         yield tx.roomFacility.create({
                             data: {
                                 title: facility.title,
@@ -112,6 +119,7 @@ const updateRoomService = (id, body, file) => __awaiter(void 0, void 0, void 0, 
                     }
                 }
             }
+
             const roomWithRelations = yield tx.room.findUnique({
                 where: { id: updatedRoom.id },
                 include: {
