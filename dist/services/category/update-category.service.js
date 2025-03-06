@@ -17,6 +17,7 @@ const prisma_1 = __importDefault(require("../../lib/prisma"));
 const updateCategoryService = (id, body) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { name } = body;
+
         const propertyCategory = yield prisma_1.default.propertyCategory.findFirst({
             where: {
                 id,
@@ -29,7 +30,9 @@ const updateCategoryService = (id, body) => __awaiter(void 0, void 0, void 0, fu
         if (!propertyCategory) {
             throw new Error("Category not found");
         }
+
         if (name !== propertyCategory.name) {
+
             const existingActiveCategory = yield prisma_1.default.propertyCategory.findFirst({
                 where: {
                     name,
@@ -41,6 +44,7 @@ const updateCategoryService = (id, body) => __awaiter(void 0, void 0, void 0, fu
             if (existingActiveCategory) {
                 throw new Error("Category name already exists for this tenant");
             }
+
             const existingDeletedCategory = yield prisma_1.default.propertyCategory.findFirst({
                 where: {
                     name,
@@ -49,11 +53,13 @@ const updateCategoryService = (id, body) => __awaiter(void 0, void 0, void 0, fu
                 },
             });
             if (existingDeletedCategory) {
+
                 yield prisma_1.default.propertyCategory.delete({
                     where: { id: existingDeletedCategory.id },
                 });
             }
         }
+
         const updatedCategory = yield prisma_1.default.propertyCategory.update({
             where: { id },
             data: { name },
@@ -64,6 +70,7 @@ const updateCategoryService = (id, body) => __awaiter(void 0, void 0, void 0, fu
         };
     }
     catch (error) {
+
         if (error instanceof Error) {
             if (error.message.includes("Unique constraint failed")) {
                 throw new Error("Category name already exists for this tenant");

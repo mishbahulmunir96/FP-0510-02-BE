@@ -51,6 +51,7 @@ const updateTenantProfileService = (body, imageFile, userId) => __awaiter(void 0
         };
     }
     catch (error) {
+
         if (error instanceof Error) {
             throw new Error("Failed to update tenant profile: " + error.message);
         }
