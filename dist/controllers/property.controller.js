@@ -127,8 +127,7 @@ function getPropertyTenantController(req, res, next) {
 }
 const createPropertyController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const result = yield (0, create_property_service_1.createPropertyService)(req.body, req.files, // Changed from req.file! to req.files
-        Number(res.locals.user.id));
+        const result = yield (0, create_property_service_1.createPropertyService)(req.body, req.files, Number(res.locals.user.id));
         res.status(200).send(result);
     }
     catch (error) {

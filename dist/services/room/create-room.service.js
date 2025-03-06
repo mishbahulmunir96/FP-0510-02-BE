@@ -28,7 +28,6 @@ const createRoomService = (body, file, tenantId) => __awaiter(void 0, void 0, vo
         if (!property) {
             throw new Error("Property id not found");
         }
-
         if (!facilities || !Array.isArray(facilities) || facilities.length === 0) {
             throw new Error("At least one facility must be provided");
         }

@@ -57,9 +57,7 @@ const updateRoomService = (id, body, file) => __awaiter(void 0, void 0, void 0, 
         if ("propertyId" in body) {
             delete body["propertyId"];
         }
-
         const { facilities } = body, roomData = __rest(body, ["facilities"]);
-
         const updatedData = Object.assign({}, roomData);
         return yield prisma_1.default.$transaction((tx) => __awaiter(void 0, void 0, void 0, function* () {
             const updatedRoom = yield tx.room.update({

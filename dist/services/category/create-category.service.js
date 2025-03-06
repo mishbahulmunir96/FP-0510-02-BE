@@ -36,7 +36,6 @@ const createCategoryService = (body, userId) => __awaiter(void 0, void 0, void 0
         if (!tenant) {
             throw new Error("Tenant not found");
         }
-
         const deletedCategory = yield prisma_1.default.propertyCategory.findFirst({
             where: {
                 name,
@@ -45,7 +44,6 @@ const createCategoryService = (body, userId) => __awaiter(void 0, void 0, void 0
             },
         });
         if (deletedCategory) {
-
             const restoredCategory = yield prisma_1.default.propertyCategory.update({
                 where: { id: deletedCategory.id },
                 data: { isDeleted: false },

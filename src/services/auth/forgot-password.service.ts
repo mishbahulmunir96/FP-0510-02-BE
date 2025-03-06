@@ -15,7 +15,7 @@ export const forgotPasswordService = async (body: Pick<User, "email">) => {
     }
 
     const token = sign({ id: user.id }, JWT_SECRET_FORGOT_PASSWORD!, {
-      expiresIn: "15m",
+      expiresIn: "1h",
     });
 
     const link = `${BASE_URL_FE}/reset-password/${token}`;

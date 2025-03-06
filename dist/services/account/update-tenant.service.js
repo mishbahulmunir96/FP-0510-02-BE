@@ -41,7 +41,6 @@ const updateTenantProfileService = (body, imageFile, userId) => __awaiter(void 0
         }
         const updatedTenant = yield prisma_1.default.tenant.update({
             where: { id: tenant.id },
-
             data: secureUrl
                 ? Object.assign(Object.assign({}, body), { imageUrl: secureUrl }) : body,
         });
