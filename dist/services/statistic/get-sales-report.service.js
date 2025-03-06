@@ -8,85 +8,24 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getSalesReportService = void 0;
-const prisma_1 = __importDefault(require("../../lib/prisma"));
-const date_utils_1 = require("../../utils/date.utils");
-const date_fns_1 = require("date-fns");
-const groupDataByPeriod = (payments, startDate, endDate) => {
-    const diffInDays = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
-    let groupingFunction;
-    if (diffInDays <= 7) {
-        groupingFunction = (date) => (0, date_fns_1.format)((0, date_utils_1.normalizeToUTC)(date), "yyyy-MM-dd");
-    }
-    else if (diffInDays <= 31) {
-        groupingFunction = (date) => {
-            const weekNumber = Math.ceil(date.getDate() / 7);
-            return `${(0, date_fns_1.format)((0, date_utils_1.normalizeToUTC)(date), "yyyy-MM")}-W${weekNumber}`;
-        };
-    }
-    else {
-        groupingFunction = (date) => (0, date_fns_1.format)((0, date_utils_1.normalizeToUTC)(date), "yyyy-MM");
-    }
-    const groupedData = payments.reduce((acc, payment) => {
-        const date = new Date(payment.createdAt);
-        const key = groupingFunction(date);
-        if (!acc[key]) {
-            acc[key] = {
-                date: key,
-                totalBookings: 0,
-                totalRevenue: 0,
-            };
-        }
-        acc[key].totalBookings += 1;
-        acc[key].totalRevenue += payment.totalPrice;
-        return acc;
-    }, {});
-    return Object.values(groupedData).sort((a, b) => a.date.localeCompare(b.date));
-};
+const get_property_metrics_service_1 = require("./get-property-metrics.service");
+const get_transaction_metrics_service_1 = require("./get-transaction.metrics.service");
 const getSalesReportService = (_a) => __awaiter(void 0, [_a], void 0, function* ({ tenantId, startDate, endDate, propertyId, }) {
     try {
-        const utcStartDate = (0, date_utils_1.normalizeToUTC)(startDate);
-        const utcEndDate = (0, date_utils_1.normalizeToUTC)(endDate);
-        const properties = yield prisma_1.default.property.findMany({
-            where: Object.assign(Object.assign({ tenantId }, (propertyId && { id: propertyId })), { isDeleted: false }),
-            include: {
-                room: {
-                    where: {
-                        isDeleted: false,
-                    },
-                    include: {
-                        reservation: {
-                            where: {
-                                payment: {
-                                    createdAt: {
-                                        gte: utcStartDate,
-                                        lte: utcEndDate,
-                                    },
-                                },
-                            },
-                            include: {
-                                payment: true,
-                            },
-                        },
-                    },
-                },
-                review: {
-                    where: {
-                        createdAt: {
-                            gte: utcStartDate,
-                            lte: utcEndDate,
-                        },
-                    },
-                    select: {
-                        rating: true,
-                    },
-                },
-            },
+
+
+        // Get property metrics
+        const propertyMetrics = yield (0, get_property_metrics_service_1.getPropertyMetricsService)({
+            tenantId,
+            startDate,
+            endDate,
+            propertyId,
+
+
         });
+<<<<<<< HEAD
         const propertyMetrics = yield Promise.all(properties.map((property) => __awaiter(void 0, void 0, void 0, function* () {
             const allReservations = property.room.flatMap((room) => room.reservation);
             const paymentGroups = allReservations.reduce((groups, reservation) => {
@@ -211,75 +150,23 @@ const getSalesReportService = (_a) => __awaiter(void 0, [_a], void 0, function* 
                     },
                 },
             },
+=======
+        // Extract property IDs for transaction metrics
+        const propertyIds = propertyMetrics.map((p) => p.propertyId);
+        // Get transaction metrics
+        const transactionMetrics = yield (0, get_transaction_metrics_service_1.getTransactionMetricsService)({
+            propertyIds,
+            startDate,
+            endDate,
+>>>>>>> 005ef401df3cf0d2b38b7821131c1a005e9001f8
         });
-        const totalTransactions = payments.length;
-        const totalRevenue = payments.reduce((sum, payment) => sum + payment.totalPrice, 0);
-        const averageTransactionValue = totalTransactions > 0
-            ? Number((totalRevenue / totalTransactions).toFixed(2))
-            : 0;
-        const paymentMethods = payments.reduce((acc, payment) => {
-            acc[payment.paymentMethode].count += 1;
-            return acc;
-        }, {
-            MANUAL: { count: 0, percentage: 0 },
-            OTOMATIS: { count: 0, percentage: 0 },
-        });
-        if (totalTransactions > 0) {
-            paymentMethods.MANUAL.percentage = Number(((paymentMethods.MANUAL.count / totalTransactions) * 100).toFixed(2));
-            paymentMethods.OTOMATIS.percentage = Number(((paymentMethods.OTOMATIS.count / totalTransactions) * 100).toFixed(2));
-        }
-        const successfulPayments = payments.filter((p) => ["CHECKED_IN", "PROCESSED", "CHECKED_OUT"].includes(p.status)).length;
-        const cancelledPayments = payments.filter((p) => p.status === "CANCELLED").length;
-        const pendingPayments = payments.filter((p) => ["WAITING_FOR_PAYMENT", "WAITING_FOR_PAYMENT_CONFIRMATION"].includes(p.status)).length;
-        const paymentStatusBreakdown = {
-            successRate: totalTransactions > 0
-                ? Number(((successfulPayments / totalTransactions) * 100).toFixed(2))
-                : 0,
-            cancellationRate: totalTransactions > 0
-                ? Number(((cancelledPayments / totalTransactions) * 100).toFixed(2))
-                : 0,
-            pendingRate: totalTransactions > 0
-                ? Number(((pendingPayments / totalTransactions) * 100).toFixed(2))
-                : 0,
-            totalSuccessful: successfulPayments,
-            totalCancelled: cancelledPayments,
-            totalPending: pendingPayments,
-        };
-        const peakBookingPeriods = groupDataByPeriod(payments, utcStartDate, utcEndDate);
-        const allReservations = payments.flatMap((p) => p.reservation);
-        const durations = allReservations.map((reservation) => {
-            const start = (0, date_utils_1.normalizeToUTC)(new Date(reservation.startDate));
-            const end = (0, date_utils_1.normalizeToUTC)(new Date(reservation.endDate));
-            return Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
-        });
-        const averageBookingDuration = durations.length > 0
-            ? Number((durations.reduce((sum, duration) => sum + duration, 0) /
-                durations.length).toFixed(2))
-            : 0;
-        const leadTimes = allReservations.map((reservation) => {
-            const bookingDate = (0, date_utils_1.normalizeToUTC)(new Date(reservation.payment.createdAt));
-            const checkInDate = (0, date_utils_1.normalizeToUTC)(new Date(reservation.startDate));
-            return Math.ceil((checkInDate.getTime() - bookingDate.getTime()) / (1000 * 60 * 60 * 24));
-        });
-        const averageBookingLeadTime = leadTimes.length > 0
-            ? Number((leadTimes.reduce((sum, time) => sum + time, 0) / leadTimes.length).toFixed(2))
-            : 0;
+        // Combine metrics into final report
         return {
             propertyMetrics,
-            transactionMetrics: {
-                totalTransactions,
-                totalRevenue,
-                averageTransactionValue,
-                paymentMethodDistribution: paymentMethods,
-                paymentStatusBreakdown,
-                peakBookingPeriods,
-                averageBookingDuration,
-                averageBookingLeadTime,
-            },
+            transactionMetrics,
         };
     }
     catch (error) {
-        console.error("Error in getSalesReportService:", error);
         throw error;
     }
 });

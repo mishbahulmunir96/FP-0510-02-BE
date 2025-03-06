@@ -1,10 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { TokenExpiredError, verify } from "jsonwebtoken";
-import {
-  JWT_SECRET,
-  JWT_SECRET_FORGOT_PASSWORD,
-  JWT_SECRET_KEY,
-} from "../config";
+import { JWT_SECRET, JWT_SECRET_FORGOT_PASSWORD } from "../config";
 
 export const verifyToken = (
   req: Request,
