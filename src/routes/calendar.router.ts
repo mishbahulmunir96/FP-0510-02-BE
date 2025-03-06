@@ -1,4 +1,3 @@
-// src/routes/calendar.router.ts
 import { Router } from "express";
 import {
   getMonthlyCalendarController,

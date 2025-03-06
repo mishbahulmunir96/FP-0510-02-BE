@@ -58,7 +58,7 @@ const changeEmailService = (userId, newEmail) => __awaiter(void 0, void 0, void 
         const emailHtml = template({
             name: user.name,
             verificationLink: `${process.env.BASE_URL_FE}/verify-email?token=${verificationToken}`,
-            logoUrl: "your-logo-url",
+            logoUrl: "https://res.cloudinary.com/andikalp/image/upload/v1738209868/qdx0l3jzw4fsqoag71dl.png",
             appName: "RateHaven",
             year: new Date().getFullYear(),
             appAddress: "Your App Address",
