@@ -50,7 +50,6 @@ const updateProfileController = (req, res, next) => __awaiter(void 0, void 0, vo
 });
 exports.updateProfileController = updateProfileController;
 const updateTenantProfileController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
     try {
         const result = yield (0, update_tenant_service_1.updateTenantProfileService)(req.body, req.file, Number(res.locals.user.id));
         res.status(200).send(result);

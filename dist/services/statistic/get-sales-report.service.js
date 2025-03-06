@@ -14,26 +14,18 @@ const get_property_metrics_service_1 = require("./get-property-metrics.service")
 const get_transaction_metrics_service_1 = require("./get-transaction.metrics.service");
 const getSalesReportService = (_a) => __awaiter(void 0, [_a], void 0, function* ({ tenantId, startDate, endDate, propertyId, }) {
     try {
-
-
-        // Get property metrics
         const propertyMetrics = yield (0, get_property_metrics_service_1.getPropertyMetricsService)({
             tenantId,
             startDate,
             endDate,
             propertyId,
-
-
         });
-        // Extract property IDs for transaction metrics
         const propertyIds = propertyMetrics.map((p) => p.propertyId);
-        // Get transaction metrics
         const transactionMetrics = yield (0, get_transaction_metrics_service_1.getTransactionMetricsService)({
             propertyIds,
             startDate,
             endDate,
         });
-        // Combine metrics into final report
         return {
             propertyMetrics,
             transactionMetrics,

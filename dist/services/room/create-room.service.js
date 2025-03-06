@@ -57,7 +57,6 @@ const createRoomService = (body, file, tenantId) => __awaiter(void 0, void 0, vo
                     },
                 });
             }
-
             const facilityPromises = facilities.map((facility) => tx.roomFacility.create({
                 data: {
                     title: facility.title,
@@ -65,9 +64,7 @@ const createRoomService = (body, file, tenantId) => __awaiter(void 0, void 0, vo
                     roomId: newRoom.id,
                 },
             }));
-
             yield Promise.all(facilityPromises);
-
             const roomWithRelations = yield tx.room.findUnique({
                 where: { id: newRoom.id },
                 include: {

@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { createCategoryService } from "../services/category/create-category.service";
 import { getCategoriesService } from "../services/category/get-category.service";
-import { getAllCategoriesService } from "../services/category/get-allCategory.service";
+import { getAllCategoriesService } from "../services/category/get-all-category.service";
 import { deleteCategoryService } from "../services/category/delete-category.service";
 import { updateCategoryService } from "../services/category/update-category.service";
 

@@ -44,13 +44,11 @@ const getTransactionMetricsService = (_a) => __awaiter(void 0, [_a], void 0, fun
             },
         },
     });
-    // Calculate basic transaction metrics
     const totalTransactions = payments.length;
     const totalRevenue = payments.reduce((sum, payment) => sum + payment.totalPrice, 0);
     const averageTransactionValue = totalTransactions > 0
         ? Number((totalRevenue / totalTransactions).toFixed(2))
         : 0;
-    // Calculate payment method distribution
     const paymentMethods = payments.reduce((acc, payment) => {
         acc[payment.paymentMethode].count += 1;
         return acc;
@@ -62,7 +60,6 @@ const getTransactionMetricsService = (_a) => __awaiter(void 0, [_a], void 0, fun
         paymentMethods.MANUAL.percentage = Number(((paymentMethods.MANUAL.count / totalTransactions) * 100).toFixed(2));
         paymentMethods.OTOMATIS.percentage = Number(((paymentMethods.OTOMATIS.count / totalTransactions) * 100).toFixed(2));
     }
-    // Calculate payment status breakdown
     const successfulPayments = payments.filter((p) => ["CHECKED_IN", "PROCESSED", "CHECKED_OUT"].includes(p.status)).length;
     const cancelledPayments = payments.filter((p) => p.status === "CANCELLED").length;
     const pendingPayments = payments.filter((p) => ["WAITING_FOR_PAYMENT", "WAITING_FOR_PAYMENT_CONFIRMATION"].includes(p.status)).length;
@@ -80,9 +77,7 @@ const getTransactionMetricsService = (_a) => __awaiter(void 0, [_a], void 0, fun
         totalCancelled: cancelledPayments,
         totalPending: pendingPayments,
     };
-    // Calculate peak booking periods
     const peakBookingPeriods = (0, dateUtils_1.groupDataByPeriod)(payments, utcStartDate, utcEndDate);
-    // Calculate average booking duration and lead time
     const allReservations = payments.flatMap((p) => p.reservation);
     const durations = allReservations.map((reservation) => {
         const start = (0, dateUtils_1.normalizeToUTC)(new Date(reservation.startDate));

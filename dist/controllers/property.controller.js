@@ -21,7 +21,7 @@ const create_property_service_1 = require("../services/property/create-property.
 const update_property_service_1 = require("../services/property/update-property.service");
 const delete_property_service_1 = require("../services/property/delete-property.service");
 const get_properties_tenant_service_1 = require("../services/property/get-properties-tenant.service");
-const get_propertiesByQuery_service_1 = require("../services/property/get-propertiesByQuery.service");
+const get_properties_by_query_service_1 = require("../services/property/get-properties-by-query.service");
 const get_property_tenant_service_1 = require("../services/property/get-property-tenant.service");
 const getPropertiesController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -94,7 +94,7 @@ function getPropertiesByQueryController(req, res, next) {
                     ? new Date(req.query.endDate)
                     : undefined,
             };
-            const result = yield (0, get_propertiesByQuery_service_1.getPropertiesServiceByQuery)(query);
+            const result = yield (0, get_properties_by_query_service_1.getPropertiesServiceByQuery)(query);
             res.status(200).send(result);
         }
         catch (error) {

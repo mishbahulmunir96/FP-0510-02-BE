@@ -16,7 +16,7 @@ exports.deleteCategoryController = deleteCategoryController;
 exports.updateCategoryController = updateCategoryController;
 const create_category_service_1 = require("../services/category/create-category.service");
 const get_category_service_1 = require("../services/category/get-category.service");
-const get_allCategory_service_1 = require("../services/category/get-allCategory.service");
+const get_all_category_service_1 = require("../services/category/get-all-category.service");
 const delete_category_service_1 = require("../services/category/delete-category.service");
 const update_category_service_1 = require("../services/category/update-category.service");
 function createCategoryController(req, res, next) {
@@ -60,7 +60,7 @@ function getAllCategoryListController(req, res, next) {
                 search: req.query.search || "",
                 propertyCategoryId: parseInt(req.query.propertyCategoryId) || 1,
             };
-            const result = yield (0, get_allCategory_service_1.getAllCategoriesService)(query);
+            const result = yield (0, get_all_category_service_1.getAllCategoriesService)(query);
             res.status(200).send(result);
         }
         catch (error) {
