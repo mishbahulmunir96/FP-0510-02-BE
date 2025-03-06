@@ -17,7 +17,6 @@ const cloudinary_1 = require("../../lib/cloudinary");
 const prisma_1 = __importDefault(require("../../lib/prisma"));
 const updateTenantProfileService = (body, imageFile, userId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        // 1. Find the active tenant associated with this user
         const tenant = yield prisma_1.default.tenant.findFirst({
             where: {
                 userId: userId,
@@ -27,7 +26,6 @@ const updateTenantProfileService = (body, imageFile, userId) => __awaiter(void 0
         if (!tenant) {
             throw new Error("Tenant not found or already deleted");
         }
-        // 2. Process image if provided
         let secureUrl;
         if (imageFile) {
             try {
@@ -41,9 +39,8 @@ const updateTenantProfileService = (body, imageFile, userId) => __awaiter(void 0
                 throw new Error("Error processing image: " + error.message);
             }
         }
-        // 3. Update tenant data
         const updatedTenant = yield prisma_1.default.tenant.update({
-            where: { id: tenant.id }, // Use tenant.id found from the query
+            where: { id: tenant.id },
             data: secureUrl
                 ? Object.assign(Object.assign({}, body), { imageUrl: secureUrl }) : body,
         });
@@ -54,7 +51,6 @@ const updateTenantProfileService = (body, imageFile, userId) => __awaiter(void 0
         };
     }
     catch (error) {
-        // Handle errors
         if (error instanceof Error) {
             throw new Error("Failed to update tenant profile: " + error.message);
         }

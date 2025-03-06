@@ -25,7 +25,6 @@ const get_propertiesByQuery_service_1 = require("../services/property/get-proper
 const get_property_tenant_service_1 = require("../services/property/get-property-tenant.service");
 const getPropertiesController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        // Parsing query parameter dan menetapkan nilai default
         const query = {
             take: parseInt(req.query.take) || 8,
             page: parseInt(req.query.page) || 1,
@@ -105,7 +104,7 @@ function getPropertiesByQueryController(req, res, next) {
 }
 const getPropertyController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { slug } = req.params; // Changed from id to slug
+        const { slug } = req.params;
         const result = yield (0, get_property_service_1.getPropertyService)(slug);
         res.status(200).send(result);
     }

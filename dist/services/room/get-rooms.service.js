@@ -17,12 +17,10 @@ const prisma_1 = __importDefault(require("../../lib/prisma"));
 const getRoomsService = (query) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { take, page, sortBy, sortOrder, search } = query;
-        // Membangun whereClause untuk Room
         const whereClause = {
             isDeleted: false,
         };
         if (search) {
-            // Karena field "type" adalah enum, kita lakukan pencarian exact match
             const allowedTypes = [
                 "Deluxe",
                 "Standard",
@@ -33,7 +31,6 @@ const getRoomsService = (query) => __awaiter(void 0, void 0, void 0, function* (
                     equals: search,
                 };
             }
-            // Jika ingin pencarian partial pada field lain (misalnya, properti terkait), tambahkan filter tambahan di sini.
         }
         const rooms = yield prisma_1.default.room.findMany({
             where: whereClause,

@@ -15,8 +15,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.forgotPasswordService = void 0;
 const jsonwebtoken_1 = require("jsonwebtoken");
 const config_1 = require("../../config");
-const prisma_1 = __importDefault(require("../../lib/prisma"));
 const handlebars_1 = require("../../lib/handlebars");
+const prisma_1 = __importDefault(require("../../lib/prisma"));
 const forgotPasswordService = (body) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { email } = body;

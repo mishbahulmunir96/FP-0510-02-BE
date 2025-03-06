@@ -10,13 +10,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.verifyChangeEmailController = exports.changeEmailController = exports.changePasswordController = exports.updateTenantProfileController = exports.updateProfileController = exports.getTenantController = exports.getProfileController = void 0;
-const get_profile_service_1 = require("../services/account/get-profile.service");
-const update_profile_service_1 = require("../services/account/update-profile.service");
-const change_password_service_1 = require("../services/account/change-password.service");
 const change_email_service_1 = require("../services/account/change-email.service");
-const verify_change_email_service_1 = require("../services/account/verify-change-email.service");
+const change_password_service_1 = require("../services/account/change-password.service");
+const get_profile_service_1 = require("../services/account/get-profile.service");
 const get_tenant_service_1 = require("../services/account/get-tenant.service");
+const update_profile_service_1 = require("../services/account/update-profile.service");
 const update_tenant_service_1 = require("../services/account/update-tenant.service");
+const verify_change_email_service_1 = require("../services/account/verify-change-email.service");
 const getProfileController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const userId = Number(res.locals.user.id);
@@ -51,9 +51,7 @@ const updateProfileController = (req, res, next) => __awaiter(void 0, void 0, vo
 exports.updateProfileController = updateProfileController;
 const updateTenantProfileController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        // Pass the user ID directly to the service, not tenant ID
-        const result = yield (0, update_tenant_service_1.updateTenantProfileService)(req.body, req.file, // Use req.file since the route is configured with uploader(1).single("imageFile")
-        Number(res.locals.user.id));
+        const result = yield (0, update_tenant_service_1.updateTenantProfileService)(req.body, req.file, Number(res.locals.user.id));
         res.status(200).send(result);
     }
     catch (error) {
@@ -65,7 +63,6 @@ const changePasswordController = (req, res, next) => __awaiter(void 0, void 0, v
     try {
         const userId = Number(res.locals.user.id);
         const { oldPassword, newPassword } = req.body;
-        // Panggil service dengan destructuring
         const result = yield (0, change_password_service_1.changePasswordService)(userId, {
             password: oldPassword,
             newPassword,

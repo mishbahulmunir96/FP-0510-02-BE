@@ -16,14 +16,12 @@ exports.deleteRoomNonAvailabilityService = void 0;
 const prisma_1 = __importDefault(require("../../lib/prisma"));
 const deleteRoomNonAvailabilityService = (id) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        // Cari record RoomNonAvailability berdasarkan id
         const roomNonAvailability = yield prisma_1.default.roomNonAvailability.findUnique({
             where: { id },
         });
         if (!roomNonAvailability) {
             throw new Error("Room Non Availability not found");
         }
-        // Hapus record secara permanen
         const deletedRecord = yield prisma_1.default.roomNonAvailability.delete({
             where: { id },
         });

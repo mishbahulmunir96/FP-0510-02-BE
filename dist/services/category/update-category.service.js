@@ -17,7 +17,6 @@ const prisma_1 = __importDefault(require("../../lib/prisma"));
 const updateCategoryService = (id, body) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { name } = body;
-        // Cari kategori yang akan diupdate, pastikan tidak dihapus
         const propertyCategory = yield prisma_1.default.propertyCategory.findFirst({
             where: {
                 id,
@@ -30,9 +29,7 @@ const updateCategoryService = (id, body) => __awaiter(void 0, void 0, void 0, fu
         if (!propertyCategory) {
             throw new Error("Category not found");
         }
-        // Jika nama berbeda dari nama saat ini
         if (name !== propertyCategory.name) {
-            // Cek untuk kategori aktif yang memiliki nama yang sama
             const existingActiveCategory = yield prisma_1.default.propertyCategory.findFirst({
                 where: {
                     name,
@@ -44,7 +41,6 @@ const updateCategoryService = (id, body) => __awaiter(void 0, void 0, void 0, fu
             if (existingActiveCategory) {
                 throw new Error("Category name already exists for this tenant");
             }
-            // Cek juga untuk kategori yang dihapus dengan nama yang sama
             const existingDeletedCategory = yield prisma_1.default.propertyCategory.findFirst({
                 where: {
                     name,
@@ -53,15 +49,11 @@ const updateCategoryService = (id, body) => __awaiter(void 0, void 0, void 0, fu
                 },
             });
             if (existingDeletedCategory) {
-                // Opsi 1: Kembalikan error
-                // throw new Error("A deleted category with this name exists. Please choose a different name or restore the deleted category.");
-                // Opsi 2: Hapus kategori yang dihapus sebelumnya untuk mengizinkan nama ini
                 yield prisma_1.default.propertyCategory.delete({
                     where: { id: existingDeletedCategory.id },
                 });
             }
         }
-        // Update kategori
         const updatedCategory = yield prisma_1.default.propertyCategory.update({
             where: { id },
             data: { name },
@@ -72,7 +64,6 @@ const updateCategoryService = (id, body) => __awaiter(void 0, void 0, void 0, fu
         };
     }
     catch (error) {
-        // Tangani kasus error spesifik
         if (error instanceof Error) {
             if (error.message.includes("Unique constraint failed")) {
                 throw new Error("Category name already exists for this tenant");

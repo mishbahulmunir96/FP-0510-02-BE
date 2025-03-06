@@ -32,7 +32,7 @@ const getPropertyTenantService = (id) => __awaiter(void 0, void 0, void 0, funct
                 propertyImage: true,
                 propertyFacility: true,
                 review: true,
-                propertyCategory: true, // Changed from PropertyCategory to match the schema
+                propertyCategory: true,
             },
         });
         if (!property) {

@@ -17,7 +17,6 @@ const prisma_1 = __importDefault(require("../../lib/prisma"));
 const getRoomsTenantService = (query, userId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { take, page, sortBy, sortOrder, search } = query;
-        // Validasi user
         const user = yield prisma_1.default.user.findUnique({
             where: { id: userId },
         });
@@ -27,20 +26,17 @@ const getRoomsTenantService = (query, userId) => __awaiter(void 0, void 0, void 
         if (user.role !== "TENANT") {
             throw new Error("User don't have access");
         }
-        // Cari tenant yang terkait dengan user
         const tenant = yield prisma_1.default.tenant.findFirst({
             where: { userId: user.id, isDeleted: false },
         });
         if (!tenant) {
             throw new Error("Tenant not found");
         }
-        // Membangun whereClause untuk Room
         const whereClause = {
             isDeleted: false,
             property: { tenantId: tenant.id },
         };
         if (search) {
-            // Menggunakan filter equals untuk enum 'type'
             const allowedTypes = [
                 "Deluxe",
                 "Standard",

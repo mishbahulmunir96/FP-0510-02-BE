@@ -20,7 +20,6 @@ const changePasswordService = (userId_1, _a) => __awaiter(void 0, [userId_1, _a]
     if (!user) {
         throw new Error("User not found");
     }
-    // Pastikan password di DB tidak null
     if (!user.password) {
         throw new Error("User has no password set");
     }

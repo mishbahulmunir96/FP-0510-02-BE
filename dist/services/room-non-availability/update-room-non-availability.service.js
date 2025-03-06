@@ -17,20 +17,17 @@ const date_fns_1 = require("date-fns");
 const prisma_1 = __importDefault(require("../../lib/prisma"));
 const updateRoomNonAvailabilityService = (id, body) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        // Cari record RoomNonAvailability berdasarkan id
         const existingRecord = yield prisma_1.default.roomNonAvailability.findUnique({
             where: { id },
         });
         if (!existingRecord) {
             throw new Error("Room Non Availability not found");
         }
-        // Jika update mencakup startDate, endDate, dan roomId, validasi tidak terjadi overlap dengan record lain
         if (body.startDate && body.endDate && body.roomId) {
             const newInterval = {
                 start: new Date(body.startDate),
                 end: new Date(body.endDate),
             };
-            // Cari interval non-availability lain untuk room yang sama (kecuali record yang sedang diupdate)
             const otherIntervals = yield prisma_1.default.roomNonAvailability.findMany({
                 where: {
                     roomId: body.roomId,
@@ -48,7 +45,6 @@ const updateRoomNonAvailabilityService = (id, body) => __awaiter(void 0, void 0,
                 }
             }
         }
-        // Update record dengan data yang diberikan
         const updatedRecord = yield prisma_1.default.roomNonAvailability.update({
             where: { id },
             data: Object.assign({}, body),
