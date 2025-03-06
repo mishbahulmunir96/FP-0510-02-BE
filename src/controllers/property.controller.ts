@@ -5,7 +5,7 @@ import { createPropertyService } from "../services/property/create-property.serv
 import { updatePropertyService } from "../services/property/update-property.service";
 import { deletePropertyService } from "../services/property/delete-property.service";
 import { getTenantPropertiesService } from "../services/property/get-properties-tenant.service";
-import { getPropertiesServiceByQuery } from "../services/property/get-propertiesByQuery.service";
+import { getPropertiesServiceByQuery } from "../services/property/get-properties-by-query.service";
 import { getPropertyTenantService } from "../services/property/get-property-tenant.service";
 
 export const getPropertiesController = async (
@@ -137,7 +137,7 @@ export const createPropertyController = async (
   try {
     const result = await createPropertyService(
       req.body,
-      req.files as Express.Multer.File[], 
+      req.files as Express.Multer.File[],
       Number(res.locals.user.id)
     );
     res.status(200).send(result);
