@@ -18,7 +18,6 @@ const cloudinary_1 = require("../../lib/cloudinary");
 const prisma_1 = __importDefault(require("../../lib/prisma"));
 const updatePropertyService = (userId, propertyId, body, files) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        // 1. Validasi user
         const user = yield prisma_1.default.user.findUnique({
             where: {
                 id: userId,
@@ -31,7 +30,6 @@ const updatePropertyService = (userId, propertyId, body, files) => __awaiter(voi
         if (user.role !== "TENANT") {
             throw { code: "UNAUTHORIZED", message: "User doesn't have access" };
         }
-        // 2. Validasi tenant
         const tenant = yield prisma_1.default.tenant.findFirst({
             where: {
                 userId: user.id,
@@ -41,7 +39,6 @@ const updatePropertyService = (userId, propertyId, body, files) => __awaiter(voi
         if (!tenant) {
             throw { code: "TENANT_NOT_FOUND", message: "Tenant not found" };
         }
-        // 3. Validasi property
         const currentProperty = yield prisma_1.default.property.findFirst({
             where: {
                 id: propertyId,
@@ -56,7 +53,6 @@ const updatePropertyService = (userId, propertyId, body, files) => __awaiter(voi
         if (!currentProperty) {
             throw { code: "PROPERTY_NOT_FOUND", message: "Property not found" };
         }
-        // 4. Upload images if provided
         let imageResults = [];
         if (files && files.length > 0) {
             try {
@@ -69,7 +65,6 @@ const updatePropertyService = (userId, propertyId, body, files) => __awaiter(voi
                 };
             }
         }
-        // 5. Prepare update data
         const updateData = Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign({}, (body.title && { title: body.title })), (body.slug && { slug: body.slug })), (body.description && { description: body.description })), (body.latitude && { latitude: body.latitude })), (body.longitude && { longitude: body.longitude })), (body.location && { location: body.location })), (body.status && { status: body.status })), (body.propertyCategoryId && {
             propertyCategory: {
                 connect: {
@@ -77,7 +72,6 @@ const updatePropertyService = (userId, propertyId, body, files) => __awaiter(voi
                 },
             },
         }));
-        // 6. Lakukan transaksi update
         return yield prisma_1.default.$transaction((tx) => __awaiter(void 0, void 0, void 0, function* () {
             // Update property
             const updatedProperty = yield tx.property.update({
@@ -96,15 +90,12 @@ const updatePropertyService = (userId, propertyId, body, files) => __awaiter(voi
                     },
                 },
             });
-            // Handle image updates if new images provided
             if (files && files.length > 0 && imageResults.length > 0) {
-                // If we're replacing all images, first delete existing ones
                 if (currentProperty.propertyImage.length > 0) {
                     yield tx.propertyImage.deleteMany({
                         where: { propertyId: propertyId },
                     });
                 }
-                // Create new image records for each uploaded image
                 yield Promise.all(imageResults
                     .filter((result) => result === null || result === void 0 ? void 0 : result.secure_url)
                     .map((result) => tx.propertyImage.create({
@@ -115,7 +106,6 @@ const updatePropertyService = (userId, propertyId, body, files) => __awaiter(voi
                     },
                 })));
             }
-            // Get fresh data after all updates
             const finalProperty = yield tx.property.findUnique({
                 where: { id: propertyId },
                 include: {
@@ -157,18 +147,15 @@ const updatePropertyService = (userId, propertyId, body, files) => __awaiter(voi
         }));
     }
     catch (error) {
-        // Handle specific errors
         if (error instanceof client_1.Prisma.PrismaClientKnownRequestError) {
             if (error.code === "P2002") {
                 throw { code: "DUPLICATE_SLUG", message: "Slug already exists" };
             }
             throw { code: "DATABASE_ERROR", message: error.message };
         }
-        // Handle custom errors
         if (error.code) {
             throw error;
         }
-        // Handle unexpected errors
         throw { code: "INTERNAL_SERVER_ERROR", message: "Something went wrong" };
     }
 });

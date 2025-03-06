@@ -17,7 +17,6 @@ const prisma_1 = __importDefault(require("../../lib/prisma"));
 const getRoomNonAvailabilitiesService = (query, userId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { take = 10, page = 1, sortBy = "createdAt", sortOrder = "asc", search, reason, startDate, endDate, roomId, } = query;
-        // Validasi user dan tenant
         const user = yield prisma_1.default.user.findUnique({
             where: { id: userId },
         });
@@ -33,7 +32,6 @@ const getRoomNonAvailabilitiesService = (query, userId) => __awaiter(void 0, voi
         if (!tenant) {
             throw new Error("Tenant not found");
         }
-        // Membangun whereClause untuk RoomNonAvailability
         const whereClause = Object.assign(Object.assign(Object.assign(Object.assign(Object.assign({ isDeleted: false, room: { property: { tenantId: tenant.id } } }, (roomId ? { roomId } : {})), (reason ? { reason: { contains: reason, mode: "insensitive" } } : {})), (search
             ? {
                 OR: [{ reason: { contains: search, mode: "insensitive" } }],

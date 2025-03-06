@@ -36,7 +36,7 @@ const createCategoryService = (body, userId) => __awaiter(void 0, void 0, void 0
         if (!tenant) {
             throw new Error("Tenant not found");
         }
-        // Cek apakah kategori dengan nama yang sama sudah ada tapi dihapus
+
         const deletedCategory = yield prisma_1.default.propertyCategory.findFirst({
             where: {
                 name,
@@ -45,7 +45,7 @@ const createCategoryService = (body, userId) => __awaiter(void 0, void 0, void 0
             },
         });
         if (deletedCategory) {
-            // Kembalikan kategori yang dihapus
+
             const restoredCategory = yield prisma_1.default.propertyCategory.update({
                 where: { id: deletedCategory.id },
                 data: { isDeleted: false },
@@ -55,7 +55,7 @@ const createCategoryService = (body, userId) => __awaiter(void 0, void 0, void 0
                 data: restoredCategory,
             };
         }
-        // Jika tidak ada kategori yang dihapus, cek kategori aktif dengan nama yang sama
+
         const existingCategory = yield prisma_1.default.propertyCategory.findFirst({
             where: {
                 name,

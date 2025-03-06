@@ -42,7 +42,6 @@ const changeEmailService = (userId, newEmail) => __awaiter(void 0, void 0, void 
         createdAt: new Date().toISOString(),
     }, process.env.JWT_SECRET, { expiresIn: "1h" });
     try {
-        // Load templates & partials
         const partialsDir = path_1.default.join(__dirname, "../../templates/partials");
         const partialFiles = fs_1.default.readdirSync(partialsDir);
         partialFiles.forEach((file) => {

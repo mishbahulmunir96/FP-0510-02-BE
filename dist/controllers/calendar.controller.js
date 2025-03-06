@@ -10,19 +10,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getPropertyMonthlyPriceComparisonController = exports.compareRoomPricingController = exports.getMonthlyCalendarController = void 0;
-const calendar_service_1 = require("../services/calendar/calendar.service");
+const get_monthly_availability_and_pricing_service_1 = require("../services/calendar/get-monthly-availability-and-pricing.service");
+const compare_room_pricing_service_1 = require("../services/calendar/compare-room-pricing-service");
+const get_property_monthly_price_comparison_service_1 = require("../services/calendar/get-property-monthly-price-comparison.service");
 const getMonthlyCalendarController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { roomId } = req.params;
         let { date } = req.query;
-        // If no date provided, use current date
         let parsedDate;
         if (!date) {
             parsedDate = new Date();
         }
         else {
             parsedDate = new Date(date);
-            // Validate date
             if (isNaN(parsedDate.getTime())) {
                 res.status(400).json({
                     success: false,
@@ -30,10 +30,9 @@ const getMonthlyCalendarController = (req, res, next) => __awaiter(void 0, void 
                 });
             }
         }
-        // Set date to the first day of the month
         parsedDate.setDate(1);
         parsedDate.setHours(0, 0, 0, 0);
-        const calendarData = yield (0, calendar_service_1.getMonthlyAvailabilityAndPricingService)(parseInt(roomId), parsedDate);
+        const calendarData = yield (0, get_monthly_availability_and_pricing_service_1.getMonthlyAvailabilityAndPricingService)(parseInt(roomId), parsedDate);
         res.status(200).json({
             success: true,
             data: calendarData,
@@ -47,7 +46,6 @@ exports.getMonthlyCalendarController = getMonthlyCalendarController;
 const compareRoomPricingController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { roomIds, startDate, endDate } = req.body;
-        // Validate inputs
         if (!roomIds || !Array.isArray(roomIds) || roomIds.length === 0) {
             res.status(400).json({
                 success: false,
@@ -60,10 +58,8 @@ const compareRoomPricingController = (req, res, next) => __awaiter(void 0, void 
                 message: "Both startDate and endDate are required",
             });
         }
-        // Parse dates
         const parsedStartDate = new Date(startDate);
         const parsedEndDate = new Date(endDate);
-        // Validate dates
         if (isNaN(parsedStartDate.getTime()) || isNaN(parsedEndDate.getTime())) {
             res.status(400).json({
                 success: false,
@@ -76,7 +72,7 @@ const compareRoomPricingController = (req, res, next) => __awaiter(void 0, void 
                 message: "startDate must be before or equal to endDate",
             });
         }
-        const comparisonData = yield (0, calendar_service_1.compareRoomPricingService)(roomIds.map((id) => parseInt(id)), parsedStartDate, parsedEndDate);
+        const comparisonData = yield (0, compare_room_pricing_service_1.compareRoomPricingService)(roomIds.map((id) => parseInt(id)), parsedStartDate, parsedEndDate);
         res.status(200).json({
             success: true,
             data: comparisonData,
@@ -91,14 +87,12 @@ const getPropertyMonthlyPriceComparisonController = (req, res, next) => __awaite
     try {
         const { propertyId } = req.params;
         let { date } = req.query;
-        // If no date provided, use current date
         let parsedDate;
         if (!date) {
             parsedDate = new Date();
         }
         else {
             parsedDate = new Date(date);
-            // Validate date
             if (isNaN(parsedDate.getTime())) {
                 res.status(400).json({
                     success: false,
@@ -106,7 +100,7 @@ const getPropertyMonthlyPriceComparisonController = (req, res, next) => __awaite
                 });
             }
         }
-        const result = yield (0, calendar_service_1.getPropertyMonthlyPriceComparisonService)(parseInt(propertyId), parsedDate);
+        const result = yield (0, get_property_monthly_price_comparison_service_1.getPropertyMonthlyPriceComparisonService)(parseInt(propertyId), parsedDate);
         res.status(200).json({
             success: true,
             propertyId: parseInt(propertyId),

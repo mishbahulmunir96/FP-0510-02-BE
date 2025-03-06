@@ -22,15 +22,13 @@ const path_1 = __importDefault(require("path"));
 const handlebars_1 = __importDefault(require("handlebars"));
 const registerService = (data, file) => __awaiter(void 0, void 0, void 0, function* () {
     const { email } = data;
-    const role = data.role || "USER"; // Default to USER if role is not provided
-    // Cek apakah email sudah terdaftar
+    const role = data.role || "USER";
     const existingUser = yield prisma_1.default.user.findUnique({
         where: { email },
     });
     if (existingUser) {
         throw new Error("Email already registered");
     }
-    // Upload gambar jika ada (hanya untuk tenant)
     let imageUrl = "";
     if (file && role === "TENANT") {
         try {
@@ -41,9 +39,7 @@ const registerService = (data, file) => __awaiter(void 0, void 0, void 0, functi
             throw new Error("Image upload failed");
         }
     }
-    // Generate name from email for USER role
     const defaultName = email.split("@")[0];
-    // Buat token verifikasi email dengan expiry 1 jam
     const verificationToken = jsonwebtoken_1.default.sign({
         email,
         createdAt: new Date().toISOString(),
@@ -51,7 +47,6 @@ const registerService = (data, file) => __awaiter(void 0, void 0, void 0, functi
         expiresIn: "1h",
     });
     try {
-        // Buat User dan Tenant (jika diperlukan) dalam transaksi
         const user = yield prisma_1.default.$transaction((prisma) => __awaiter(void 0, void 0, void 0, function* () {
             const newUser = yield prisma.user.create({
                 data: {
@@ -82,7 +77,6 @@ const registerService = (data, file) => __awaiter(void 0, void 0, void 0, functi
             }
             return newUser;
         }));
-        // Load dan register partials
         const partialsDir = path_1.default.join(__dirname, "../../templates/partials");
         const partialFiles = fs_1.default.readdirSync(partialsDir);
         partialFiles.forEach((file) => {
@@ -94,11 +88,9 @@ const registerService = (data, file) => __awaiter(void 0, void 0, void 0, functi
             const source = fs_1.default.readFileSync(filepath, "utf8");
             handlebars_1.default.registerPartial(name, source);
         });
-        // Load dan compile template utama
         const mainTemplatePath = path_1.default.join(__dirname, "../../templates/verifyEmail.hbs");
         const mainTemplateSource = fs_1.default.readFileSync(mainTemplatePath, "utf8");
         const mainTemplate = handlebars_1.default.compile(mainTemplateSource);
-        // Data untuk template
         const replacements = {
             name: role === "USER" ? defaultName : data.name,
             verificationLink: `${process.env.BASE_URL_FE}/verify?token=${verificationToken}`,
@@ -108,9 +100,7 @@ const registerService = (data, file) => __awaiter(void 0, void 0, void 0, functi
             appAddress: "RateHaven Address, Yogyakarta, Indonesia",
             expiryTime: "1 hour",
         };
-        // Render HTML email
         const emailHtml = mainTemplate(replacements);
-        // Kirim email verifikasi
         yield nodemailer_1.transporter.sendMail({
             from: process.env.GMAIL_EMAIL,
             to: email,

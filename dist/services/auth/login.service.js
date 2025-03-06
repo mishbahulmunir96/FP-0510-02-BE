@@ -55,7 +55,6 @@ const loginService = (body) => __awaiter(void 0, void 0, void 0, function* () {
             id: user.id,
             role: user.role,
         }, config_1.JWT_SECRET, { expiresIn: "2h" });
-        // Update user token in database
         yield prisma_1.default.user.update({
             where: { id: user.id },
             data: { token },

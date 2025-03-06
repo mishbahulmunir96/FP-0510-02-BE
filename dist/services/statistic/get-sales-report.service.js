@@ -21,6 +21,7 @@ const getSalesReportService = (_a) => __awaiter(void 0, [_a], void 0, function* 
             startDate,
             endDate,
             propertyId,
+
         });
         // Extract property IDs for transaction metrics
         const propertyIds = propertyMetrics.map((p) => p.propertyId);

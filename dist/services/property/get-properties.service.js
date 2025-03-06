@@ -16,7 +16,7 @@ exports.getPropertiesService = void 0;
 const prisma_1 = __importDefault(require("../../lib/prisma"));
 const getPropertiesService = (query) => __awaiter(void 0, void 0, void 0, function* () {
     const { take = 8, page = 1, sortBy = "createdAt", sortOrder = "desc", location, category, search, startDate, endDate, guest, priceMin, priceMax, } = query;
-    // Validasi tanggal: jika salah satu tanggal diberikan, kedua tanggal harus ada dan valid
+
     if ((startDate && !endDate) || (!startDate && endDate)) {
         throw new Error("Both startDate and endDate are required for filtering");
     }
@@ -30,7 +30,6 @@ const getPropertiesService = (query) => __awaiter(void 0, void 0, void 0, functi
             throw new Error("startDate cannot be after endDate");
         }
     }
-    // Membangun whereClause untuk filter properti
     const whereClause = Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign({ isDeleted: false, status: "PUBLISHED" }, (location && {
         location: {
             contains: location,
@@ -72,9 +71,7 @@ const getPropertiesService = (query) => __awaiter(void 0, void 0, void 0, functi
     })), (startDate &&
         endDate && {
         room: {
-            some: Object.assign(Object.assign({ isDeleted: false }, (guest && { guest: { gte: guest } })), { 
-                // Pastikan tidak ada reservasi yang tumpang tindih dengan periode yang dipilih
-                reservation: {
+            some: Object.assign(Object.assign({ isDeleted: false }, (guest && { guest: { gte: guest } })), { reservation: {
                     none: {
                         AND: [
                             {
@@ -94,9 +91,7 @@ const getPropertiesService = (query) => __awaiter(void 0, void 0, void 0, functi
                             },
                         ],
                     },
-                }, 
-                // Pastikan tidak ada jadwal non-availability room yang tumpang tindih
-                roomNonAvailability: {
+                }, roomNonAvailability: {
                     none: {
                         isDeleted: false,
                         startDate: { lte: new Date(endDate) },
@@ -105,7 +100,6 @@ const getPropertiesService = (query) => __awaiter(void 0, void 0, void 0, functi
                 } }),
         },
     }));
-    // Membatasi field yang diizinkan untuk sorting
     const allowedSortByFields = ["createdAt", "updatedAt", "title", "location"];
     const sortField = allowedSortByFields.includes(sortBy)
         ? sortBy

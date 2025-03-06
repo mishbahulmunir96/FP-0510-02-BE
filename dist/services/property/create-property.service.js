@@ -19,20 +19,16 @@ const prisma_1 = __importDefault(require("../../lib/prisma"));
 const createPropertyService = (body, files, userId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { description, latitude, longitude, slug, title, propertyCategoryId, location, } = body;
-        // Convert propertyCategoryId to number
         const categoryId = Number(propertyCategoryId);
-        // Validate if conversion was successful
         if (isNaN(categoryId)) {
             throw new Error("Invalid property category ID");
         }
-        // Check if slug exists
         const existingProperty = yield prisma_1.default.property.findUnique({
             where: { slug },
         });
         if (existingProperty) {
             throw new Error("Slug already exists");
         }
-        // Validate user and tenant
         const user = yield prisma_1.default.user.findUnique({
             where: {
                 id: userId,
@@ -54,18 +50,15 @@ const createPropertyService = (body, files, userId) => __awaiter(void 0, void 0,
         if (!tenant) {
             throw new Error("Tenant profile not found");
         }
-        // Validate property category exists (using the converted number)
         const categoryExists = yield prisma_1.default.propertyCategory.findUnique({
             where: { id: categoryId },
         });
         if (!categoryExists) {
             throw new Error("Property category not found");
         }
-        // Upload images if provided
         const imageResults = files && files.length > 0
             ? yield Promise.all(files.map((file) => (0, cloudinary_1.cloudinaryUpload)(file)))
             : [];
-        // Create property and images in a transaction
         const result = yield prisma_1.default.$transaction((tx) => __awaiter(void 0, void 0, void 0, function* () {
             const newProperty = yield tx.property.create({
                 data: {
@@ -74,7 +67,7 @@ const createPropertyService = (body, files, userId) => __awaiter(void 0, void 0,
                     longitude,
                     slug,
                     title,
-                    propertyCategoryId: categoryId, // Use the converted number
+                    propertyCategoryId: categoryId,
                     location,
                     status: client_1.StatusProperty.PUBLISHED,
                     tenantId: tenant.id,
@@ -86,7 +79,6 @@ const createPropertyService = (body, files, userId) => __awaiter(void 0, void 0,
                     tenant: true,
                 },
             });
-            // Create property images
             if (imageResults.length > 0) {
                 yield Promise.all(imageResults
                     .filter((result) => result === null || result === void 0 ? void 0 : result.secure_url)

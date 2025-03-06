@@ -30,7 +30,7 @@ const loginWithGoogleService = (accessToken) => __awaiter(void 0, void 0, void 0
         const user = yield prisma_1.default.user.findFirst({
             where: {
                 email: userInfo.email,
-                isDeleted: false, // Sesuai schema yang memiliki field isDeleted
+                isDeleted: false,
             },
         });
         if (user && user.provider !== "GOOGLE") {
@@ -44,8 +44,8 @@ const loginWithGoogleService = (accessToken) => __awaiter(void 0, void 0, void 0
                     name: userInfo.name,
                     isVerified: true,
                     provider: "GOOGLE",
-                    role: "USER", // Sesuai enum Role dalam schema
-                    imageUrl: userInfo.picture, // Jika ada dari Google
+                    role: "USER",
+                    imageUrl: userInfo.picture,
                     isDeleted: false,
                 },
             });
@@ -70,7 +70,6 @@ const loginWithGoogleService = (accessToken) => __awaiter(void 0, void 0, void 0
         const token = (0, jsonwebtoken_1.sign)({ id: userId }, config_1.JWT_SECRET, {
             expiresIn: "2h",
         });
-        // Update token di database
         yield prisma_1.default.user.update({
             where: { id: userId },
             data: { token },

@@ -27,19 +27,16 @@ const getTenantPropertiesService = (query, userId) => __awaiter(void 0, void 0, 
         if (user.role !== "TENANT") {
             throw new Error("User don't have access");
         }
-        // Cari tenant yang terkait dengan user
         const tenant = yield prisma_1.default.tenant.findFirst({
             where: { userId: user.id, isDeleted: false },
         });
         if (!tenant) {
             throw new Error("Tenant not found");
         }
-        // Membangun whereClause untuk properti
         const whereClause = {
             isDeleted: false,
             tenantId: tenant.id,
         };
-        // Tambahkan filter pencarian jika search tersedia
         if (search) {
             whereClause.OR = [
                 { title: { contains: search, mode: "insensitive" } },

@@ -18,14 +18,12 @@ const prisma_1 = __importDefault(require("../../lib/prisma"));
 const createRoomNonAvailabilityService = (userId, body) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { reason, startDate, endDate, roomId } = body;
-        // Validasi user
         const user = yield prisma_1.default.user.findFirst({
             where: { id: userId },
         });
         if (!user) {
             throw new Error("User not found");
         }
-        // Validasi adanya non-availability yang tumpang tindih
         const existingNonAvailabilities = yield prisma_1.default.roomNonAvailability.findMany({
             where: { roomId },
         });
@@ -42,14 +40,12 @@ const createRoomNonAvailabilityService = (userId, body) => __awaiter(void 0, voi
                 throw new Error("Room Non Availability for that interval already exists");
             }
         });
-        // Validasi room
         const room = yield prisma_1.default.room.findFirst({
             where: { id: roomId },
         });
         if (!room) {
             throw new Error("Room not found");
         }
-        // Buat record RoomNonAvailability dalam transaksi
         return yield prisma_1.default.$transaction((tx) => __awaiter(void 0, void 0, void 0, function* () {
             const newRoomNonAvailability = yield tx.roomNonAvailability.create({
                 data: {

@@ -17,7 +17,6 @@ const cloudinary_1 = require("../../lib/cloudinary");
 const prisma_1 = __importDefault(require("../../lib/prisma"));
 const updateProfileService = (body, imageFile, userId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        // Validate user exists
         const user = yield prisma_1.default.user.findFirst({
             where: {
                 id: userId,
@@ -28,7 +27,6 @@ const updateProfileService = (body, imageFile, userId) => __awaiter(void 0, void
             throw new Error("User not found");
         }
         let secureUrl;
-        // Handle image upload if provided
         if (imageFile) {
             try {
                 // Remove old image if exists
@@ -42,7 +40,6 @@ const updateProfileService = (body, imageFile, userId) => __awaiter(void 0, void
                 throw new Error("Failed to process image upload");
             }
         }
-        // Update user data
         const updatedUser = yield prisma_1.default.user.update({
             where: { id: userId },
             data: Object.assign(Object.assign(Object.assign({}, body), (secureUrl && { imageUrl: secureUrl })), { updatedAt: new Date() }),
@@ -65,14 +62,11 @@ const updateProfileService = (body, imageFile, userId) => __awaiter(void 0, void
         };
     }
     catch (error) {
-        // Rollback image upload if db update fails
         if (imageFile && error instanceof Error) {
             try {
                 yield (0, cloudinary_1.cloudinaryRemove)(imageFile.path);
             }
-            catch (_a) {
-                // Silent fail on rollback
-            }
+            catch (_a) { }
         }
         if (error instanceof Error) {
             throw new Error(`Failed to update profile: ${error.message}`);

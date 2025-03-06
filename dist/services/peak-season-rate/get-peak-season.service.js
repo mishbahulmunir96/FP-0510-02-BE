@@ -16,21 +16,21 @@ exports.getPeakSeasonsService = void 0;
 const prisma_1 = __importDefault(require("../../lib/prisma"));
 const getPeakSeasonsService = (query, userId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { take, page, sortBy, sortOrder, search, price, startDate, endDate, roomId, } = query;
+        const { take, page, sortBy, sortOrder } = query;
         const user = yield prisma_1.default.user.findUnique({
             where: { id: userId },
         });
         if (!user) {
-            throw new Error('User not found');
+            throw new Error("User not found");
         }
-        if (user.role !== 'TENANT') {
+        if (user.role !== "TENANT") {
             throw new Error("User don't have access");
         }
         const tenant = yield prisma_1.default.tenant.findFirst({
             where: { userId: user.id, isDeleted: false },
         });
         if (!tenant) {
-            throw new Error('Tenant not found');
+            throw new Error("Tenant not found");
         }
         const whereClause = {
             isDeleted: false,
@@ -40,7 +40,7 @@ const getPeakSeasonsService = (query, userId) => __awaiter(void 0, void 0, void 
             where: whereClause,
             skip: (page - 1) * take,
             take: take,
-            orderBy: { [sortBy]: sortOrder || 'asc' },
+            orderBy: { [sortBy]: sortOrder || "asc" },
             include: {
                 room: true,
             },

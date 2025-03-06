@@ -17,9 +17,7 @@ const prisma_1 = __importDefault(require("../../lib/prisma"));
 const getPropertiesServiceByQuery = (query) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { take, page, sortBy, sortOrder, search, guest, title, startDate, endDate, name, price, } = query;
-        // Build the room conditions separately to handle both guest and price filters
         const roomConditions = Object.assign(Object.assign({ stock: { gt: 0 } }, (guest ? { guest: { gte: guest } } : {})), (price ? { price: { lte: price } } : {}));
-        // Add date availability condition if dates are provided
         if (startDate && endDate) {
             roomConditions.roomNonAvailability = {
                 none: {
@@ -32,25 +30,21 @@ const getPropertiesServiceByQuery = (query) => __awaiter(void 0, void 0, void 0,
                 },
             };
         }
-        // Build the main where clause
         const whereClause = {
             isDeleted: false,
-            status: "PUBLISHED", // Ensure only published properties are returned
+            status: "PUBLISHED",
             room: {
                 some: roomConditions,
             },
         };
-        // Add property category filter if name is provided
         if (name) {
             whereClause.propertyCategory = {
                 name: { equals: name, mode: "insensitive" },
             };
         }
-        // Add title filter if provided
         if (title) {
             whereClause.title = { contains: title, mode: "insensitive" };
         }
-        // Add search filter if provided
         if (search) {
             whereClause.OR = [
                 { title: { contains: search, mode: "insensitive" } },
@@ -58,7 +52,6 @@ const getPropertiesServiceByQuery = (query) => __awaiter(void 0, void 0, void 0,
                 { location: { contains: search, mode: "insensitive" } }, // Added location search
             ];
         }
-        // Fetch properties with pagination and sorting
         const propertiesByQuery = yield prisma_1.default.property.findMany({
             where: whereClause,
             skip: Math.max(0, (page - 1) * take),
@@ -95,9 +88,7 @@ const getPropertiesServiceByQuery = (query) => __awaiter(void 0, void 0, void 0,
                 },
             },
         });
-        // Get total count for pagination
         const count = yield prisma_1.default.property.count({ where: whereClause });
-        // Return data with pagination metadata
         return Object.assign({ data: propertiesByQuery, meta: {
                 page,
                 take,

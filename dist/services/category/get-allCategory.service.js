@@ -18,7 +18,7 @@ const getAllCategoriesService = (query) => __awaiter(void 0, void 0, void 0, fun
     try {
         const { take, page, sortBy, sortOrder, search } = query;
         const whereClause = {
-            isDeleted: false, // Added this line to filter out deleted categories
+            isDeleted: false,
         };
         if (search) {
             whereClause.name = { contains: search };
