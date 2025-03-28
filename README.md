@@ -1,1 +1,1 @@
-ratehaven.my.id
+this is api for ratehaven.my.id
